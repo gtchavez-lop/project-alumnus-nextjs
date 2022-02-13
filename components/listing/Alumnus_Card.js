@@ -1,7 +1,7 @@
 import { motion } from "framer-motion"
 import dayjs from "dayjs"
 import { _Transition_Card } from "../_Animations"
-import { CgUser } from "react-icons/cg"
+import { CgReadme, CgUser, CgUserList } from "react-icons/cg"
 
 const Alumnus_Card = ({ instance_id, name_last, name_given, student_id, graduation_date, program_affiliated }) => {
     return (
@@ -10,7 +10,7 @@ const Alumnus_Card = ({ instance_id, name_last, name_given, student_id, graduati
                 variants={_Transition_Card}
                 initial="initial" animate="animate" exit="exit"
                 whileHover={{ translateY: -5 }}
-                key={instance_id} className="card card-side card-bordered shadow-2xl border-2 bg-base-200 border-slate-400 select-none cursor-pointer">
+                key={instance_id} className="card card-bordered shadow-2xl border-2 border-base-content bg-base-200">
                 <div className="card-body p-5">
                     <h2 className="card-title flex items-center">
                         <CgUser size={30} />
@@ -28,7 +28,11 @@ const Alumnus_Card = ({ instance_id, name_last, name_given, student_id, graduati
                         {dayjs(graduation_date).format("MMMM D, YYYY")}
                     </p>
                     <div className="card-actions justify-end">
-                        <p className="text-slate-500">Tap this card to view more details</p>
+                        <button
+                            className="btn btn-sm btn-disabled">
+                            <CgUserList size={25} />
+                            <span className="ml-3">Not yet Available</span>
+                        </button>
                     </div>
                 </div>
             </motion.div>

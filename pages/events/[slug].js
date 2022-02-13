@@ -35,7 +35,7 @@ const Event_Blog = ({ id, content }) => {
         h5: props => <h5 className="text-lg my-5 font-bold">{props.children}</h5>,
         h6: props => <h6 className="text-md my-5 font-bold">{props.children}</h6>,
         p: props => <p className="my-2">{props.children}</p>,
-        ul: props => <ul className="text-xl my-5 list-disc border-l-2 px-5">{props.children}</ul>,
+        ul: props => <ul className="text-xl my-5 list-disc border-l-2 px-10">{props.children}</ul>,
         li: props => <li className="">{props.children}</li>,
         blockquote: props => <blockquote className="text-xl mt-12">{props.children}</blockquote>,
         strong: props => <strong className="text-xl mt-12">{props.children}</strong>,

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react"
 import _SupabaseClient from "../../components/_SupabaseClient"
 import { _Transition_Blob_Bottom, _Transition_Blob_Top, _Transition_Page } from "../../components/_Animations"
 import { CgSpinner } from "react-icons/cg"
+import Head from "next/head"
 
 const Listing = e => {
 
@@ -29,6 +30,11 @@ const Listing = e => {
     return (
         <>
 
+            <Head>
+                <title>Alumni List - UCC Project Alumnus</title>
+                <meta name="description" content="University of Caloocan City - Alumni Management System" />
+            </Head>
+
             {/* desgn | blob */}
             <motion.div
                 variants={_Transition_Blob_Bottom}
@@ -44,7 +50,7 @@ const Listing = e => {
 
                 {/* initial page */}
                 <section className="relative min-h-screen flex flex-col justify-center items-center">
-                    <h1 className="text-5xl font-bold text-center bg-gradient-to-bl from-gray-700 via-gray-900 to-black bg-clip-text text-transparent ">
+                    <h1 className="text-5xl font-bold text-center text-base-content ">
                         Alumni Members List
                     </h1>
                     {/* description */}
@@ -53,7 +59,7 @@ const Listing = e => {
                     </p>
 
                     {/* scrolldown */}
-                    <p className="absolute bottom-10 select-none text-gray-600">Scroll Down to see more</p>
+                    <p className="absolute bottom-10 select-none text-base-content text-opacity-50">Scroll Down to see more</p>
                 </section>
 
                 {/* events content */}
@@ -66,7 +72,7 @@ const Listing = e => {
                                 <span className="label-text">Search an Alumnus</span>
                             </label>
                             <div className="flex space-x-2">
-                                <input type="text" placeholder="Find someone here..." className="w-full input input-primary input-bordered" />
+                                <input type="text" placeholder="Find someone here..." className="w-full input input-base-100 input-bordered" />
                                 <button className="btn btn-primary">Find</button>
                             </div>
                         </div>
@@ -77,7 +83,7 @@ const Listing = e => {
                     <AnimatePresence>
                         <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                             {loaded && alumni.map((alumnus) => (
-                                <Alumnus_Card {...alumnus} key={student_id} />
+                                <Alumnus_Card {...alumnus} key={alumnus.student_id} />
                             ))}
                         </div>
                     </AnimatePresence>

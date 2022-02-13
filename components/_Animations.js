@@ -79,8 +79,6 @@ export const _Transition_Card = {
     initial: {
         opacity: 0,
         scale: 0.95,
-        originX: 0,
-        originY: 0,
         transition: {
             duration: 0,
             ease: [0.2, 1, 0, 1]
@@ -89,8 +87,6 @@ export const _Transition_Card = {
     animate: {
         opacity: 1,
         scale: 1,
-        originX: 0,
-        originY: 0,
         transition: {
             duration: 0.75,
             ease: [0.2, 1, 0, 1]

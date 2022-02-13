@@ -39,7 +39,7 @@ const Events = e => {
             <motion.div
                 variants={_Transition_Blob_Top}
                 initial="initial" animate="animate" exit="exit"
-                className="absolute top-0 left-0 w-full h-full z-0 bg-gradient-to-tl from-green-300 via-blue-500 to-purple-600"
+                className="absolute top-0 left-0 w-full h-full z-0 bg-gradient-to-tl from-teal-600 via-blue-700 to-purple-600"
             />
             {/* event pag */}
             <motion.div
@@ -50,7 +50,7 @@ const Events = e => {
 
                 {/* initial page */}
                 <section className="relative min-h-screen flex flex-col justify-center items-center">
-                    <h1 className="text-5xl font-bold text-center bg-gradient-to-bl from-gray-700 via-gray-900 to-black bg-clip-text text-transparent ">
+                    <h1 className="text-5xl font-bold text-center text-base-content ">
                         News and Events
                     </h1>
                     {/* description */}
@@ -60,7 +60,7 @@ const Events = e => {
                     </p>
 
                     {/* scrolldown */}
-                    <p className="absolute bottom-10 select-none text-gray-600">Scroll Down to see more</p>
+                    <p className="absolute bottom-10 select-none text-base-content text-opacity-50">Scroll Down to see more</p>
                 </section>
 
                 {/* events content */}
