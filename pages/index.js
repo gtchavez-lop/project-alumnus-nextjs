@@ -12,11 +12,11 @@ export default function Home() {
       </Head>
 
 
-      <motion.div
+      <motion.section
         variants={_Transition_Page}
         initial="initial" animate="animate" exit="exit"
-        className="min-h-screen flex flex-col justify-center items-start px-5 lg:px-28"
-      >
+        className="min-h-screen flex flex-col justify-center items-start px-5 lg:px-28 select-none">
+
         <motion.div
           variants={_Transition_HeroPage}
           initial="initial" animate="animate" exit="exit"
@@ -34,7 +34,8 @@ export default function Home() {
 
           <button className='btn btn-primary lg:w-max mt-5'>Apply for an Alumnus Account</button>
         </div>
-      </motion.div>
+      </motion.section>
+
 
     </>
   )

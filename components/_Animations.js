@@ -78,7 +78,7 @@ export const _Transition_Page = {
 export const _Transition_HeroPage = {
     initial: {
         opacity: 0,
-        scale: 0.9,
+        scale: 1.05,
         originX: 1,
         originY: 0.5,
         transition: {

@@ -5,22 +5,43 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import { _Transition_Page } from '../../components/_Animations'
 import { useEffect } from 'react'
+import _sanityClient from '../../components/_sanityClient'
 
 export const getServerSideProps = async (context) => {
     const { id } = context.query
-    const { data: content, error } = await _SupabaseClient
-        .from('Table_Events')
-        .select('*')
-        .eq('id', id)
+    // const { data: content, error } = await _SupabaseClient
+    //     .from('Table_Events')
+    //     .select('*')
+    //     .eq('id', id)
 
+    //     return {
+    //         props: {
+    //             id: id,
+    //             content: content,
+    //         }
+    //     }
+    const posts = await _sanityClient.fetch(
+        `*[_type == "event_post" && _id == "${id}"] [0] {
+            _id,
+            "event_author": event_author -> author_name,
+            event_body,
+            "event_mainImage": event_mainImage.asset -> url,
+            event_publishedAt,
+            "event_slug": event_slug.current,
+            event_tags,
+            event_title
+          }`
+    )
 
     return {
         props: {
             id: id,
-            content: content,
+            content: posts
         }
     }
+
 }
+
 
 const Event_Blog = ({ id, content }) => {
     // initialize markdown parser
@@ -28,7 +49,7 @@ const Event_Blog = ({ id, content }) => {
 
     // markdown parser component renderer
     const renderers = {
-        h1: props => <h1 className="text-5xl my-5 font-bold">{props.children}</h1>,
+        h1: props => <h1 className="text-4xl my-5 font-bold">{props.children}</h1>,
         h2: props => <h2 className="text-3xl my-5 font-bold">{props.children}</h2>,
         h3: props => <h3 className="text-2xl my-5 font-bold">{props.children}</h3>,
         h4: props => <h4 className="text-xl my-5 font-bold">{props.children}</h4>,
@@ -56,6 +77,9 @@ const Event_Blog = ({ id, content }) => {
         root: props => <div className=" text-xl mt-12">{props.children}</div>
     }
 
+    // tree shake content
+    const { event_body, event_mainImage, event_publishedAt, event_tags, event_title } = content
+
     useEffect(() => {
         // scroll to top of page
         window.scrollTo(0, 0)
@@ -73,7 +97,7 @@ const Event_Blog = ({ id, content }) => {
                     <Link href={{
                         pathname: '/events',
                     }}>
-                        <button className='btn btn-secondary btn-link'>
+                        <button className='btn btn-secondary btn-outline'>
                             <CgChevronLeft size={25} />
                             <span className='ml-2'>Back to events</span>
                         </button>
@@ -81,9 +105,16 @@ const Event_Blog = ({ id, content }) => {
                 </div>
 
                 <div className='pb-20 pt-10'>
+                    <div className='flex flex-wrap gap-2 mb-10 select-none'>
+                        {event_tags.map((tag, index) => (
+                            <div key={index} className="badge badge-primary capitalize">{tag}</div>
+                        ))}
+                    </div>
+                    <p className='text-5xl my-5 font-bold'>{event_title}</p>
+                    <div className='divider' />
                     <ReactMarkdown
                         components={renderers}>
-                        {content[0].content}
+                        {event_body}
                     </ReactMarkdown>
                 </div>
             </section>

@@ -10,7 +10,7 @@ const Alumnus_Card = ({ instance_id, name_last, name_given, student_id, graduati
                 variants={_Transition_Card}
                 initial="initial" animate="animate" exit="exit"
                 whileHover={{ translateY: -5 }}
-                key={instance_id} className="card card-bordered shadow-2xl border-2 border-base-content bg-base-200">
+                key={instance_id} className="card card-bordered shadow-2xl border-2 border-base-content bg-base-200 select-none">
                 <div className="card-body p-5">
                     <h2 className="card-title flex items-center">
                         <CgUser size={30} />

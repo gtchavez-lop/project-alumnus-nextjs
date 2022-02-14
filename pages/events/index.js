@@ -1,32 +1,37 @@
-import dayjs from "dayjs"
-import { AnimatePresence, m, motion } from "framer-motion"
 import Head from "next/head"
 import { useEffect, useState } from "react"
-import { CgSpinner, CgSpinnerAlt, CgSpinnerTwo, CgSpinnerTwoAlt } from "react-icons/cg"
-import Event_Card from "../../components/events/Event_Card"
-import { _Transition_Blob_Bottom, _Transition_Blob_Top, _Transition_Card, _Transition_Page } from "../../components/_Animations"
+import { AnimatePresence, motion } from "framer-motion"
+import { CgSpinner } from "react-icons/cg"
+
 import _SupabaseClient from "../../components/_SupabaseClient"
+import _sanityClient from "../../components/_sanityClient"
+import { _Transition_Blob_Bottom, _Transition_Blob_Top, _Transition_Card, _Transition_Page } from "../../components/_Animations"
+import Event_Card from "../../components/events/Event_Card"
 
-
-const Events = e => {
-
-    // fetch Events Table Data
-    const [events, setEvents] = useState()
-    const [loaded, setLoaded] = useState(false)
-
-    useEffect(async () => {
-        let { data: Table_Events, error } = await _SupabaseClient
-            .from('Table_Events')
-            .select('*')
-
-        if (!error) {
-            setEvents(Table_Events);
-            setTimeout(() => {
-                setLoaded(true)
-            }, 100);
+export const getStaticProps = async () => {
+    const posts = await _sanityClient.fetch(`
+        *[_type == "event_post"] {
+            _id,
+            "event_author": event_author -> author_name,
+            event_body,
+            "event_mainImage": event_mainImage.asset -> url,
+            event_publishedAt,
+            "event_slug": event_slug.current,
+            event_tags,
+            event_title
         }
+    `)
+    return {
+        props: {
+            Table_Events: posts
+        }
+    }
+}
 
-    }, [])
+const Events = ({ Table_Events }) => {
+
+    const [events, setEvents] = useState()
+    const [loaded, setLoaded] = useState(true)
 
     return (
         <>
@@ -69,8 +74,8 @@ const Events = e => {
 
                     <AnimatePresence>
                         <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                            {loaded && events.map((event) => (
-                                <Event_Card {...event} key={event.id} />
+                            {(loaded || Table_Events) && Table_Events.map((event) => (
+                                <Event_Card {...event} key={event._id} />
                             ))}
                         </div>
                     </AnimatePresence>
