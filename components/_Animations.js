@@ -74,6 +74,41 @@ export const _Transition_Page = {
     }
 }
 
+// hero page transitions
+export const _Transition_HeroPage = {
+    initial: {
+        opacity: 0,
+        scale: 0.9,
+        originX: 1,
+        originY: 0.5,
+        transition: {
+            duration: 0,
+            ease: [0.2, 1, 0, 1]
+        }
+    },
+    animate: {
+        opacity: 1,
+        scale: 1,
+        originX: 1,
+        originY: 0.5,
+        transition: {
+            duration: 0.75,
+            ease: [0.2, 1, 0, 1]
+        }
+    },
+    exit: {
+        opacity: 0,
+        scale: 1.1,
+        originX: 1,
+        originY: 0.5,
+        transition: {
+            duration: 0.25,
+            ease: [1, 0, 0.8, 0]
+        }
+    }
+}
+
+
 // card transitions
 export const _Transition_Card = {
     initial: {

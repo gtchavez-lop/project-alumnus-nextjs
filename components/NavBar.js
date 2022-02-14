@@ -32,7 +32,7 @@ const NavBar = e => {
                 )}
             </AnimatePresence>
             {/* navbar */}
-            <div className={`fixed top-0 left-0 w-full navbar justify-between px-5 lg:px-28 z-50 transition-all ${_scrollY > 150 ? 'bg-neutral shadow-lg text-neutral-content' : 'bg-transparent py-10 text-base-content'}`}>
+            <div className={`fixed top-0 left-0 w-full navbar justify-between px-5 lg:px-28 z-50 transition-all ${_scrollY > 150 ? 'bg-neutral shadow-2xl text-neutral-content' : 'bg-transparent py-10 text-base-content'}`}>
                 <div className="flex">
                     <Link href='/' scroll={false}>
                         <div className="cursor-pointer hidden lg:flex items-center">

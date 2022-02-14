@@ -13,7 +13,7 @@ function MyApp({ Component, pageProps }) {
         <link rel="icon" href="/pa-transparent-white.png" />
       </Head>
       <NavBar />
-      <AnimatePresence exitBeforeEnter initial={false} >
+      <AnimatePresence exitBeforeEnter  >
         <motion.div className='relative' key={router.route}>
           <Component {...pageProps} />
         </motion.div>
