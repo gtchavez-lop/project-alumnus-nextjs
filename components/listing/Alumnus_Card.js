@@ -3,25 +3,22 @@ import dayjs from "dayjs"
 import { _Transition_Card } from "../_Animations"
 import { CgReadme, CgUser, CgUserList } from "react-icons/cg"
 
-const Alumnus_Card = ({ instance_id, name_last, name_given, student_id, graduation_date, program_affiliated }) => {
+const Alumnus_Card = ({ name, program_graduated, graduation_date, _id }) => {
     return (
         <>
             <motion.div
                 variants={_Transition_Card}
                 initial="initial" animate="animate" exit="exit"
                 whileHover={{ translateY: -5 }}
-                key={instance_id} className="card card-bordered shadow-2xl border-2 border-base-content bg-base-200 select-none">
+                key={_id} className="card card-bordered shadow-2xl border-2 border-base-content bg-base-200 select-none">
                 <div className="card-body p-5">
                     <h2 className="card-title flex items-center">
                         <CgUser size={30} />
-                        <span className="ml-5">{name_last}, {name_given}</span>
+                        <span className="ml-5">{name}</span>
                     </h2>
 
-                    <p className="text-sm">
-                        {student_id}
-                    </p>
                     <p>
-                        {program_affiliated}
+                        {program_graduated}
                     </p>
                     <p className="text-sm mt-5">
                         <span className="text-slate-500">Graduated since: </span>

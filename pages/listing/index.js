@@ -5,27 +5,18 @@ import _SupabaseClient from "../../components/_SupabaseClient"
 import { _Transition_Blob_Bottom, _Transition_Blob_Top, _Transition_Page } from "../../components/_Animations"
 import { CgSpinner } from "react-icons/cg"
 import Head from "next/head"
+import _sanityClient from "../../components/_sanityClient"
 
-const Listing = e => {
-
-    // fetch Alumnus Table Data
-    const [alumni, setAlumni] = useState()
-    const [loaded, setLoaded] = useState(false)
-
-    useEffect(async () => {
-        let { data: Table_Alumnus, error } = await _SupabaseClient
-            .from('Table_Alumnus')
-            .select('*')
-
-        console.log(Table_Alumnus)
-
-        if (!error) {
-            setAlumni(Table_Alumnus);
-            setTimeout(() => {
-                setLoaded(true)
-            }, 100);
+export const getServerSideProps = async () => {
+    const alumniList = await _sanityClient.fetch('*[_type == "alumnus" ]')
+    return {
+        props: {
+            listing: alumniList
         }
-    }, [])
+    }
+}
+
+const Listing = ({ listing }) => {
 
     return (
         <>
@@ -82,12 +73,12 @@ const Listing = e => {
 
                     <AnimatePresence>
                         <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                            {loaded && alumni.map((alumnus) => (
+                            {listing && listing.map((alumnus) => (
                                 <Alumnus_Card {...alumnus} key={alumnus.student_id} />
                             ))}
                         </div>
                     </AnimatePresence>
-                    <AnimatePresence>
+                    {/* <AnimatePresence>
                         <div className="mt-10 flex flex-col gap-5 justify-center items-center">
                             {!loaded && (
                                 <>
@@ -101,7 +92,7 @@ const Listing = e => {
                                 </>
                             )}
                         </div>
-                    </AnimatePresence>
+                    </AnimatePresence> */}
                 </section>
 
             </motion.div>
