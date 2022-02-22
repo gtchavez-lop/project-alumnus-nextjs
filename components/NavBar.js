@@ -67,7 +67,7 @@ const NavBar = e => {
                     <div className="divider divider-vertical mx-0 hidden lg:flex" />
                     <button className="btn btn-ghost btn-sm btn-square hidden lg:flex"> <CgShoppingCart size={25} /> </button>
                     <button
-                        data-toggle-theme="forest,emerald"
+                        data-toggle-theme="corporate,busness"
                         className="btn btn-ghost btn-sm btn-square">
                         <CgDarkMode size={25} />
                     </button>

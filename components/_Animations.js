@@ -113,7 +113,7 @@ export const _Transition_HeroPage = {
 export const _Transition_Card = {
     initial: {
         opacity: 0,
-        scale: 0.95,
+        scale: 0.9,
         transition: {
             duration: 0,
             ease: [0.2, 1, 0, 1]
@@ -124,7 +124,8 @@ export const _Transition_Card = {
         scale: 1,
         transition: {
             duration: 0.75,
-            ease: [0.2, 1, 0, 1]
+            ease: [0.2, 1, 0, 1],
+            delay: 0.25
         }
     },
     exit: {

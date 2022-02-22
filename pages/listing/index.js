@@ -1,23 +1,45 @@
+import Head from "next/head"
 import { motion, AnimatePresence } from "framer-motion"
-import Alumnus_Card from "../../components/listing/Alumnus_Card"
 import { useEffect, useState } from "react"
-import _SupabaseClient from "../../components/_SupabaseClient"
 import { _Transition_Blob_Bottom, _Transition_Blob_Top, _Transition_Page } from "../../components/_Animations"
 import { CgSpinner } from "react-icons/cg"
-import Head from "next/head"
-import _sanityClient from "../../components/_sanityClient"
 
-export const getServerSideProps = async () => {
-    const alumniList = await _sanityClient.fetch('*[_type == "alumnus" ]')
+
+import Alumnus_Card from "../../components/listing/Alumnus_Card"
+import apolloClient from "../../apolloClient"
+import { gql } from "@apollo/client"
+
+export const getStaticProps = async () => {
+    const { data } = await apolloClient.query({
+        query: gql`
+            query {
+                alumniLists {
+                    id
+                    surname
+                    givenName
+                    slug
+                    alumniDisplayPhoto {url}
+                    currentEmail
+                    currentLocation
+                    programCompleted
+                    graduationDate
+                    isCurrentlyWorking
+                    company
+                    startingWorkDate
+                    endingWorkDate
+                  }
+            }
+        `
+    })
+
     return {
         props: {
-            listing: alumniList
+            alumniList: data.alumniLists
         }
     }
 }
 
-const Listing = ({ listing }) => {
-
+const Listing = ({ alumniList }) => {
     return (
         <>
 
@@ -73,26 +95,11 @@ const Listing = ({ listing }) => {
 
                     <AnimatePresence>
                         <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                            {listing && listing.map((alumnus) => (
-                                <Alumnus_Card {...alumnus} key={alumnus.student_id} />
+                            {alumniList && alumniList.map((alumnus) => (
+                                <Alumnus_Card {...alumnus} key={alumnus.id} />
                             ))}
                         </div>
                     </AnimatePresence>
-                    {/* <AnimatePresence>
-                        <div className="mt-10 flex flex-col gap-5 justify-center items-center">
-                            {!loaded && (
-                                <>
-                                    <motion.div
-                                        animate={{ rotate: ["0deg", '360deg'] }}
-                                        transition={{ repeat: Infinity, duration: 0.75, ease: 'linear' }}
-                                    >
-                                        <CgSpinner size={100} />
-                                    </motion.div>
-                                    <p>Fetching Data</p>
-                                </>
-                            )}
-                        </div>
-                    </AnimatePresence> */}
                 </section>
 
             </motion.div>

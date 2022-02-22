@@ -1,42 +1,37 @@
 import reactMarkdown from 'react-markdown'
-import _SupabaseClient from '../../components/_SupabaseClient'
-import { CgChevronLeft } from 'react-icons/cg'
 import Link from 'next/link'
+import { CgChevronLeft } from 'react-icons/cg'
 import { motion } from 'framer-motion'
-import { _Transition_Page } from '../../components/_Animations'
 import { useEffect } from 'react'
-import _sanityClient from '../../components/_sanityClient'
+
+import { _Transition_Page } from '../../components/_Animations'
+import apolloClient from 'apolloClient'
+import { gql } from '@apollo/client'
 
 export const getServerSideProps = async (context) => {
     const { id } = context.query
-    // const { data: content, error } = await _SupabaseClient
-    //     .from('Table_Events')
-    //     .select('*')
-    //     .eq('id', id)
 
-    //     return {
-    //         props: {
-    //             id: id,
-    //             content: content,
-    //         }
-    //     }
-    const posts = await _sanityClient.fetch(
-        `*[_type == "event_post" && _id == "${id}"] [0] {
-            _id,
-            "event_author": event_author -> author_name,
-            event_body,
-            "event_mainImage": event_mainImage.asset -> url,
-            event_publishedAt,
-            "event_slug": event_slug.current,
-            event_tags,
-            event_title
-          }`
-    )
+    const { data } = await apolloClient.query({
+        query: gql`
+            query {
+                news_And_Events {
+                    id
+                    createdAt
+                    eventTitle
+                    eventSlug
+                    eventContent { markdown }
+                    displayImage { url }
+                    eventAuthors { name authorSlug }
+                    eventTags
+                  }
+            }
+        `
+    })
 
     return {
         props: {
-            id: id,
-            content: posts
+            id: data.news_And_Events.find(event => event.id === id).id,
+            content: data.news_And_Events.find(event => event.id === id)
         }
     }
 
@@ -78,7 +73,7 @@ const Event_Blog = ({ id, content }) => {
     }
 
     // tree shake content
-    const { event_body, event_mainImage, event_publishedAt, event_tags, event_title } = content
+    const { eventContent, displayImage, createdAt, eventTags, eventTitle, eventAuthors } = content
 
     useEffect(() => {
         // scroll to top of page
@@ -97,7 +92,7 @@ const Event_Blog = ({ id, content }) => {
                     <Link href={{
                         pathname: '/events',
                     }}>
-                        <button className='btn btn-secondary btn-outline'>
+                        <button className='btn btn-secondary btn-link'>
                             <CgChevronLeft size={25} />
                             <span className='ml-2'>Back to events</span>
                         </button>
@@ -105,16 +100,17 @@ const Event_Blog = ({ id, content }) => {
                 </div>
 
                 <div className='pb-20 pt-10'>
+                    <p className='my-2 text-gray-400 flex flex-col'>Posted by <span className='ml-2 text-base-content font-bold'>{eventAuthors.name}</span></p>
                     <div className='flex flex-wrap gap-2 mb-10 select-none'>
-                        {event_tags.map((tag, index) => (
+                        {eventTags.map((tag, index) => (
                             <div key={index} className="badge badge-primary capitalize">{tag}</div>
                         ))}
                     </div>
-                    <p className='text-5xl my-5 font-bold'>{event_title}</p>
+                    <p className='text-5xl my-5 font-bold'>{eventTitle}</p>
                     <div className='divider' />
                     <ReactMarkdown
                         components={renderers}>
-                        {event_body}
+                        {eventContent}
                     </ReactMarkdown>
                 </div>
             </section>

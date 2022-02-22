@@ -24,13 +24,13 @@ export default function Home() {
           <div className='absolute top-0 z-10 left-0 w-full h-full bg-base-100 bg-opacity-80 lg:bg-opacity-100 lg:bg-transparent lg:bg-gradient-to-r from-base-100  to-transparent' />
           <Image src='/ucc-north.jpg' layout='fill' objectFit='cover' />
         </motion.div>
-        <div className='flex px-10 flex-col text-center lg:text-left w-full lg:max-w-md mt-16 lg:mt-32'>
+        <div className='flex px-10 flex-col text-center lg:text-left w-full lg:max-w-md lg:mt-10'>
           <p className='text-5xl'>Reconnect.</p>
           <p className='text-5xl'>Rekindle.</p>
           <p className='text-5xl'>Relive.</p>
         </div>
-        <div className='flex px-10 flex-col text-center lg:text-left lg:max-w-md'>
-          <p className='mt-16'>Graduating from the University doesn&#39;t end there. Find and invite people to see what&#39;s the life of the next generation</p>
+        <div className='flex px-10 flex-col text-center lg:text-left lg:max-w-md mt-7'>
+          <p className=''>Graduating from the University doesn&#39;t end there. Find and invite people to see what&#39;s the life of the next generation</p>
 
           <button className='btn btn-primary lg:w-max mt-5'>Apply for an Alumnus Account</button>
         </div>

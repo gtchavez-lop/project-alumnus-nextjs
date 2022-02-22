@@ -2,28 +2,33 @@ import Head from "next/head"
 import { useEffect, useState } from "react"
 import { AnimatePresence, motion } from "framer-motion"
 import { CgSpinner } from "react-icons/cg"
+import { gql } from "@apollo/client"
 
-import _SupabaseClient from "../../components/_SupabaseClient"
-import _sanityClient from "../../components/_sanityClient"
+import apolloClient from "../../apolloClient"
 import { _Transition_Blob_Bottom, _Transition_Blob_Top, _Transition_Card, _Transition_Page } from "../../components/_Animations"
 import Event_Card from "../../components/events/Event_Card"
 
+// get blog data
 export const getStaticProps = async () => {
-    const posts = await _sanityClient.fetch(`
-        *[_type == "event_post"] {
-            _id,
-            "event_author": event_author -> author_name,
-            event_body,
-            "event_mainImage": event_mainImage.asset -> url,
-            event_publishedAt,
-            "event_slug": event_slug.current,
-            event_tags,
-            event_title
-        }
-    `)
+    const { data } = await apolloClient.query({
+        query: gql`
+            query {
+                news_And_Events {
+                    id
+                    createdAt
+                    eventTitle
+                    eventSlug
+                    eventContent { markdown }
+                    displayImage { url }
+                    eventAuthors { name authorSlug }
+                    eventTags
+                }
+            }
+        `
+    })
     return {
         props: {
-            Table_Events: posts
+            Table_Events: data.news_And_Events
         }
     }
 }
@@ -74,8 +79,8 @@ const Events = ({ Table_Events }) => {
 
                     <AnimatePresence>
                         <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                            {(loaded || Table_Events) && Table_Events.map((event) => (
-                                <Event_Card {...event} key={event._id} />
+                            {Table_Events.map((event) => (
+                                <Event_Card {...event} />
                             ))}
                         </div>
                     </AnimatePresence>
