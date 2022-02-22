@@ -80,6 +80,8 @@ const Event_Blog = ({ id, content }) => {
         window.scrollTo(0, 0)
     }, [])
 
+    console.log(eventContent)
+
     return (
         <motion.div
             variants={_Transition_Page}
@@ -110,7 +112,7 @@ const Event_Blog = ({ id, content }) => {
                     <div className='divider' />
                     <ReactMarkdown
                         components={renderers}>
-                        {eventContent}
+                        {eventContent.markdown}
                     </ReactMarkdown>
                 </div>
             </section>
