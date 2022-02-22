@@ -80,7 +80,7 @@ const Events = ({ Table_Events }) => {
                     <AnimatePresence>
                         <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                             {Table_Events.map((event) => (
-                                <Event_Card {...event} />
+                                <Event_Card {...event} key={event.id} />
                             ))}
                         </div>
                     </AnimatePresence>
