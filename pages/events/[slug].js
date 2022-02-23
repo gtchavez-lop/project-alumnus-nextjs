@@ -13,7 +13,7 @@ export const getServerSideProps = async (context) => {
 
     const { data } = await apolloClient.query({
         query: gql`
-            query {
+            query  {
                 news_And_Events {
                     id
                     createdAt
@@ -36,7 +36,6 @@ export const getServerSideProps = async (context) => {
     }
 
 }
-
 
 const Event_Blog = ({ id, content }) => {
     // initialize markdown parser
@@ -80,7 +79,7 @@ const Event_Blog = ({ id, content }) => {
         window.scrollTo(0, 0)
     }, [])
 
-    console.log(eventContent)
+    console.log(content)
 
     return (
         <motion.div
@@ -110,10 +109,13 @@ const Event_Blog = ({ id, content }) => {
                     </div>
                     <p className='text-5xl my-5 font-bold'>{eventTitle}</p>
                     <div className='divider' />
-                    <ReactMarkdown
-                        components={renderers}>
-                        {eventContent.markdown}
-                    </ReactMarkdown>
+                    <div className='mb-32'>
+                        <ReactMarkdown
+                            components={renderers}>
+                            {eventContent.markdown}
+                        </ReactMarkdown>
+
+                    </div>
                 </div>
             </section>
         </motion.div>

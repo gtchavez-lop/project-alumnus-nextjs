@@ -96,7 +96,7 @@ const Listing = ({ alumniList }) => {
                     <AnimatePresence>
                         <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
                             {alumniList && alumniList.map((alumnus) => (
-                                <Alumnus_Card {...alumnus} key={alumnus.id} />
+                                <Alumnus_Card alumniData={alumnus} key={alumnus.id} />
                             ))}
                         </div>
                     </AnimatePresence>

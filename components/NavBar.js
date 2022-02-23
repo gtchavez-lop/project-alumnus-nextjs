@@ -61,7 +61,7 @@ const NavBar = e => {
                             <button className="btn btn-ghost btn-sm gap-2 items-center"> <CgWebsite size={25} /> Events </button>
                         </Link>
                         <Link href='/listing' scroll={false}>
-                            <button className="btn btn-ghost btn-sm gap-2 items-center"> <CgUserList size={25} /> Listing </button>
+                            <button className="btn btn-ghost btn-sm gap-2 items-center"> <CgUserList size={25} /> Alumni List </button>
                         </Link>
                     </div>
                     <div className="divider divider-vertical mx-0 hidden lg:flex" />

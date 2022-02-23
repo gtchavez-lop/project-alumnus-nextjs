@@ -109,6 +109,33 @@ export const _Transition_HeroPage = {
 }
 
 
+// bottom menu animation
+export const _Transition_BottomMenu = {
+    initial: {
+        opacity: 0,
+        y: 100,
+        transition: {
+            duration: 0,
+        }
+    },
+    animate: {
+        opacity: 1,
+        y: 0,
+        transition: {
+            duration: 0.5,
+            ease: [0.2, 1, 0, 1]
+        }
+    },
+    exit: {
+        opacity: 0,
+        y: 100,
+        transition: {
+            duration: 0.25,
+            ease: [1, 0, 0.8, 0]
+        }
+    }
+}
+
 // card transitions
 export const _Transition_Card = {
     initial: {

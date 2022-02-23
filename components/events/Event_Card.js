@@ -14,7 +14,7 @@ const Event_Card = ({ eventTitle, eventSlug, createdAt, id, eventAuthors }) => {
             variants={_Transition_Card}
             initial="initial" animate="animate" exit="exit"
             whileHover={{ translateY: -5 }}
-            key={id} className="card card-bordered shadow-2xl border-2 border-base-content bg-base-200">
+            key={id} className="card card-bordered shadow border-2 border-base-content bg-base-200">
             <div className="card-body p-5">
                 <h2 className="card-title">{eventTitle}</h2>
                 <p className="text-sm">
