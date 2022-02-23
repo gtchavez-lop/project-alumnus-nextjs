@@ -9,7 +9,7 @@ import Alumnus_Card from "../../components/listing/Alumnus_Card"
 import apolloClient from "../../apolloClient"
 import { gql } from "@apollo/client"
 
-export const getStaticProps = async () => {
+export const getServerSideProps = async () => {
     const { data } = await apolloClient.query({
         query: gql`
             query {
@@ -32,9 +32,11 @@ export const getStaticProps = async () => {
         `
     })
 
+    const { alumniLists } = data
+
     return {
         props: {
-            alumniList: data.alumniLists
+            alumniList: alumniLists
         }
     }
 }
