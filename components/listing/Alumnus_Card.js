@@ -3,6 +3,7 @@ import dayjs from "dayjs"
 import { _Transition_BottomMenu, _Transition_Card, _Transition_Page } from "../_Animations"
 import { CgClose, CgReadme, CgUser, CgUserList } from "react-icons/cg"
 import { useState } from "react"
+import Image from "next/image"
 
 const ProfilePopUp = ({ alumni, closeHandler }) => {
     return (
@@ -22,14 +23,26 @@ const ProfilePopUp = ({ alumni, closeHandler }) => {
                         <CgClose className="h-6 w-6 text-white" />
                     </button>
                 </div>
-                <div className="flex flex-col-reverse lg:flex-row mb-16">
-                    {/* alimni content */}
-                    <div className="flex flex-col mt-10 w-full">
+                <div className="flex flex-col lg:flex-row mb-16 justify-center">
+                    {/* alumni photo */}
+                    <div className="w-full lg:w-1/2 h-40 lg:h-auto mt-10 lg:mt-0 flex flex-col gap-10 justify-center items-center">
+                        {alumni.alumniDisplayPhoto ? (
+                            <div className="w-40 h-40 mask mask-squircle lg:mask-square ">
+                                <img className="lg:rounded" src={alumni.alumniDisplayPhoto.url} />
+                            </div>
+                        ) : (
+                            <div className="flex flex-col text-center items-center gap-5">
+                                <CgUser className="h-16 w-16 text-white" />
+                                <p>Image Unavailable</p>
+                            </div>
+                        )}
                         <div className="text-center lg:text-left">
                             <motion.h1 className="text-2xl font-bold">{alumni.surname}, {alumni.givenName}</motion.h1>
                             <p className="text-sm">{alumni.programCompleted} - Batch {dayjs(alumni.graduationDate).year()}</p>
                         </div>
-
+                    </div>
+                    {/* alimni content */}
+                    <div className="flex flex-col mt-10 w-full">
                         {/* info */}
                         <div className="flex flex-col lg:flex-row mt-7 gap-7 justify-around">
                             <div className="flex flex-col gap-2 w-full">
@@ -75,10 +88,6 @@ const ProfilePopUp = ({ alumni, closeHandler }) => {
                             </div>
                         </div>
                     </div>
-                    {/* alumni photo */}
-                    <div className="w-full lg:w-1/2 h-40 lg:h-auto flex justify-center items-center">
-                        <p>Image goes here</p>
-                    </div>
                 </div>
             </motion.div>
         </motion.div>
@@ -87,7 +96,7 @@ const ProfilePopUp = ({ alumni, closeHandler }) => {
 
 const Alumnus_Card = ({ alumniData }) => {
 
-    const { surname, givenName, programCompleted, graduationDate, id } = alumniData
+    const { surname, givenName, programCompleted, graduationDate, id, alumniDisplayPhoto } = alumniData
 
     const [showProfile, setShowProfile] = useState(false)
 
@@ -105,9 +114,17 @@ const Alumnus_Card = ({ alumniData }) => {
                     whileHover={{ translateY: -5 }}
                     key={id} className="card card-bordered shadow border-2 border-base-content bg-base-200 select-none">
                     <div className="card-body p-4   ">
-                        <h2 className="card-title flex items-center font-bold mb-0">
-                            {surname}, {givenName}
-                        </h2>
+                        <div className="flex items-center">
+                            {alumniDisplayPhoto && (
+                                <div className="w-10 h-10 mr-2 mask mask-circle">
+                                    <img src={alumniDisplayPhoto.url} />
+                                    {/* <Image src={alumniDisplayPhoto.url} alt={`${surname}_${givenName}_photo`} layout="fill" /> */}
+                                </div>
+                            )}
+                            <h2 className="text-xl flex items-center font-bold mb-0">
+                                {surname}, {givenName}
+                            </h2>
+                        </div>
                         <p className="text-sm">{programCompleted}</p>
                         <p className="text-sm mt-2">
                             <span className="text-slate-500">Graduated since: </span>

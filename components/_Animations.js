@@ -186,7 +186,7 @@ export const _Transition_Blob_Top = {
 }
 export const _Transition_Blob_Bottom = {
     initial: {
-        clipPath: "circle(0% at 100% 50%)",
+        clipPath: "circle(0% at 80% 0%)",
         opacity: 0,
         transition: {
             duration: 0,
@@ -194,7 +194,7 @@ export const _Transition_Blob_Bottom = {
         }
     },
     animate: {
-        clipPath: "circle(50% at 100% 50%)",
+        clipPath: "circle(60% at 80% 0%)",
         opacity: 0.5,
         transition: {
             duration: 0.75,
@@ -202,7 +202,7 @@ export const _Transition_Blob_Bottom = {
         }
     },
     exit: {
-        clipPath: "circle(40% at 100% 50%)",
+        clipPath: "circle(40% at 100% 0%)",
         opacity: 0,
         transition: {
             duration: 0.25,
