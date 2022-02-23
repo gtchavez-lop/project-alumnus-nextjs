@@ -17,7 +17,7 @@ function MyApp({ Component, pageProps }) {
       </Head>
       <NavBar />
       <AnimatePresence exitBeforeEnter  >
-        <motion.div className='relative' key={router.route}>
+        <motion.div className='relative overflow-x-hidden' key={router.route}>
           <Component {...pageProps} />
         </motion.div>
       </AnimatePresence>

@@ -40,6 +40,7 @@ export const getStaticProps = async () => {
 }
 
 const Listing = ({ alumniList }) => {
+
     return (
         <>
 

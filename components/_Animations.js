@@ -140,7 +140,7 @@ export const _Transition_BottomMenu = {
 export const _Transition_Card = {
     initial: {
         opacity: 0,
-        scale: 0.9,
+        translateY: 50,
         transition: {
             duration: 0,
             ease: [0.2, 1, 0, 1]
@@ -148,21 +148,13 @@ export const _Transition_Card = {
     },
     animate: {
         opacity: 1,
-        scale: 1,
+        translateY: 0,
         transition: {
             duration: 0.75,
             ease: [0.2, 1, 0, 1],
             delay: 0.25
         }
     },
-    exit: {
-        opacity: 0,
-        scale: 1,
-        transition: {
-            duration: 0.25,
-            ease: [1, 0, 0.8, 0]
-        }
-    }
 }
 
 // blob transitions
