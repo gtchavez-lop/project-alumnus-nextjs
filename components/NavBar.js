@@ -42,11 +42,11 @@ const NavBar = e => {
                             </span>
                         </div>
                     </Link>
-                    <button
+                    <a
                         onClick={() => _toggleSideMenu(!_sideMenuOpen)}
                         className="btn btn-ghost btn-square lg:hidden">
                         {_sideMenuOpen ? <CgClose size={25} /> : <CgMenu size={25} />}
-                    </button>
+                    </a>
                 </div>
                 <div className="lg:hidden flex">
                     <Link href='/' scroll={false}>
@@ -55,24 +55,39 @@ const NavBar = e => {
                         </div>
                     </Link>
                 </div>
-                <div className="flex gap-2">
+                <div className="flex gap-2 items-center">
                     <div className="lg:flex items-center hidden gap-2">
                         <Link href='/events' scroll={false}>
-                            <button className="btn btn-ghost btn-sm gap-2 items-center"> <CgWebsite size={25} /> Events </button>
+                            <a className="btn btn-ghost gap-2 items-center"> <CgWebsite size={25} /> Events </a>
                         </Link>
                         <Link href='/listing' scroll={false}>
-                            <button className="btn btn-ghost btn-sm gap-2 items-center"> <CgUserList size={25} /> Alumni List </button>
+                            <a className="btn btn-ghost gap-2 items-center"> <CgUserList size={25} /> Alumni List </a>
                         </Link>
                     </div>
-                    <div className="divider divider-vertical mx-0 hidden lg:flex" />
-                    <button className="btn btn-ghost btn-sm btn-square hidden lg:flex"> <CgShoppingCart size={25} /> </button>
-                    <button
-                        data-toggle-theme="corporate,busness"
-                        className="btn btn-ghost btn-sm btn-square">
-                        <CgDarkMode size={25} />
-                    </button>
-                    <button
-                        className="btn btn-ghost btn-sm btn-square"> <CgProfile size={25} /> </button>
+                    <div className="flex items-center gap-3">
+                        <a className="btn btn-ghost btn-square hidden lg:flex"> <CgShoppingCart size={25} /> </a>
+
+                        <a
+                            data-toggle-theme="corporate,busness"
+                            className="btn btn-ghost btn-square">
+                            <CgDarkMode size={25} />
+                        </a>
+
+                        <div className="dropdown dropdown-end dropdown-hover items-center">
+                            <label tabIndex={0} className="btn btn-ghost btn-square"><CgProfile size={25} /></label>
+                            <ul className="p-2 menu dropdown-content bg-neutral text-neutral-content rounded w-max">
+                                <li><a className="text-right">Sign In</a></li>
+                                <li>
+                                    <Link href='/register' scroll={false} passHref>
+                                        <a className="text-right">Register an account</a>
+                                    </Link>
+                                </li>
+                            </ul>
+
+                        </div>
+
+                    </div>
+
                 </div>
 
             </div>

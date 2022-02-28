@@ -210,3 +210,29 @@ export const _Transition_Blob_Bottom = {
         }
     }
 }
+export const _Transition_Blob_Left = {
+    initial: {
+        clipPath: "circle(0% at 0% 50%)",
+        opacity: 0,
+        transition: {
+            duration: 0,
+            ease: [0.2, 1, 0, 1]
+        }
+    },
+    animate: {
+        clipPath: "circle(70% at 0% 50%)",
+        opacity: 0.5,
+        transition: {
+            duration: 0.75,
+            ease: [0.2, 1, 0, 1]
+        }
+    },
+    exit: {
+        clipPath: "circle(0% at 0% 50%)",
+        opacity: 0,
+        transition: {
+            duration: 0.25,
+            ease: [1, 0, 0.8, 0]
+        }
+    }
+}

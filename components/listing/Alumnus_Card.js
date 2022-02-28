@@ -17,11 +17,11 @@ const ProfilePopUp = ({ alumni, closeHandler }) => {
                 className="absolute w-full h-5/6 bg-base-200 bottom-0 left-0 p-5 lg:px-20 lg:py-5 overflow-y-auto">
                 <div className="flex items-center justify-end w-full left-0 px-5 lg:px-20 absolute">
                     {/* close button */}
-                    <button
+                    <div
                         onClick={closeHandler}
                         className="btn btn-secondary btn-square">
                         <CgClose className="h-6 w-6 text-white" />
-                    </button>
+                    </div>
                 </div>
                 <div className="flex flex-col lg:flex-row mb-16 justify-center">
                     {/* alumni photo */}
