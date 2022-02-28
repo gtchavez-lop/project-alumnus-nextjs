@@ -2,14 +2,11 @@ import { AnimatePresence } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useState } from "react"
-import { CgClose, CgDarkMode, CgMenu, CgProfile, CgShoppingCart, CgUserList, CgWebsite } from 'react-icons/cg'
+import { CgClose, CgDarkMode, CgMenu, CgMoon, CgProfile, CgShoppingCart, CgSun, CgUserList, CgWebsite } from 'react-icons/cg'
 import { themeChange } from "theme-change"
 import SideMenu from "./SideMenu"
 
 const NavBar = e => {
-
-
-
     const [_sideMenuOpen, _toggleSideMenu] = useState(false)
     const [_scrollY, _setScrollY] = useState(0)
 
@@ -58,20 +55,20 @@ const NavBar = e => {
                 <div className="flex gap-2 items-center">
                     <div className="lg:flex items-center hidden gap-2">
                         <Link href='/events' scroll={false}>
-                            <a className="btn btn-ghost gap-2 items-center"> <CgWebsite size={25} /> Events </a>
+                            <a className="btn btn-ghost gap-2 items-center font-bold">  Events </a>
                         </Link>
                         <Link href='/listing' scroll={false}>
-                            <a className="btn btn-ghost gap-2 items-center"> <CgUserList size={25} /> Alumni List </a>
+                            <a className="btn btn-ghost gap-2 items-center font-bold">  Alumni List </a>
                         </Link>
                     </div>
-                    <div className="flex items-center gap-3">
+                    <div className="divider divider-vertical mx-2" />
+                    <div className="flex items-center gap-1">
                         <a className="btn btn-ghost btn-square hidden lg:flex"> <CgShoppingCart size={25} /> </a>
-
-                        <a
-                            data-toggle-theme="corporate,busness"
-                            className="btn btn-ghost btn-square">
-                            <CgDarkMode size={25} />
-                        </a>
+                        <label className="btn btn-ghost btn-square swap swap-rotate place-items-center content-center">
+                            <input className=" " data-toggle-theme="corporate,business" type="checkbox" />
+                            <CgSun className="swap-on" size={25} />
+                            <CgMoon className="swap-off" size={25} />
+                        </label>
 
                         <div className="dropdown dropdown-end dropdown-hover items-center">
                             <label tabIndex={0} className="btn btn-ghost btn-square"><CgProfile size={25} /></label>
@@ -83,7 +80,6 @@ const NavBar = e => {
                                     </Link>
                                 </li>
                             </ul>
-
                         </div>
 
                     </div>

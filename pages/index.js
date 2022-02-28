@@ -2,8 +2,16 @@ import Head from 'next/head'
 import { motion } from 'framer-motion'
 import { _Transition_Page, _Transition_HeroPage } from '../components/_Animations'
 import Image from 'next/image'
+import Link from 'next/link'
+import { useEffect } from 'react'
 
 export default function Home() {
+
+  // scroll to top using useEffect
+  useEffect(() => {
+    window.scrollTo(0, 0)
+  }, [])
+
   return (
     <>
       <Head>
@@ -32,7 +40,9 @@ export default function Home() {
         <div className='flex px-10 flex-col text-center lg:text-left lg:max-w-md mt-7'>
           <p className=''>Graduating from the University doesn&#39;t end there. Find and invite people to see what&#39;s the life of the next generation</p>
 
-          <button className='btn btn-primary lg:w-max mt-5'>Apply for an Alumnus Account</button>
+          <Link href='/register' scroll={false} passHref>
+            <a className='btn btn-primary lg:w-max mt-5'>Apply for an Alumnus Account</a>
+          </Link>
         </div>
       </motion.section>
 

@@ -108,7 +108,6 @@ export const _Transition_HeroPage = {
     }
 }
 
-
 // bottom menu animation
 export const _Transition_BottomMenu = {
     initial: {
@@ -235,4 +234,25 @@ export const _Transition_Blob_Left = {
             ease: [1, 0, 0.8, 0]
         }
     }
+}
+
+// slide transitions
+export const _Transition_Slide_Left = {
+    initial: {
+        x: 100,
+        opacity: 0,
+        transition: {
+            duration: 0,
+            ease: [0.2, 1, 0, 1]
+        }
+    },
+    animate: {
+        x: 0,
+        opacity: 1,
+        transition: {
+            duration: 0.75,
+            ease: [0.2, 1, 0, 1],
+            delay: 0.25
+        }
+    },
 }

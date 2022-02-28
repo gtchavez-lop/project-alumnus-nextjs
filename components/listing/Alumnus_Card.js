@@ -15,80 +15,86 @@ const ProfilePopUp = ({ alumni, closeHandler }) => {
                 // variants={_Transition_BottomMenu} initial="initial" animate="animate" exit="exit"
                 layoutId={`${alumni.id}_layout`}
                 className="absolute w-full h-5/6 bg-base-200 bottom-0 left-0 p-5 lg:px-20 lg:py-5 overflow-y-auto">
-                <div className="flex items-center justify-end w-full left-0 px-5 lg:px-20 absolute">
+                <motion.div
+                    layoutId={`${alumni.id}_profile_button`}
+                    className="flex items-center justify-end w-full left-0 px-5 lg:px-20 absolute">
                     {/* close button */}
-                    <div
+                    <motion.div
                         onClick={closeHandler}
-                        className="btn btn-secondary btn-square">
+                        className="btn btn-primary btn-square">
                         <CgClose className="h-6 w-6 text-white" />
-                    </div>
-                </div>
-                <div className="flex flex-col lg:flex-row mb-16 justify-center">
+                    </motion.div>
+                </motion.div>
+                <motion.div className="flex flex-col lg:flex-row mb-16 justify-center">
                     {/* alumni photo */}
-                    <div className="w-full lg:w-1/2 h-40 lg:h-auto mt-10 lg:mt-0 flex flex-col gap-10 justify-center items-center">
+                    <motion.div className="w-full lg:w-1/2 h-40 lg:h-auto mt-10 lg:mt-0 flex flex-col gap-10 justify-center items-center">
                         {alumni.alumniDisplayPhoto ? (
-                            <div className="w-40 h-40 mask mask-squircle lg:mask-square ">
-                                <img className="lg:rounded" src={alumni.alumniDisplayPhoto.url} />
-                            </div>
+                            <motion.div
+                                layoutId={`${alumni.id}_photo_layout`}
+                                className="w-40 h-40 mask mask-squircle relative">
+                                <Image layout="fill" objectFit="cover" alt={alumni.surname} src={alumni.alumniDisplayPhoto.url} />
+                            </motion.div>
                         ) : (
-                            <div className="flex flex-col text-center items-center gap-5">
+                            <motion.div
+                                layoutId={`${alumni.id}_photo_layout_none`}
+                                className="flex flex-col text-center items-center gap-5">
                                 <CgUser className="h-16 w-16 text-white" />
-                                <p>Image Unavailable</p>
-                            </div>
+                                <motion.p>Image Unavailable</motion.p>
+                            </motion.div>
                         )}
-                        <div className="text-center lg:text-left">
-                            <motion.h1 className="text-2xl font-bold">{alumni.surname}, {alumni.givenName}</motion.h1>
-                            <p className="text-sm">{alumni.programCompleted} - Batch {dayjs(alumni.graduationDate).year()}</p>
-                        </div>
-                    </div>
+                        <motion.div className="text-center lg:text-left">
+                            <motion.h1 layoutId={`${alumni.id}_name_layout`} className="text-2xl font-bold">{alumni.surname}, {alumni.givenName}</motion.h1>
+                            <motion.p layoutId={`${alumni.id}_program_layout`} className="text-sm">{alumni.programCompleted} - Batch {dayjs(alumni.graduationDate).year()}</motion.p>
+                        </motion.div>
+                    </motion.div>
                     {/* alimni content */}
-                    <div className="flex flex-col mt-10 w-full">
+                    <motion.div className="flex flex-col mt-10 w-full">
                         {/* info */}
-                        <div className="flex flex-col lg:flex-row mt-7 gap-7 justify-around">
-                            <div className="flex flex-col gap-2 w-full">
-                                <p className="text-xl">Basic Information</p>
-                                <div className="bg-base-100 rounded p-5">
-                                    <h1 className="text-lg font-bold">Location</h1>
-                                    <p className="">{alumni.currentLocation}</p>
-                                </div>
-                                <div className="bg-base-100 rounded p-5">
-                                    <h1 className="text-lg font-bold">Current Email Address</h1>
-                                    <p className="">{alumni.currentEmail}</p>
-                                </div>
-                                <div className="bg-base-100 rounded p-5">
-                                    <h1 className="text-lg font-bold">Currently Working</h1>
-                                    <p className="">{alumni.isCurrentlyWorking ? "Yes" : "No"}</p>
-                                </div>
-                            </div>
+                        <motion.div className="flex flex-col lg:flex-row mt-7 gap-7 justify-around">
+                            <motion.div className="flex flex-col gap-2 w-full">
+                                <motion.p className="text-xl">Basic Information</motion.p>
+                                <motion.div className="bg-base-100 rounded p-5">
+                                    <motion.h1 className="text-lg font-bold">Location</motion.h1>
+                                    <motion.p className="">{alumni.currentLocation}</motion.p>
+                                </motion.div>
+                                <motion.div className="bg-base-100 rounded p-5">
+                                    <motion.h1 className="text-lg font-bold">Current Email Address</motion.h1>
+                                    <motion.p className="">{alumni.currentEmail}</motion.p>
+                                </motion.div>
+                                <motion.div className="bg-base-100 rounded p-5">
+                                    <motion.h1 className="text-lg font-bold">Currently Working</motion.h1>
+                                    <motion.p className="">{alumni.isCurrentlyWorking ? "Yes" : "No"}</motion.p>
+                                </motion.div>
+                            </motion.div>
 
-                            <div className="flex flex-col gap-2 w-full">
+                            <motion.div className="flex flex-col gap-2 w-full">
                                 {alumni.isCurrentlyWorking && (
                                     <>
-                                        <p className="text-xl">Work Information</p>
-                                        <div className="bg-base-100 rounded p-5">
-                                            <h1 className="text-lg font-bold">Current Work Company</h1>
-                                            <p className="">{alumni.company}</p>
-                                        </div>
-                                        <div className="bg-base-100 rounded p-5">
-                                            <h1 className="text-lg font-bold">Started From</h1>
-                                            <p className="">{alumni.startingWorkDate}</p>
-                                        </div>
+                                        <motion.p className="text-xl">Work Information</motion.p>
+                                        <motion.div className="bg-base-100 rounded p-5">
+                                            <motion.h1 className="text-lg font-bold">Current Work Company</motion.h1>
+                                            <motion.p className="">{alumni.company}</motion.p>
+                                        </motion.div>
+                                        <motion.div className="bg-base-100 rounded p-5">
+                                            <motion.h1 className="text-lg font-bold">Started From</motion.h1>
+                                            <motion.p className="">{alumni.startingWorkDate}</motion.p>
+                                        </motion.div>
                                         {alumni.endingWorkDate != null ? (
-                                            <div className="bg-base-100 rounded p-5">
-                                                <h1 className="text-lg font-bold">Ended To</h1>
-                                                <p className="">{alumni.endingWorkDate}</p>
-                                            </div>
+                                            <motion.div className="bg-base-100 rounded p-5">
+                                                <motion.h1 className="text-lg font-bold">Ended To</motion.h1>
+                                                <motion.p className="">{alumni.endingWorkDate}</motion.p>
+                                            </motion.div>
                                         ) : (
-                                            <div className="flex bg-base-100 rounded p-5 items-center">
-                                                <p className="">Currently working there</p>
-                                            </div>
+                                            <motion.div className="flex bg-base-100 rounded p-5 items-center">
+                                                <motion.p className="">Currently working there</motion.p>
+                                            </motion.div>
                                         )}
                                     </>
                                 )}
-                            </div>
-                        </div>
-                    </div>
-                </div>
+                            </motion.div>
+                        </motion.div>
+                    </motion.div>
+                </motion.div>
             </motion.div>
         </motion.div>
     )
@@ -111,34 +117,41 @@ const Alumnus_Card = ({ alumniData }) => {
                     variants={_Transition_Card}
                     layoutId={`${id}_layout`}
                     initial="initial" animate="animate" exit="exit"
-                    whileHover={{ translateY: -5 }}
-                    key={id} className="card card-bordered shadow border-2 border-base-content bg-base-200 select-none">
-                    <div className="card-body p-4   ">
-                        <div className="flex items-center">
-                            {alumniDisplayPhoto && (
-                                <div className="w-10 h-10 mr-2 mask mask-circle">
-                                    <img src={alumniDisplayPhoto.url} />
-                                    {/* <Image src={alumniDisplayPhoto.url} alt={`${surname}_${givenName}_photo`} layout="fill" /> */}
-                                </div>
+                    whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
+                    key={id} className="card shadow bg-base-300 select-none">
+                    <motion.div className="card-body p-4   ">
+                        <motion.div className="flex items-center">
+                            {alumniDisplayPhoto ? (
+                                <motion.div
+                                    layoutId={`${id}_photo_layout`} className="w-10 h-10 mr-2 mask mask-circle relative">
+                                    <Image layout="fill" objectFit="cover" src={alumniDisplayPhoto.url} alt={`${surname}_${givenName}_photo`} />
+                                </motion.div>
+                            ) : (
+                                <motion.div
+                                    layoutId={`${id}_photo_layout_none`} className="w-10 h-10 mr-2 mask mask-circle relative">
+                                    <CgUser className="h-10 w-10 text-white" />
+                                </motion.div>
                             )}
-                            <h2 className="text-xl flex items-center font-bold mb-0">
+                            <motion.h2 layoutId={`${id}_name_layout`} className="text-xl flex items-center font-bold mb-0">
                                 {surname}, {givenName}
-                            </h2>
-                        </div>
-                        <p className="text-sm">{programCompleted}</p>
-                        <p className="text-sm mt-2">
-                            <span className="text-slate-500">Graduated since: </span>
+                            </motion.h2>
+                        </motion.div>
+                        <motion.p layoutId={`${id}_program_layout`} className="text-sm">{programCompleted}</motion.p>
+                        <motion.p className="text-sm mt-2">
+                            <motion.span className="text-slate-500">Graduated since: </motion.span>
                             {dayjs(graduationDate).format("MMMM D, YYYY")}
-                        </p>
-                        <div className="card-actions justify-end mt-7">
-                            <button
+                        </motion.p>
+                        <motion.div
+                            layoutId={`${id}_profile_button`}
+                            className="card-actions justify-end mt-7">
+                            <motion.div
                                 onClick={() => setShowProfile(true)}
                                 className="btn btn-sm btn-primary">
                                 <CgUserList size={25} />
                                 <span className="ml-3">View Profile</span>
-                            </button>
-                        </div>
-                    </div>
+                            </motion.div>
+                        </motion.div>
+                    </motion.div>
                 </motion.div>
             </AnimateSharedLayout>
         </>
