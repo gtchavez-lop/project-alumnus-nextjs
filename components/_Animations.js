@@ -251,8 +251,15 @@ export const _Transition_Slide_Left = {
         opacity: 1,
         transition: {
             duration: 0.75,
-            ease: [0.2, 1, 0, 1],
-            delay: 0.25
+            ease: [0.2, 1, 0, 1]
+        }
+    },
+    exit: {
+        x: -100,
+        opacity: 0,
+        transition: {
+            duration: 0.75,
+            ease: [0.2, 1, 0, 1]
         }
     },
 }

@@ -64,13 +64,17 @@ const Events = ({ Table_Events }) => {
                         News and Events
                     </h1>
                     {/* description */}
-                    <p className="text-center text-xl mt-12">
+                    <p className="text-center text-xl mt-5">
                         See what is happening in the University of Caloocan City.
 
                     </p>
 
                     {/* scrolldown */}
-                    <p className="absolute bottom-10 select-none text-base-content text-opacity-50">Scroll Down to see more</p>
+                    <motion.p
+                        variants={_Transition_Card}
+                        initial="initial" animate="animate" exit="exit"
+                        className="absolute bottom-10 select-none text-base-content text-opacity-50">Scroll down to see the events</motion.p>
+
                 </section>
 
                 {/* events content */}
