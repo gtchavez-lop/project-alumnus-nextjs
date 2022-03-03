@@ -17,17 +17,19 @@ const Listing = ({ }) => {
     const [isSearching, setIsSearching] = useState(false)
     const [searchQuery, setSearchQuery] = useState("")
     const [filteredAlumniList, setFilteredAlumniList] = useState([])
-    const [sortedBy, setSortedBy] = useState("")
+    const [orderBy, setOrderBy] = useState("createdAt")
+    const [orderDirection, setOrderDirection] = useState("ASC")
     const [_alumniList, _setAlumniList] = useState([]);
     const [user, loading, error] = useAuthState(getAuth(firebaseApp));
 
+    // fetch alumni list on page load
     useEffect(() => {
         try {
             if (user) {
                 apolloClient.query({
                     query: gql`
                         query {
-                            alumniLists {
+                            alumniLists (where: {currentEmail_not: "${user.email}"}, orderBy: ${orderBy}_${orderDirection}) {
                                 id
                                 surname
                                 givenName
@@ -48,144 +50,202 @@ const Listing = ({ }) => {
             }
         }
         catch (error) {
-            console.log(error instanceof Error)
+            console.log(error)
         }
 
     }, [user])
 
-    // search alumni
+    // fetch alumni list on search
     useEffect(() => {
-        if (searchQuery.length > 0) {
-            setIsSearching(true)
-            const filteredAlumni = _alumniList.filter(alumni => {
-                return alumni.surname.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    alumni.givenName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    alumni.currentEmail.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    alumni.currentLocation.toLowerCase().includes(searchQuery.toLowerCase()) // ||
-                // alumni.company.toLowerCase().includes(searchQuery.toLowerCase())
-            })
-            // sort using switch case
-            switch (sortedBy) {
-                case "surname":
-                    filteredAlumni.sort((a, b) => {
-                        if (a.surname < b.surname) return -1
-                        if (a.surname > b.surname) return 1
-                        return 0
+        if (user) {
+            try {
+                if (searchQuery.length > 0) {
+                    apolloClient.query({
+                        query: gql`
+                        query {
+                            alumniLists (
+                                where: {
+                                    currentEmail_not: "${user.email}",
+                                    OR: [
+                                        {surname_contains: "${searchQuery}"},
+                                        {givenName_contains: "${searchQuery}"},
+                                    ]
+                                }, 
+                                orderBy: ${orderBy}_${orderDirection}) {
+                                    id
+                                    surname
+                                    givenName
+                                    slug
+                                    alumniDisplayPhoto {url}
+                                    currentEmail
+                                    currentLocation
+                                    programCompleted
+                                    graduationDate
+                                    isCurrentlyWorking
+                                    company
+                                }
+                            }
+                        `
+                    }).then(res => {
+                        _setAlumniList(res.data.alumniLists)
                     })
-                    break;
-                case "givenName":
-                    filteredAlumni.sort((a, b) => {
-                        if (a.givenName < b.givenName) return -1
-                        if (a.givenName > b.givenName) return 1
-                        return 0
+                } else {
+                    apolloClient.query({
+                        query: gql`
+                        query {
+                            alumniLists (where: {currentEmail_not: "${user.email}"}, orderBy: ${orderBy}_${orderDirection}) {
+                                id
+                                surname
+                                givenName
+                                slug
+                                alumniDisplayPhoto {url}
+                                currentEmail
+                                currentLocation
+                                programCompleted
+                                graduationDate
+                                isCurrentlyWorking
+                                company
+                            }
+                        }
+                    `
+                    }).then(res => {
+                        _setAlumniList(res.data.alumniLists)
                     })
-                    break;
-                case "email":
-                    filteredAlumni.sort((a, b) => {
-                        if (a.currentEmail < b.currentEmail) return -1
-                        if (a.currentEmail > b.currentEmail) return 1
-                        return 0
-                    })
-                    break;
-                case "location":
-                    filteredAlumni.sort((a, b) => {
-                        if (a.currentLocation < b.currentLocation) return -1
-                        if (a.currentLocation > b.currentLocation) return 1
-                        return 0
-                    })
-                    break;
-                case "company":
-                    filteredAlumni.sort((a, b) => {
-                        if (a.company < b.company) return -1
-                        if (a.company > b.company) return 1
-                        return 0
-                    })
-                    break;
-                // default sort by createdAt
-                default:
-                    filteredAlumni.sort((a, b) => {
-                        if (a.createdAt < b.createdAt) return -1
-                        if (a.createdAt > b.createdAt) return 1
-                        return 0
-                    })
-                    break;
+                }
             }
-
-            setFilteredAlumniList(filteredAlumni)
-        } else {
-            setIsSearching(false)
-            setFilteredAlumniList([])
-            // sort using switch case
+            catch (error) {
+                console.log(error)
+            }
         }
     }, [searchQuery])
 
-    // manually sort alumni
-    const sortAlumni = (sortBy) => {
-        setSortedBy(sortBy)
-
-        if (sortedBy.length > 0) {
-            const filteredAlumni = _alumniList.filter(alumni => {
-                return alumni.surname.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    alumni.givenName.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    alumni.currentEmail.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                    alumni.currentLocation.toLowerCase().includes(searchQuery.toLowerCase()) // ||
-                // alumni.company.toLowerCase().includes(searchQuery.toLowerCase())
-            })
-            // set searching to true
-            setIsSearching(true)
-            // sort using switch case
-            switch (sortedBy) {
-                case "surname":
-                    _alumniList.sort((a, b) => {
-                        if (a.surname < b.surname) return -1
-                        if (a.surname > b.surname) return 1
-                        return 0
+    // fetch alumni list on sort
+    useEffect(() => {
+        if (user) {
+            try {
+                if (searchQuery.length > 0) {
+                    apolloClient.query({
+                        query: gql`
+                        query {
+                            alumniLists (
+                                where: {
+                                    currentEmail_not: "${user.email}",
+                                    OR: [
+                                        {surname_contains: "${searchQuery}"},
+                                        {givenName_contains: "${searchQuery}"},
+                                    ]
+                                }, 
+                                orderBy: ${orderBy}_${orderDirection}) {
+                                    id
+                                    surname
+                                    givenName
+                                    slug
+                                    alumniDisplayPhoto {url}
+                                    currentEmail
+                                    currentLocation
+                                    programCompleted
+                                    graduationDate
+                                    isCurrentlyWorking
+                                    company
+                                }
+                            }
+                        `
+                    }).then(res => {
+                        _setAlumniList(res.data.alumniLists)
                     })
-                    break;
-                case "givenName":
-                    _alumniList.sort((a, b) => {
-                        if (a.givenName < b.givenName) return -1
-                        if (a.givenName > b.givenName) return 1
-                        return 0
+                } else {
+                    apolloClient.query({
+                        query: gql`
+                        query {
+                            alumniLists (where: {currentEmail_not: "${user.email}"}, orderBy: ${orderBy}_${orderDirection}) {
+                                id
+                                surname
+                                givenName
+                                slug
+                                alumniDisplayPhoto {url}
+                                currentEmail
+                                currentLocation
+                                programCompleted
+                                graduationDate
+                                isCurrentlyWorking
+                                company
+                            }
+                        }
+                    `
+                    }).then(res => {
+                        _setAlumniList(res.data.alumniLists)
                     })
-                    break;
-                case "email":
-                    _alumniList.sort((a, b) => {
-                        if (a.currentEmail < b.currentEmail) return -1
-                        if (a.currentEmail > b.currentEmail) return 1
-                        return 0
-                    })
-                    break;
-                case "location":
-                    _alumniList.sort((a, b) => {
-                        if (a.currentLocation < b.currentLocation) return -1
-                        if (a.currentLocation > b.currentLocation) return 1
-                        return 0
-                    })
-                    break;
-                case "company":
-                    _alumniList.sort((a, b) => {
-                        if (a.company < b.company) return -1
-                        if (a.company > b.company) return 1
-                        return 0
-                    })
-                    break;
-                // default sort by createdAt
-                default:
-                    _alumniList.sort((a, b) => {
-                        if (a.createdAt < b.createdAt) return -1
-                        if (a.createdAt > b.createdAt) return 1
-                        return 0
-                    })
-                    break;
+                }
             }
-
-            setFilteredAlumniList(filteredAlumni)
-        } else {
-            setIsSearching(false)
-            setFilteredAlumniList([])
+            catch (error) {
+                console.log(error)
+            }
         }
-    }
+    }, [orderBy])
+
+    // fetch alumni list on change of order direction
+    useEffect(() => {
+        if (user) {
+            try {
+                if (searchQuery.length > 0) {
+                    apolloClient.query({
+                        query: gql`
+                        query {
+                            alumniLists (
+                                where: {
+                                    currentEmail_not: "${user.email}",
+                                    OR: [
+                                        {surname_contains: "${searchQuery}"},
+                                        {givenName_contains: "${searchQuery}"},
+                                    ]
+                                }, 
+                                orderBy: ${orderBy}_${orderDirection}) {
+                                    id
+                                    surname
+                                    givenName
+                                    slug
+                                    alumniDisplayPhoto {url}
+                                    currentEmail
+                                    currentLocation
+                                    programCompleted
+                                    graduationDate
+                                    isCurrentlyWorking
+                                    company
+                                }
+                            }
+                        `
+                    }).then(res => {
+                        _setAlumniList(res.data.alumniLists)
+                    })
+                } else {
+                    apolloClient.query({
+                        query: gql`
+                        query {
+                            alumniLists (where: {currentEmail_not: "${user.email}"}, orderBy: ${orderBy}_${orderDirection}) {
+                                id
+                                surname
+                                givenName
+                                slug
+                                alumniDisplayPhoto {url}
+                                currentEmail
+                                currentLocation
+                                programCompleted
+                                graduationDate
+                                isCurrentlyWorking
+                                company
+                            }
+                        }
+                    `
+                    }).then(res => {
+                        _setAlumniList(res.data.alumniLists)
+                    })
+                }
+            }
+            catch (error) {
+                console.log(error)
+            }
+        }
+    }, [orderDirection])
 
     return (
         <>
@@ -242,40 +302,74 @@ const Listing = ({ }) => {
                     <section className="min-h-screen flex flex-col pt-28 mb-36">
                         <h1 className="text-4xl font-bold text-center">Alumnus List</h1>
 
-                        <div className="grid grid-cols-1 md:grid-cols-2 2xl:grid-cols-3 my-10 gap-5">
-                            <div className="form-control">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 my-10 gap-5">
+                            {/* <div className="form-control">
                                 <label className="label">
                                     <span className="label-text">Search an Alumnus</span>
                                 </label>
                                 <div className="flex space-x-2">
                                     <input onChange={e => setSearchQuery(e.target.value)} type="text" placeholder="Find someone here. Just type and it will appear" className="w-full input input-base-100 input-bordered" />
                                 </div>
+                            </div> */}
+                            <div className="flex flex-col">
+                                <label className="label">
+                                    <span className="label-text">Search an Alumnus</span>
+                                </label>
+                                <div className="input-group">
+                                    <input onChange={e => setSearchQuery(e.target.value)} type="text" placeholder="Find someone here. Just type and it will appear" className="w-full input input-base-100 input-bordered " />
+                                </div>
+                                <div className="self-end">
+                                    <select onChange={
+                                        e => {
+                                            setOrderBy(e.target.value);
+                                        }
+                                    } className="select select-bordered lg:hidden input-sm md:input-md">
+                                        <option disabled defaultValue="createdAt">Select Category</option>
+                                        <option value="createdAt">Date Added</option>
+                                        <option value="surname">Surname</option>
+                                        <option value="givenName">Given Name</option>
+                                        <option value="currentEmail">Email</option>
+                                    </select>
+                                    <select onChange={
+                                        e => {
+                                            setOrderDirection(e.target.value);
+                                        }
+                                    } className="select select-bordered lg:hidden input-sm md:input-md">
+                                        <option disabled defaultValue="ASC">Select Order </option>
+                                        <option value="ASC">Ascending</option>
+                                        <option value="DESC">Descending</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div className="flex w-full justify-end gap-5">
+                            <div className="w-full justify-end gap-5 hidden lg:flex">
                                 <div className="form-control">
                                     <label className="label">
                                         <span className="label-text">Sort By</span>
                                     </label>
                                     <select onChange={
                                         e => {
-                                            sortAlumni(e.target.value);
+                                            setOrderBy(e.target.value);
                                         }
-                                    } className="select select-bordered">
+                                    } className="select select-bordered select-sm lg:select-md">
                                         <option disabled defaultValue="createdAt">Select Category</option>
                                         <option value="createdAt">Date Added</option>
                                         <option value="surname">Surname</option>
                                         <option value="givenName">Given Name</option>
-                                        <option value="email">Email</option>
+                                        <option value="currentEmail">Email</option>
                                     </select>
                                 </div>
                                 <div className="form-control">
                                     <label className="label">
                                         <span className="label-text">Order By</span>
                                     </label>
-                                    <select className="select select-bordered select-disabled">
-                                        <option disabled defaultValue="asc">Select Order (unavailable)</option>
-                                        <option>Ascending</option>
-                                        <option>Descending</option>
+                                    <select onChange={
+                                        e => {
+                                            setOrderDirection(e.target.value);
+                                        }
+                                    } className="select select-bordered select-sm lg:select-md">
+                                        <option disabled defaultValue="ASC">Select Order </option>
+                                        <option value="ASC">Ascending</option>
+                                        <option value="DESC">Descending</option>
                                     </select>
                                 </div>
                             </div>
@@ -296,7 +390,7 @@ const Listing = ({ }) => {
                             </AnimatePresence>
                         </motion.div>
                         <AnimatePresence>
-                            {(filteredAlumniList.length < 1 && searchQuery.length > 0) && (
+                            {(_alumniList.length < 1 && searchQuery.length > 0) && (
                                 <>
                                     <motion.div
                                         layout>

@@ -29,10 +29,11 @@ const ProfilePopUp = ({ alumni, closeHandler }) => {
                     {/* alumni photo */}
                     <motion.div className="w-full lg:w-1/2 h-40 lg:h-auto mt-10 lg:mt-0 flex flex-col gap-10 justify-center items-center">
                         {alumni.alumniDisplayPhoto ? (
-                            <motion.div
-                                layoutId={`${alumni.id}_photo_layout`}
-                                className="w-40 h-40 mask mask-squircle relative">
-                                <Image layout="fill" objectFit="cover" alt={alumni.surname} src={alumni.alumniDisplayPhoto.url} />
+                            <motion.div layoutId={`${alumni.id}_photo_layout`} className="w-40 h-40 mask mask-squircle">
+                                <motion.div
+                                    className="relative w-40 h-40">
+                                    <Image layout="fill" objectFit="cover" alt={alumni.surname} src={alumni.alumniDisplayPhoto.url} />
+                                </motion.div>
                             </motion.div>
                         ) : (
                             <motion.div
@@ -120,7 +121,7 @@ const Alumnus_Card = ({ alumniData }) => {
                     whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
                     key={id} className="card shadow bg-base-300 select-none">
                     <motion.div className="card-body p-4   ">
-                        <motion.div className="flex items-center">
+                        <motion.div className="flex items-center relative">
                             {alumniDisplayPhoto ? (
                                 <motion.div
                                     layoutId={`${id}_photo_layout`} className="w-10 h-10 mr-2 mask mask-circle relative">

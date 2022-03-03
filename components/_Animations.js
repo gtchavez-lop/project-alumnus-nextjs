@@ -24,7 +24,7 @@ export const _Transition_SideMenu_Overlay = {
 }
 export const _Transition_SideMenu_Content = {
     initial: {
-        x: '-100vw',
+        x: -50,
         transition: {
             duration: 0,
             ease: [0.2, 1, 0, 1]
@@ -38,7 +38,7 @@ export const _Transition_SideMenu_Content = {
         }
     },
     exit: {
-        x: '-100vw',
+        x: -50,
         transition: {
             duration: 0.25,
             ease: [1, 0, 0.8, 0]
@@ -228,6 +228,32 @@ export const _Transition_Blob_Left = {
     },
     exit: {
         clipPath: "circle(0% at 0% 50%)",
+        opacity: 0,
+        transition: {
+            duration: 0.25,
+            ease: [1, 0, 0.8, 0]
+        }
+    }
+}
+export const _Transition_Blob_Profile = {
+    initial: {
+        clipPath: "circle(0% at 100% 50%)",
+        opacity: 0,
+        transition: {
+            duration: 0,
+            ease: [0.2, 1, 0, 1]
+        }
+    },
+    animate: {
+        clipPath: "circle(70% at 100% 50%)",
+        opacity: 0.5,
+        transition: {
+            duration: 0.75,
+            ease: [0.2, 1, 0, 1]
+        }
+    },
+    exit: {
+        clipPath: "circle(0% at 100% 50%)",
         opacity: 0,
         transition: {
             duration: 0.25,

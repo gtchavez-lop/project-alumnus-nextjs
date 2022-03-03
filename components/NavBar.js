@@ -33,6 +33,7 @@ const NavBar = e => {
     const [_userEmail, _setUserEmail] = useState('')
     const [_userPassword, _setUserPassword] = useState('')
     const [_userData, _setUserData] = useState({})
+    const [_showError, _setShowError] = useState(false)
 
     useEffect(() => {
         if (getUser) {
@@ -53,6 +54,14 @@ const NavBar = e => {
                 })
             }
         }
+
+        if (error) {
+            console.log(error)
+            _setShowError(true)
+            setTimeout(() => {
+                _setShowError(false)
+            }, 1000);
+        }
     }, [getUser])
 
     const _signInUser = async e => {
@@ -71,7 +80,6 @@ const NavBar = e => {
             const { data } = await apolloClient.query({
                 query: getUserQuery,
             })
-            console.log(data)
         }
         _setUserEmail('')
         _setUserPassword('')
@@ -84,6 +92,10 @@ const NavBar = e => {
 
     return (
         <>
+            {/* alert */}
+            {_showError && <div className="absolute bottom right-0 w-1/2 lg:w-1/4 alert alert-danger">
+                <strong>Error!</strong>
+            </div>}
             {/* sidemenu */}
             <AnimatePresence exitBeforeEnter>
                 {_sideMenuOpen && (
@@ -101,11 +113,12 @@ const NavBar = e => {
                             </span>
                         </div>
                     </Link>
-                    <a
-                        onClick={() => _toggleSideMenu(!_sideMenuOpen)}
-                        className="btn btn-ghost btn-square lg:hidden">
-                        {_sideMenuOpen ? <CgClose size={25} /> : <CgMenu size={25} />}
-                    </a>
+
+                    <label className="lg:hidden btn btn-ghost btn-square swap swap-rotate place-items-center content-center">
+                        <input checked={_sideMenuOpen} onChange={e => _toggleSideMenu(e.target.checked)} type="checkbox" />
+                        <CgClose className="swap-on" size={25} />
+                        <CgMenu className="swap-off" size={25} />
+                    </label>
                 </div>
                 <div className="lg:hidden flex">
                     <Link href='/' scroll={false}>
@@ -164,6 +177,11 @@ const NavBar = e => {
                                 {(getUser && !loading) && (
                                     <>
                                         <li>
+                                            <Link href='/profile' scroll={false} passHref>
+                                                <a className="text-right">Your Profile</a>
+                                            </Link>
+                                        </li>
+                                        <li>
                                             <label htmlFor="SignOut_PopupWindow" className="modal-button">Sign Out</label>
                                         </li>
                                     </>
@@ -175,6 +193,7 @@ const NavBar = e => {
 
                 </div>
 
+                {/* sign in window */}
                 <input type="checkbox" id="SignIn_PopupWindow" className="modal-toggle" />
                 <div className="modal bg-base-200 bg-opacity-80">
                     <div className="modal-box">
@@ -190,6 +209,13 @@ const NavBar = e => {
                                 <input type="password" value={_userPassword} onChange={e => _setUserPassword(e.target.value)} placeholder="••••••••" className="input input-bordered input-primary" />
                             </label>
                         </div>
+
+                        {/* error alert */}
+                        {error && (
+                            <div className="alert alert-danger">
+                                {error}
+                            </div>
+                        )}
 
                         <div className="modal-action justify-between">
                             <label htmlFor="SignIn_PopupWindow" className="btn btn-ghost">Close</label>

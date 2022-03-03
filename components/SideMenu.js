@@ -7,6 +7,7 @@ const SideMenu = ({ toggleSideMenu }) => {
         <>
             {/* overlay */}
             <motion.div
+                onClick={(e) => { toggleSideMenu(); }}
                 variants={_Transition_SideMenu_Overlay}
                 initial="initial" animate="animate" exit="exit"
                 className="fixed w-full h-full top-0 left-0 bg-base-300 bg-opacity-50 z-40 lg:hidden">
@@ -17,13 +18,13 @@ const SideMenu = ({ toggleSideMenu }) => {
                     className="absolute top-0 left-0 w-3/4 md:w-1/2 h-full bg-base-300 flex flex-col justify-center overflow-hidden shadow-md">
                     <div className="flex flex-col gap-1">
                         <Link href='/' scroll={false} >
-                            <button onClick={() => toggleSideMenu()} className="btn btn-ghost rounded-none">Home</button>
+                            <button className="btn btn-ghost rounded-none">Home</button>
                         </Link>
                         <Link href='/listing' scroll={false} >
-                            <button onClick={() => toggleSideMenu()} className="btn btn-ghost rounded-none">Listing</button>
+                            <button className="btn btn-ghost rounded-none">Listing</button>
                         </Link>
                         <Link href='/events' scroll={false} >
-                            <button onClick={() => toggleSideMenu()} className="btn btn-ghost rounded-none">News &#x26; Events</button>
+                            <button className="btn btn-ghost rounded-none">News &#x26; Events</button>
                         </Link>
                         <button className="btn btn-ghost rounded-none">Merchandise</button>
                         <div className="divider" />
