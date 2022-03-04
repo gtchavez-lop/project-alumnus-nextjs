@@ -268,7 +268,7 @@ const Listing = ({ }) => {
                                         layout>
                                         <p className="text-2xl text-center">Seems like that person does not exist in our database.</p>
                                         <p className="text-lg text-center text-gray-500 mt-2">
-                                            If you're looking for yourself.
+                                            If you&apos;re looking for yourself.
                                             <Link href="/profile" scroll>
                                                 <span className="ml-2 link">Go here</span>
                                             </Link>
