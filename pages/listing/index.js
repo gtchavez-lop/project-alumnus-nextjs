@@ -1,6 +1,7 @@
 import Head from "next/head"
+import Link from "next/link"
 import { motion, AnimatePresence } from "framer-motion"
-import { useEffect, useState } from "react"
+import { useEffect, useRef, useState } from "react"
 import { _Transition_Blob_Bottom, _Transition_Blob_Top, _Transition_Card, _Transition_Page } from "../../components/_Animations"
 import { CgDanger } from "react-icons/cg"
 
@@ -18,9 +19,14 @@ const Listing = ({ }) => {
     const [searchQuery, setSearchQuery] = useState("")
     const [filteredAlumniList, setFilteredAlumniList] = useState([])
     const [orderBy, setOrderBy] = useState("createdAt")
-    const [orderDirection, setOrderDirection] = useState("ASC")
     const [_alumniList, _setAlumniList] = useState([]);
     const [user, loading, error] = useAuthState(getAuth(firebaseApp));
+    const _alumniList_Ref = useRef()
+    const [_searchAndFilterState, set_searchAndFilterState] = useState({
+        searchQuery: "",
+        orderBy: "createdAt",
+        orderDirection: "ASC"
+    })
 
     // fetch alumni list on page load
     useEffect(() => {
@@ -46,6 +52,7 @@ const Listing = ({ }) => {
                     `
                 }).then(res => {
                     _setAlumniList(res.data.alumniLists)
+                    _alumniList_Ref.current = res.data.alumniLists
                 })
             }
         }
@@ -59,7 +66,8 @@ const Listing = ({ }) => {
     useEffect(() => {
         if (user) {
             try {
-                if (searchQuery.length > 0) {
+                console.log(_searchAndFilterState)
+                if (_searchAndFilterState) {
                     apolloClient.query({
                         query: gql`
                         query {
@@ -67,11 +75,11 @@ const Listing = ({ }) => {
                                 where: {
                                     currentEmail_not: "${user.email}",
                                     OR: [
-                                        {surname_contains: "${searchQuery}"},
-                                        {givenName_contains: "${searchQuery}"},
+                                        {surname_contains: "${_searchAndFilterState.searchQuery}"},
+                                        {givenName_contains: "${_searchAndFilterState.searchQuery}"},
                                     ]
                                 }, 
-                                orderBy: ${orderBy}_${orderDirection}) {
+                                orderBy: ${_searchAndFilterState.orderBy}_${_searchAndFilterState.orderDirection}) {
                                     id
                                     surname
                                     givenName
@@ -90,162 +98,14 @@ const Listing = ({ }) => {
                         _setAlumniList(res.data.alumniLists)
                     })
                 } else {
-                    apolloClient.query({
-                        query: gql`
-                        query {
-                            alumniLists (where: {currentEmail_not: "${user.email}"}, orderBy: ${orderBy}_${orderDirection}) {
-                                id
-                                surname
-                                givenName
-                                slug
-                                alumniDisplayPhoto {url}
-                                currentEmail
-                                currentLocation
-                                programCompleted
-                                graduationDate
-                                isCurrentlyWorking
-                                company
-                            }
-                        }
-                    `
-                    }).then(res => {
-                        _setAlumniList(res.data.alumniLists)
-                    })
+                    _setAlumniList(_alumniList_Ref.current)
                 }
             }
             catch (error) {
                 console.log(error)
             }
         }
-    }, [searchQuery])
-
-    // fetch alumni list on sort
-    useEffect(() => {
-        if (user) {
-            try {
-                if (searchQuery.length > 0) {
-                    apolloClient.query({
-                        query: gql`
-                        query {
-                            alumniLists (
-                                where: {
-                                    currentEmail_not: "${user.email}",
-                                    OR: [
-                                        {surname_contains: "${searchQuery}"},
-                                        {givenName_contains: "${searchQuery}"},
-                                    ]
-                                }, 
-                                orderBy: ${orderBy}_${orderDirection}) {
-                                    id
-                                    surname
-                                    givenName
-                                    slug
-                                    alumniDisplayPhoto {url}
-                                    currentEmail
-                                    currentLocation
-                                    programCompleted
-                                    graduationDate
-                                    isCurrentlyWorking
-                                    company
-                                }
-                            }
-                        `
-                    }).then(res => {
-                        _setAlumniList(res.data.alumniLists)
-                    })
-                } else {
-                    apolloClient.query({
-                        query: gql`
-                        query {
-                            alumniLists (where: {currentEmail_not: "${user.email}"}, orderBy: ${orderBy}_${orderDirection}) {
-                                id
-                                surname
-                                givenName
-                                slug
-                                alumniDisplayPhoto {url}
-                                currentEmail
-                                currentLocation
-                                programCompleted
-                                graduationDate
-                                isCurrentlyWorking
-                                company
-                            }
-                        }
-                    `
-                    }).then(res => {
-                        _setAlumniList(res.data.alumniLists)
-                    })
-                }
-            }
-            catch (error) {
-                console.log(error)
-            }
-        }
-    }, [orderBy])
-
-    // fetch alumni list on change of order direction
-    useEffect(() => {
-        if (user) {
-            try {
-                if (searchQuery.length > 0) {
-                    apolloClient.query({
-                        query: gql`
-                        query {
-                            alumniLists (
-                                where: {
-                                    currentEmail_not: "${user.email}",
-                                    OR: [
-                                        {surname_contains: "${searchQuery}"},
-                                        {givenName_contains: "${searchQuery}"},
-                                    ]
-                                }, 
-                                orderBy: ${orderBy}_${orderDirection}) {
-                                    id
-                                    surname
-                                    givenName
-                                    slug
-                                    alumniDisplayPhoto {url}
-                                    currentEmail
-                                    currentLocation
-                                    programCompleted
-                                    graduationDate
-                                    isCurrentlyWorking
-                                    company
-                                }
-                            }
-                        `
-                    }).then(res => {
-                        _setAlumniList(res.data.alumniLists)
-                    })
-                } else {
-                    apolloClient.query({
-                        query: gql`
-                        query {
-                            alumniLists (where: {currentEmail_not: "${user.email}"}, orderBy: ${orderBy}_${orderDirection}) {
-                                id
-                                surname
-                                givenName
-                                slug
-                                alumniDisplayPhoto {url}
-                                currentEmail
-                                currentLocation
-                                programCompleted
-                                graduationDate
-                                isCurrentlyWorking
-                                company
-                            }
-                        }
-                    `
-                    }).then(res => {
-                        _setAlumniList(res.data.alumniLists)
-                    })
-                }
-            }
-            catch (error) {
-                console.log(error)
-            }
-        }
-    }, [orderDirection])
+    }, [_searchAndFilterState])
 
     return (
         <>
@@ -316,12 +176,20 @@ const Listing = ({ }) => {
                                     <span className="label-text">Search an Alumnus</span>
                                 </label>
                                 <div className="input-group">
-                                    <input onChange={e => setSearchQuery(e.target.value)} type="text" placeholder="Find someone here. Just type and it will appear" className="w-full input input-base-100 input-bordered " />
+                                    <input onChange={e => {
+                                        set_searchAndFilterState({
+                                            ..._searchAndFilterState,
+                                            searchQuery: e.target.value
+                                        })
+                                    }} type="text" placeholder="Find someone here. Just type and it will appear" className="w-full input input-base-100 input-bordered " />
                                 </div>
                                 <div className="self-end">
                                     <select onChange={
                                         e => {
-                                            setOrderBy(e.target.value);
+                                            set_searchAndFilterState({
+                                                ..._searchAndFilterState,
+                                                orderBy: e.target.value
+                                            })
                                         }
                                     } className="select select-bordered lg:hidden input-sm md:input-md">
                                         <option disabled defaultValue="createdAt">Select Category</option>
@@ -332,7 +200,10 @@ const Listing = ({ }) => {
                                     </select>
                                     <select onChange={
                                         e => {
-                                            setOrderDirection(e.target.value);
+                                            set_searchAndFilterState({
+                                                ..._searchAndFilterState,
+                                                orderDirection: e.target.value
+                                            })
                                         }
                                     } className="select select-bordered lg:hidden input-sm md:input-md">
                                         <option disabled defaultValue="ASC">Select Order </option>
@@ -348,7 +219,10 @@ const Listing = ({ }) => {
                                     </label>
                                     <select onChange={
                                         e => {
-                                            setOrderBy(e.target.value);
+                                            set_searchAndFilterState({
+                                                ..._searchAndFilterState,
+                                                orderBy: e.target.value
+                                            })
                                         }
                                     } className="select select-bordered select-sm lg:select-md">
                                         <option disabled defaultValue="createdAt">Select Category</option>
@@ -364,7 +238,10 @@ const Listing = ({ }) => {
                                     </label>
                                     <select onChange={
                                         e => {
-                                            setOrderDirection(e.target.value);
+                                            set_searchAndFilterState({
+                                                ..._searchAndFilterState,
+                                                orderDirection: e.target.value
+                                            })
                                         }
                                     } className="select select-bordered select-sm lg:select-md">
                                         <option disabled defaultValue="ASC">Select Order </option>
@@ -378,23 +255,24 @@ const Listing = ({ }) => {
 
 
                         <motion.div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                            <AnimatePresence>
-                                {!isSearching && _alumniList.map((alumnus) => (
-                                    <Alumnus_Card alumniData={alumnus} key={alumnus.id} />
-                                ))}
-                            </AnimatePresence>
-                            <AnimatePresence>
-                                {isSearching && filteredAlumniList.map((alumnus) => (
-                                    <Alumnus_Card alumniData={alumnus} key={alumnus.id} />
-                                ))}
-                            </AnimatePresence>
+                            {_alumniList.map((alumnus) => (
+                                <Alumnus_Card alumniData={alumnus} key={alumnus.id} />
+                            ))}
                         </motion.div>
                         <AnimatePresence>
-                            {(_alumniList.length < 1 && searchQuery.length > 0) && (
+                            {(_alumniList.length < 1) && (
                                 <>
                                     <motion.div
+                                        variants={_Transition_Card}
+                                        initial="initial" animate="animate" exit="exit"
                                         layout>
-                                        <p className="text-2xl text-center">We do not have that</p>
+                                        <p className="text-2xl text-center">Seems like that person does not exist in our database.</p>
+                                        <p className="text-lg text-center text-gray-500 mt-2">
+                                            If you're looking for yourself.
+                                            <Link href="/profile" scroll>
+                                                <span className="ml-2 link">Go here</span>
+                                            </Link>
+                                        </p>
                                     </motion.div>
                                 </>
                             )}

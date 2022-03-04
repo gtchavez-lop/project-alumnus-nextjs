@@ -1,22 +1,38 @@
 import { _Transition_Blob_Left, _Transition_Card, _Transition_Page, _Transition_Slide_Left } from "../../components/_Animations"
 import { motion, useMotionValue, AnimateSharedLayout } from "framer-motion"
-import React, { useEffect, useState, CSSProperties } from 'react'
+import React, { useEffect, useState, CSSProperties, useRef } from 'react'
 import { CgDanger } from 'react-icons/cg'
 
 import { getAuth, } from 'firebase/auth'
 import { useAuthState } from 'react-firebase-hooks/auth'
 import firebaseApp from '../../firebaseConfig'
+import Image from "next/image"
 
 const RegisterPage = e => {
 
-    const [_regStep, _setRegStep] = useState(1)
+    const [_regStep, _setRegStep] = useState(4)
     const [_isWorking, _setIsWorking] = useState(false)
 
     const [user, loading, error] = useAuthState(getAuth(firebaseApp));
 
-    // useEffect(() => {
+    const _userDisplayPhoto = useRef()
+    // const [_userDisplayPhoto, _setUserDisplayPhoto] = useState({})
+    const [_userTOR, _setUserTOR] = useState()
 
-    // }, [user])
+    const _setDisplayPhoto = async ctx => {
+        const file = ctx.target.files[0]
+        _userDisplayPhoto.current = file
+        console.log(_userDisplayPhoto.current)
+
+        // const response = await fetch(`${process.env.GRAPHCMS_URL}/upload`, {
+        //     method: 'POST',
+        //     headers: {
+        //         "Authorization": `Bearer ${process.env.GRAPHCMS_ASSET_KEY_DRAFT}`,
+        //     },
+        //     body: file,
+        // })
+        // const data = await response.json()
+    }
 
     return (
         <>
@@ -115,6 +131,12 @@ const RegisterPage = e => {
                                             </div>
                                         </label>
                                         <label className="input-group input-group-vertical mt-2">
+                                            <span>Your Birthdate</span>
+                                            <div className="input-group w-full">
+                                                <input type="date" placeholder="Birthdate" className="input input-bordered input-primary w-full" />
+                                            </div>
+                                        </label>
+                                        <label className="input-group input-group-vertical mt-2">
                                             <span>Your Current Location (City Approximate)</span>
                                             <input type="text" placeholder="Your current location here" className="input input-bordered input-primary" />
                                         </label>
@@ -174,6 +196,34 @@ const RegisterPage = e => {
                                         variants={_Transition_Slide_Left} initial="initial" animate="animate"
                                         className="form-control w-full">
 
+
+                                        <p className="text-3xl mb-10">Display Photo</p>
+
+                                        {_userDisplayPhoto.current && (
+                                            <Image src={`/${URL.createObjectURL(_userDisplayPhoto.current)}`} width={200} height={200} />
+                                        )}
+                                        <label className="input-group input-group-vertical mt-2">
+                                            <span>Upload Photo</span>
+                                            <input type="file" name="alumniDisplayPhoto"
+                                                accept="image/*"
+                                                onChange={e => _setDisplayPhoto(e)}
+                                                className="form-control w-full bg-base-100 px-2 py-3 text-base-content rounded cursor-pointer" />
+                                        </label>
+
+
+                                        <div className="flex w-full justify-between gap-2">
+                                            <a onClick={() => _setRegStep(_regStep - 1)} className="btn btn-primary mt-7">Prev</a>
+                                            <a onClick={() => _setRegStep(_regStep + 1)} className="btn btn-primary mt-7">Next</a>
+                                        </div>
+                                    </motion.div>
+                                )}
+
+                                {/* step 5 */}
+                                {_regStep == 5 && (
+                                    <motion.div
+                                        variants={_Transition_Slide_Left} initial="initial" animate="animate"
+                                        className="form-control w-full">
+
                                         <p className="text-3xl mb-10">Verification</p>
 
                                         <label className="flex items-center mt-2">
@@ -208,7 +258,8 @@ const RegisterPage = e => {
                                 <li className={`step ${_regStep >= 1 ? 'step-primary' : ""}`}>Account Detail</li>
                                 <li className={`step ${_regStep >= 2 ? 'step-primary' : ""}`}>Personal Information</li>
                                 <li className={`step ${_regStep >= 3 ? 'step-primary' : ""}`}>Current Status</li>
-                                <li className={`step ${_regStep >= 4 ? 'step-primary' : ""}`}>Verification</li>
+                                <li className={`step ${_regStep >= 4 ? 'step-primary' : ""}`}>Display Photo</li>
+                                <li className={`step ${_regStep >= 5 ? 'step-primary' : ""}`}>Verification</li>
                             </ul>
 
                         </div>

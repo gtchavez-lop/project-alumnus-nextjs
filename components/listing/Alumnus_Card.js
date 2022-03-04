@@ -63,6 +63,10 @@ const ProfilePopUp = ({ alumni, closeHandler }) => {
                                     <motion.p className="">{alumni.currentEmail}</motion.p>
                                 </motion.div>
                                 <motion.div className="bg-base-100 rounded p-5">
+                                    <motion.h1 className="text-lg font-bold">Birthdate</motion.h1>
+                                    <motion.p className="">{alumni.birthDate ? `${dayjs(alumni.birthDate).format("MMMM D, YYYY")} (${dayjs().diff(dayjs(alumni.birthDate), 'years')})` : "Undefined"}</motion.p>
+                                </motion.div>
+                                <motion.div className="bg-base-100 rounded p-5">
                                     <motion.h1 className="text-lg font-bold">Currently Working</motion.h1>
                                     <motion.p className="">{alumni.isCurrentlyWorking ? "Yes" : "No"}</motion.p>
                                 </motion.div>
