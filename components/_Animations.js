@@ -154,6 +154,14 @@ export const _Transition_Card = {
             delay: 0.25
         }
     },
+    initial: {
+        opacity: 0,
+        translateY: 50,
+        transition: {
+            duration: 0.25,
+            ease: [0.2, 1, 0, 1]
+        }
+    },
 }
 
 // blob transitions

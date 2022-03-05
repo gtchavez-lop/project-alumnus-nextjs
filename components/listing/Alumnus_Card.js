@@ -45,7 +45,7 @@ const ProfilePopUp = ({ alumni, closeHandler }) => {
                         )}
                         <motion.div className="text-center lg:text-left">
                             <motion.h1 layoutId={`${alumni.id}_name_layout`} className="text-2xl font-bold">{alumni.surname}, {alumni.givenName}</motion.h1>
-                            <motion.p layoutId={`${alumni.id}_program_layout`} className="text-sm">{alumni.programCompleted} - Batch {dayjs(alumni.graduationDate).year()}</motion.p>
+                            <motion.p className="text-sm">{alumni.programCompleted} - Batch {dayjs(alumni.graduationDate).year()}</motion.p>
                         </motion.div>
                     </motion.div>
                     {/* alimni content */}
@@ -54,20 +54,20 @@ const ProfilePopUp = ({ alumni, closeHandler }) => {
                         <motion.div className="flex flex-col lg:flex-row mt-7 gap-7 justify-around">
                             <motion.div className="flex flex-col gap-2 w-full">
                                 <motion.p className="text-xl">Basic Information</motion.p>
-                                <motion.div className="bg-base-100 rounded p-5">
-                                    <motion.h1 className="text-lg font-bold">Location</motion.h1>
+                                <motion.div className="bg-base-100 rounded p-3">
+                                    <motion.h1 className="text-lg font-bold text-gray-600">Location</motion.h1>
                                     <motion.p className="">{alumni.currentLocation}</motion.p>
                                 </motion.div>
-                                <motion.div className="bg-base-100 rounded p-5">
-                                    <motion.h1 className="text-lg font-bold">Current Email Address</motion.h1>
+                                <motion.div className="bg-base-100 rounded p-3">
+                                    <motion.h1 className="text-lg font-bold text-gray-600">Current Email Address</motion.h1>
                                     <motion.p className="">{alumni.currentEmail}</motion.p>
                                 </motion.div>
-                                <motion.div className="bg-base-100 rounded p-5">
-                                    <motion.h1 className="text-lg font-bold">Birthdate</motion.h1>
+                                <motion.div className="bg-base-100 rounded p-3">
+                                    <motion.h1 className="text-lg font-bold text-gray-600">Birthdate</motion.h1>
                                     <motion.p className="">{alumni.birthDate ? `${dayjs(alumni.birthDate).format("MMMM D, YYYY")} (${dayjs().diff(dayjs(alumni.birthDate), 'years')})` : "Undefined"}</motion.p>
                                 </motion.div>
-                                <motion.div className="bg-base-100 rounded p-5">
-                                    <motion.h1 className="text-lg font-bold">Currently Working</motion.h1>
+                                <motion.div className="bg-base-100 rounded p-3">
+                                    <motion.h1 className="text-lg font-bold text-gray-600">Currently Working</motion.h1>
                                     <motion.p className="">{alumni.isCurrentlyWorking ? "Yes" : "No"}</motion.p>
                                 </motion.div>
                             </motion.div>
@@ -76,24 +76,14 @@ const ProfilePopUp = ({ alumni, closeHandler }) => {
                                 {alumni.isCurrentlyWorking && (
                                     <>
                                         <motion.p className="text-xl">Work Information</motion.p>
-                                        <motion.div className="bg-base-100 rounded p-5">
-                                            <motion.h1 className="text-lg font-bold">Current Work Company</motion.h1>
+                                        <motion.div className="bg-base-100 rounded p-3">
+                                            <motion.h1 className="text-lg font-bold text-gray-600">Current Work Company</motion.h1>
                                             <motion.p className="">{alumni.company}</motion.p>
                                         </motion.div>
-                                        <motion.div className="bg-base-100 rounded p-5">
-                                            <motion.h1 className="text-lg font-bold">Started From</motion.h1>
-                                            <motion.p className="">{alumni.startingWorkDate}</motion.p>
+                                        <motion.div className="bg-base-100 rounded p-3">
+                                            <motion.h1 className="text-lg font-bold text-gray-600">Current Work Position</motion.h1>
+                                            <motion.p className="">{alumni.workPosition ? alumni.workPosition : "Unspecified"}</motion.p>
                                         </motion.div>
-                                        {alumni.endingWorkDate != null ? (
-                                            <motion.div className="bg-base-100 rounded p-5">
-                                                <motion.h1 className="text-lg font-bold">Ended To</motion.h1>
-                                                <motion.p className="">{alumni.endingWorkDate}</motion.p>
-                                            </motion.div>
-                                        ) : (
-                                            <motion.div className="flex bg-base-100 rounded p-5 items-center">
-                                                <motion.p className="">Currently working there</motion.p>
-                                            </motion.div>
-                                        )}
                                     </>
                                 )}
                             </motion.div>
@@ -123,7 +113,9 @@ const Alumnus_Card = ({ alumniData }) => {
                     layoutId={`${id}_layout`}
                     initial="initial" animate="animate" exit="exit"
                     whileHover={{ scale: 1.02, transition: { duration: 0.2 } }}
-                    key={id} className="card shadow bg-base-300 select-none">
+                    onClick={() => setShowProfile(true)}
+                    key={id}
+                    className="card shadow bg-base-300 select-none cursor-pointer">
                     <motion.div className="card-body p-4   ">
                         <motion.div className="flex items-center relative">
                             {alumniDisplayPhoto ? (
@@ -141,20 +133,22 @@ const Alumnus_Card = ({ alumniData }) => {
                                 {surname}, {givenName}
                             </motion.h2>
                         </motion.div>
-                        <motion.p layoutId={`${id}_program_layout`} className="text-sm">{programCompleted}</motion.p>
-                        <motion.p className="text-sm mt-2">
+                        <motion.p className="hidden md:block text-sm">{programCompleted}</motion.p>
+                        {/* <motion.p className="text-sm mt-2 hidden md:block ">
                             <motion.span className="text-slate-500">Graduated since: </motion.span>
                             {dayjs(graduationDate).format("MMMM D, YYYY")}
-                        </motion.p>
+                        </motion.p> */}
                         <motion.div
                             layoutId={`${id}_profile_button`}
-                            className="card-actions justify-end mt-7">
-                            <motion.div
+                            className="card-actions justify-end mt-2">
+                            {/* <motion.div
                                 onClick={() => setShowProfile(true)}
                                 className="btn btn-sm btn-primary">
                                 <CgUserList size={25} />
                                 <span className="ml-3">View Profile</span>
-                            </motion.div>
+                            </motion.div> */}
+                            <p className="text-sm text-gray-700 text-right lg:hidden">Tap to see more</p>
+                            <p className="text-sm text-gray-700 text-right hidden lg:block">Click to see more</p>
                         </motion.div>
                     </motion.div>
                 </motion.div>

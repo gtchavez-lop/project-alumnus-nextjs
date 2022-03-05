@@ -13,99 +13,114 @@ import Alumnus_Card from "../../components/listing/Alumnus_Card"
 import apolloClient from "../../apolloClient"
 import { gql } from "@apollo/client"
 
-const Listing = ({ }) => {
+export const getServerSideProps = async e => {
+    const { data } = await apolloClient.query({
+        query: gql`
+            query {
+                alumniLists (orderBy: createdAt_DESC) {
+                    createdAt
+                    id
+                    surname
+                    givenName
+                    slug
+                    alumniDisplayPhoto {url}
+                    currentEmail
+                    currentLocation
+                    programCompleted
+                    graduationDate
+                    isCurrentlyWorking
+                    company
+                    workPosition
+                }
+            }
+        `
+    })
 
-    const [isSearching, setIsSearching] = useState(false)
-    const [searchQuery, setSearchQuery] = useState("")
+    return {
+        props: {
+            alumnus: data
+        }
+    }
+}
+
+const Listing = ({ alumnus }) => {
     const [filteredAlumniList, setFilteredAlumniList] = useState([])
-    const [orderBy, setOrderBy] = useState("createdAt")
-    const [_alumniList, _setAlumniList] = useState([]);
     const [user, loading, error] = useAuthState(getAuth(firebaseApp));
-    const _alumniList_Ref = useRef()
     const [_searchAndFilterState, set_searchAndFilterState] = useState({
         searchQuery: "",
         orderBy: "createdAt",
         orderDirection: "ASC"
     })
 
-    // fetch alumni list on page load
-    useEffect(() => {
-        try {
-            if (user) {
-                apolloClient.query({
-                    query: gql`
-                        query {
-                            alumniLists (where: {currentEmail_not: "${user.email}"}, orderBy: ${orderBy}_${orderDirection}) {
-                                id
-                                surname
-                                givenName
-                                slug
-                                alumniDisplayPhoto {url}
-                                currentEmail
-                                currentLocation
-                                programCompleted
-                                graduationDate
-                                isCurrentlyWorking
-                                company
-                            }
-                        }
-                    `
-                }).then(res => {
-                    _setAlumniList(res.data.alumniLists)
-                    _alumniList_Ref.current = res.data.alumniLists
+    const reassignAlumniList = () => {
+        if (user) {
+            let outputArray = []
+
+            // search, filter, and sort alumni list
+            if (_searchAndFilterState.searchQuery.length > 0) {
+                outputArray = alumnus.alumniLists.filter(alumnus => {
+                    return alumnus.surname.toLowerCase().includes(_searchAndFilterState.searchQuery.toLowerCase()) ||
+                        alumnus.givenName.toLowerCase().includes(_searchAndFilterState.searchQuery.toLowerCase())
+                })
+            } else {
+                outputArray = alumnus.alumniLists
+            }
+
+            // sort alumni list using swtich
+            switch (_searchAndFilterState.orderBy) {
+                case "createdAt":
+                    outputArray.sort((a, b) => {
+                        return a.createdAt > b.createdAt ? -1 : 1
+                    })
+                    break;
+                case "surname":
+                    outputArray.sort((a, b) => {
+                        return a.surname > b.surname ? 1 : -1
+                    })
+                    break;
+                case "givenName":
+                    outputArray.sort((a, b) => {
+                        return a.givenName > b.givenName ? 1 : -1
+                    })
+                    break;
+                case "currentEmail":
+                    outputArray.sort((a, b) => {
+                        return a.currentEmail > b.currentEmail ? 1 : -1
+                    })
+                    break;
+            }
+
+            // sort alumni list using direction
+            if (_searchAndFilterState.orderDirection === "DESC") {
+                let tempArray = []
+                for (let i = outputArray.length - 1; i >= 0; i--) {
+                    tempArray.push(outputArray[i])
+                }
+                outputArray = tempArray
+            }
+
+            // remove alumni if the user's email is equal to the alumnus's current email
+            if (user.email) {
+                outputArray = outputArray.filter(alumnus => {
+                    return alumnus.currentEmail !== user.email
                 })
             }
-        }
-        catch (error) {
-            console.log(error)
-        }
 
-    }, [user])
+
+            setFilteredAlumniList(outputArray)
+        }
+    }
 
     // fetch alumni list on search
     useEffect(() => {
-        if (user) {
-            try {
-                console.log(_searchAndFilterState)
-                if (_searchAndFilterState) {
-                    apolloClient.query({
-                        query: gql`
-                        query {
-                            alumniLists (
-                                where: {
-                                    currentEmail_not: "${user.email}",
-                                    OR: [
-                                        {surname_contains: "${_searchAndFilterState.searchQuery}"},
-                                        {givenName_contains: "${_searchAndFilterState.searchQuery}"},
-                                    ]
-                                }, 
-                                orderBy: ${_searchAndFilterState.orderBy}_${_searchAndFilterState.orderDirection}) {
-                                    id
-                                    surname
-                                    givenName
-                                    slug
-                                    alumniDisplayPhoto {url}
-                                    currentEmail
-                                    currentLocation
-                                    programCompleted
-                                    graduationDate
-                                    isCurrentlyWorking
-                                    company
-                                }
-                            }
-                        `
-                    }).then(res => {
-                        _setAlumniList(res.data.alumniLists)
-                    })
-                } else {
-                    _setAlumniList(_alumniList_Ref.current)
-                }
-            }
-            catch (error) {
-                console.log(error)
-            }
-        }
+        reassignAlumniList()
     }, [_searchAndFilterState])
+
+    // fetch alumni list on user login
+    useEffect(() => {
+        reassignAlumniList()
+    }, [user])
+
 
     return (
         <>
@@ -157,20 +172,11 @@ const Listing = ({ }) => {
                 </section>
 
                 {/* events content */}
-
                 {user && (
                     <section className="min-h-screen flex flex-col pt-28 mb-36">
                         <h1 className="text-4xl font-bold text-center">Alumnus List</h1>
 
                         <div className="grid grid-cols-1 lg:grid-cols-2 my-10 gap-5">
-                            {/* <div className="form-control">
-                                <label className="label">
-                                    <span className="label-text">Search an Alumnus</span>
-                                </label>
-                                <div className="flex space-x-2">
-                                    <input onChange={e => setSearchQuery(e.target.value)} type="text" placeholder="Find someone here. Just type and it will appear" className="w-full input input-base-100 input-bordered" />
-                                </div>
-                            </div> */}
                             <div className="flex flex-col">
                                 <label className="label">
                                     <span className="label-text">Search an Alumnus</span>
@@ -253,14 +259,13 @@ const Listing = ({ }) => {
 
                         </div>
 
-
-                        <motion.div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                            {_alumniList.map((alumnus) => (
+                        <motion.div className="mt-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
+                            {user && filteredAlumniList.map((alumnus) => (
                                 <Alumnus_Card alumniData={alumnus} key={alumnus.id} />
                             ))}
                         </motion.div>
                         <AnimatePresence>
-                            {(_alumniList.length < 1) && (
+                            {(filteredAlumniList.length < 1) && (
                                 <>
                                     <motion.div
                                         variants={_Transition_Card}
