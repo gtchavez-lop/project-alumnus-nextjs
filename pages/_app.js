@@ -8,15 +8,21 @@ import { useRouter } from 'next/router'
 import NavBar from '../components/NavBar'
 import Footer from '../components/Footer'
 
-function MyApp({ Component, pageProps }) {
+// Root component for all pages
+const RootApp = ({ Component, pageProps }) => {
   const router = useRouter()
   return (
     <>
+      {/* head */}
       <Head>
         <link rel="icon" href="/pa-transparent-white.png" />
       </Head>
+
+      {/* navbar */}
       <NavBar />
-      <AnimatePresence exitBeforeEnter  >
+
+      {/* body */}
+      <AnimatePresence exitBeforeEnter  > {/* detect changes in navigation and trigger animation for all pages */}
         <motion.div className='relative overflow-x-hidden' key={router.route}>
           <Component {...pageProps} />
         </motion.div>
@@ -26,4 +32,5 @@ function MyApp({ Component, pageProps }) {
   )
 }
 
-export default MyApp
+// export root component
+export default RootApp

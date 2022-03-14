@@ -26,7 +26,9 @@ const SideMenu = ({ toggleSideMenu }) => {
                         <Link href='/events' scroll={false} >
                             <button className="btn btn-ghost rounded-none">News &#x26; Events</button>
                         </Link>
-                        <button className="btn btn-ghost rounded-none">Merchandise</button>
+                        <Link href='/merch' scroll={false} >
+                            <button className="btn btn-ghost rounded-none">Merchandise</button>
+                        </Link>``
                         <div className="divider" />
                         <button className="btn btn-ghost rounded-none">About</button>
                         <button className="btn btn-ghost rounded-none">Contact</button>

@@ -13,6 +13,7 @@ import Alumnus_Card from "../../components/listing/Alumnus_Card"
 import apolloClient from "../../apolloClient"
 import { gql } from "@apollo/client"
 
+// get all alumnus as a server prop (for preloading) on page request
 export const getServerSideProps = async e => {
     const { data } = await apolloClient.query({
         query: gql`
@@ -43,7 +44,9 @@ export const getServerSideProps = async e => {
     }
 }
 
+// create Alumnus page
 const Listing = ({ alumnus }) => {
+    // states
     const [filteredAlumniList, setFilteredAlumniList] = useState([])
     const [user, loading, error] = useAuthState(getAuth(firebaseApp));
     const [_searchAndFilterState, set_searchAndFilterState] = useState({
@@ -52,11 +55,12 @@ const Listing = ({ alumnus }) => {
         orderDirection: "ASC"
     })
 
-    const reassignAlumniList = () => {
+    // update and filter alumnus list and push to filteredAlumniList state
+    const _ReassignAlumnuList = () => {
         if (user) {
             let outputArray = []
 
-            // search, filter, and sort alumni list
+            // search, filter, and sort alumni list based on _searchAndFilterState state
             if (_searchAndFilterState.searchQuery.length > 0) {
                 outputArray = alumnus.alumniLists.filter(alumnus => {
                     return alumnus.surname.toLowerCase().includes(_searchAndFilterState.searchQuery.toLowerCase()) ||
@@ -90,7 +94,7 @@ const Listing = ({ alumnus }) => {
                     break;
             }
 
-            // sort alumni list using direction
+            // sort alumni list by direction
             if (_searchAndFilterState.orderDirection === "DESC") {
                 let tempArray = []
                 for (let i = outputArray.length - 1; i >= 0; i--) {
@@ -99,7 +103,7 @@ const Listing = ({ alumnus }) => {
                 outputArray = tempArray
             }
 
-            // remove alumni if the user's email is equal to the alumnus's current email
+            // remove alumni if the user's email is equal to the alumnus' current email
             if (user.email) {
                 outputArray = outputArray.filter(alumnus => {
                     return alumnus.currentEmail !== user.email
@@ -111,48 +115,45 @@ const Listing = ({ alumnus }) => {
         }
     }
 
-    // fetch alumni list on search
+    // trigger _ReassignAlumnuList on _searchAndFilterState change
     useEffect(() => {
-        reassignAlumniList()
+        _ReassignAlumnuList()
     }, [_searchAndFilterState])
 
-    // fetch alumni list on user login
+    // trigger _ReassignAlumnuList on user state change
     useEffect(() => {
-        reassignAlumniList()
+        _ReassignAlumnuList()
     }, [user])
 
 
     return (
         <>
+            {/* head */}
             <Head>
                 <title>Alumni List - UCC Project Alumnus</title>
                 <meta name="description" content="University of Caloocan City - Alumni Management System" />
             </Head>
 
-            {/* desgn | blob */}
+            {/* animated background */}
             <motion.div
                 variants={_Transition_Blob_Bottom}
                 initial="initial" animate="animate" exit="exit"
                 className="absolute top-0 left-0 w-full h-screen z-0 bg-gradient-to-tl from-green-300 via-blue-500 to-purple-600"
             />
-            {/* event pag */}
-            <motion.div
+
+            {/* alumnus section */}
+            <motion.main
                 variants={_Transition_Page}
                 initial="initial" animate="animate" exit="exit"
                 className="relative min-h-screen flex flex-col px-5 lg:px-20 z-10 "
             >
 
-                {/* initial page */}
+                {/* landing section */}
                 <section className="relative min-h-screen flex flex-col justify-center items-center">
-                    <h1 className="text-5xl font-bold text-center text-base-content ">
-                        Alumni Members List
-                    </h1>
-                    {/* description */}
-                    <p className="text-center text-xl mt-5">
-                        See people who became part of the University of Caloocan City.
-                    </p>
+                    <h1 className="text-5xl font-bold text-center text-base-content ">Alumni Members List</h1>
+                    <p className="text-center text-xl mt-5">See people who became part of the University of Caloocan City.</p>
 
-                    {/* scrolldown */}
+                    {/* display a toast if the user is not signed in */}
                     {(user && !loading) ? (
                         <motion.p
                             variants={_Transition_Card}
@@ -171,11 +172,13 @@ const Listing = ({ alumnus }) => {
                     )}
                 </section>
 
-                {/* events content */}
+                {/* alumnus list section */}
+                {/* only show alumnus list section if user object is existing and has value */}
                 {user && (
                     <section className="min-h-screen flex flex-col pt-28 mb-36">
                         <h1 className="text-4xl font-bold text-center">Alumnus List</h1>
 
+                        {/* action section */}
                         <div className="grid grid-cols-1 lg:grid-cols-2 my-10 gap-5">
                             <div className="flex flex-col">
                                 <label className="label">
@@ -259,11 +262,14 @@ const Listing = ({ alumnus }) => {
 
                         </div>
 
+                        {/* loop filteredAlumniList and display card on each *IF* the user is existing  */}
                         <motion.div className="mt-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
                             {user && filteredAlumniList.map((alumnus) => (
                                 <Alumnus_Card alumniData={alumnus} key={alumnus.id} />
                             ))}
                         </motion.div>
+
+                        {/* display a simple note that the searched user is not existing or the user is searching for himself/herself */}
                         <AnimatePresence>
                             {(filteredAlumniList.length < 1) && (
                                 <>
@@ -285,7 +291,7 @@ const Listing = ({ alumnus }) => {
                     </section>
                 )}
 
-            </motion.div>
+            </motion.main>
         </>
     )
 }

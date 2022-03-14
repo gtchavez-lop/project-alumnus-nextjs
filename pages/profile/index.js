@@ -12,11 +12,14 @@ import { useEffect, useState } from "react"
 import apolloClient from "apolloClient"
 import { gql } from "@apollo/client"
 
+// create profile page
 const ProfilePage = e => {
+    // states
     const [user, loading, error] = useAuthState(getAuth(firebaseApp))
     const [userData, setUserData] = useState({})
     const [userDataLoading, setUserDataLoading] = useState(true)
 
+    // get user data on page load
     useEffect(e => {
         if (user) {
             const getUserQuery = gql`
@@ -53,24 +56,24 @@ const ProfilePage = e => {
         }
     }, [user])
 
-    // 
-    // useEffect(e => {
-    //     console.log(userData)
-    // }, [userData])
-
     return (
         <>
+            {/* animated background */}
             <motion.div
                 variants={_Transition_Blob_Profile} initial="initial" animate="animate" exit="exit"
                 className="absolute h-full w-full top-0 left-0 bg-gradient-to-tl from-secondary to-primary" />
+
+            {/* profile page content */}
             <motion.main
                 variants={_Transition_Page} initial="initial" animate="animate" exit="exit"
                 className="min-h-screen px-5 lg:px-32 gap-5 lg:mt-0">
                 <section className="min-h-screen flex items-center justify-center relative">
                     <div className="hidden lg:block" />
-                    {/* scroll down to register */}
+
+                    {/* check if user is not signed in */}
                     {(userDataLoading) ?
                         ((!user && !loading) ? (
+                            // display message that user is not signed in
                             <div className="flex flex-col md:flex-row-reverse justify-evenly items-center w-full gap-3">
                                 <motion.div
                                     variants={_Transition_Card}
@@ -89,17 +92,19 @@ const ProfilePage = e => {
                                 </motion.div>
                             </div>
                         ) : (
+                            // show loading animation
                             <>
-
                                 <motion.div
                                     animate={{ rotate: ["0deg", '360deg'] }}
                                     transition={{ repeat: Infinity, duration: 0.75, ease: 'linear' }}
                                 >
-                                    <CgSpinner size={35} />
+                                    <CgSpinner size={75} />
                                 </motion.div>
                             </>
                         ))
+
                         : (
+                            // display user data if user is signed in
                             <motion.div
                                 variants={_Transition_Card} initial="initial" animate="animate" exit="exit"
                                 className="flex flex-col justify-center lg:items-end items-center w-full">

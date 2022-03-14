@@ -2,7 +2,7 @@ import { AnimatePresence, motion } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useState } from "react"
-import { CgClose, CgDarkMode, CgMenu, CgMoon, CgProfile, CgShoppingCart, CgSun } from 'react-icons/cg'
+import { CgClose, CgDanger, CgMenu, CgMoon, CgProfile, CgShoppingCart, CgSun } from 'react-icons/cg'
 import { themeChange } from "theme-change"
 import SideMenu from "./SideMenu"
 
@@ -12,20 +12,17 @@ import { useAuthState, useSignInWithEmailAndPassword } from 'react-firebase-hook
 import firebaseApp from '../firebaseConfig'
 import apolloClient from "apolloClient"
 import { gql } from "@apollo/client"
+import Logo from "./Logo"
 
 const NavBar = e => {
     const [_sideMenuOpen, _toggleSideMenu] = useState(false)
     const [_scrollY, _setScrollY] = useState(0)
 
     useEffect(() => {
-        window.onscroll = () => {
+        window.addEventListener("scroll", e => {
             _setScrollY(window.scrollY)
-        }
+        })
     }, [_scrollY])
-
-    useEffect(() => {
-        themeChange(false)
-    }, [])
 
     // firebase auth 
     const [getUser, loading, error] = useAuthState(getAuth(firebaseApp))
@@ -34,6 +31,13 @@ const NavBar = e => {
     const [_userPassword, _setUserPassword] = useState('')
     const [_userData, _setUserData] = useState({})
     const [_showError, _setShowError] = useState(false)
+    const [_themeSelected, _setThemeSelected] = useState("")
+
+    useEffect(e => {
+        themeChange(false)
+        let temp = window.localStorage.getItem('theme')
+        _setThemeSelected(temp == 'corporate' ? 'corporate' : 'business')
+    }, [])
 
     useEffect(() => {
         if (getUser) {
@@ -64,38 +68,44 @@ const NavBar = e => {
         }
     }, [getUser])
 
-    const _signInUser = async e => {
-        await signInWithEmailAndPassword(_userEmail, _userPassword)
-
-        const getUserQuery = gql`
-            query {
-                alumniLists (where: {
-                    currentEmail: "${_userEmail}"
-                }) {
-                    alumniDisplayPhoto { url }
-                }
-            }
-        `
-        if (!loading && _userEmail) {
-            const { data } = await apolloClient.query({
-                query: getUserQuery,
-            })
+    useEffect(e => {
+        if (signInError) {
+            console.log(signInError.message)
+            _setShowError(true)
         }
-        _setUserEmail('')
-        _setUserPassword('')
+    }, [signInLoading])
+
+    const SignInUser = async e => {
+        await signInWithEmailAndPassword(_userEmail, _userPassword)
     }
 
-    const _signOutUser = async e => {
+    const SignOutUser = async e => {
         await signOut(getAuth(firebaseApp))
         _setUserData({})
+    }
+
+    const ShowError = ({ closeHandler }) => {
+        _setUserEmail('')
+        _setUserPassword('')
+        return (
+            <div className="fixed bottom bottom-0 z-40 p-5 w-full">
+                <div className="alert alert-error shadow-lg">
+                    <div>
+                        <CgDanger size={25} className="mr-5" />
+                        <span>{signInError.message}</span>
+                    </div>
+                    <a onClick={closeHandler} className="btn btn-ghost btn-square">
+                        <CgClose size={25} className="" />
+                    </a>
+                </div>
+            </div>
+        )
     }
 
     return (
         <>
             {/* alert */}
-            {_showError && <div className="absolute bottom right-0 w-1/2 lg:w-1/4 alert alert-danger">
-                <strong>Error!</strong>
-            </div>}
+            {_showError && <ShowError closeHandler={() => _setShowError(false)} />}
             {/* sidemenu */}
             <AnimatePresence exitBeforeEnter>
                 {_sideMenuOpen && (
@@ -104,10 +114,11 @@ const NavBar = e => {
             </AnimatePresence>
             {/* navbar */}
             <motion.div className={`fixed top-0 left-0 w-full navbar justify-between px-5 lg:px-28 z-50 transition-all duration-100 ${_scrollY > 100 ? 'bg-neutral shadow-2xl text-neutral-content' : 'bg-transparent py-10 text-base-content'}`}>
+                {/* navbar start */}
                 <div className="flex">
                     <Link href='/' scroll={false}>
                         <div className="cursor-pointer hidden lg:flex items-center">
-                            <Image src='/pa-transparent-white.png' width={30} height={30} />
+                            <Logo width={30} height={30} strokeWidth={100} strokeColor={_themeSelected == "business" ? "#D4D4D4" : "#181A2A"} />
                             <span className={`ml-3 font-bold transition-all duration-100 ${_scrollY < 100 ? 'text-xl' : ''}`}>
                                 UCC Project Alumnus
                             </span>
@@ -120,13 +131,17 @@ const NavBar = e => {
                         <CgMenu className="swap-off" size={25} />
                     </label>
                 </div>
+
+                {/* center logo */}
                 <div className="lg:hidden flex">
                     <Link href='/' scroll={false}>
                         <div className="cursor-pointer flex items-center">
-                            <Image src='/pa-transparent-white.png' width={30} height={30} />
+                            <Logo width={30} height={30} strokeWidth={100} strokeColor={_themeSelected == "business" ? "#D4D4D4" : "#181A2A"} />
                         </div>
                     </Link>
                 </div>
+
+                {/* navbar end */}
                 <div className="flex gap-2 items-center">
                     <div className="lg:flex items-center hidden gap-2">
                         <Link href='/events' scroll={false}>
@@ -138,16 +153,24 @@ const NavBar = e => {
                     </div>
                     <div className="divider divider-vertical mx-2 hidden lg:block" />
                     <div className="flex items-center gap-1">
-                        <a className="btn btn-ghost btn-square hidden lg:flex"> <CgShoppingCart size={25} /> </a>
+                        <Link href="/merch" passHref>
+                            <a className="btn btn-ghost btn-square hidden lg:flex"> <CgShoppingCart size={25} /> </a>
+                        </Link>
                         <label className="btn btn-ghost btn-square swap swap-rotate place-items-center content-center">
-                            <input className=" " data-toggle-theme="corporate,business" type="checkbox" />
+                            <input
+                                checked={_themeSelected === 'corporate' ? true : false}
+                                onChange={e => {
+                                    let activeTheme = window.localStorage.getItem('theme')
+                                    _setThemeSelected(activeTheme === 'business' ? 'business' : 'corporate')
+                                }}
+                                data-toggle-theme="business,corporate" type="checkbox" />
                             <CgSun className="swap-on" size={25} />
                             <CgMoon className="swap-off" size={25} />
                         </label>
 
                         <div className="dropdown dropdown-end dropdown-hover items-center">
                             {
-                                (Object.keys(_userData).length > 0 && !loading) ? (
+                                ((_userData.alumniDisplayPhoto) && !loading) ? (
                                     <>
                                         <label tabIndex={0} className="btn btn-ghost btn-square">
                                             <div className="avatar">
@@ -219,7 +242,7 @@ const NavBar = e => {
 
                         <div className="modal-action justify-between">
                             <label htmlFor="SignIn_PopupWindow" className="btn btn-ghost">Close</label>
-                            <label onClick={() => _signInUser()} htmlFor="SignIn_PopupWindow" className="btn btn-primary">Sign In</label>
+                            <label onClick={() => SignInUser()} htmlFor="SignIn_PopupWindow" className="btn btn-primary">Sign In</label>
                         </div>
                     </div>
                 </div>
@@ -233,7 +256,7 @@ const NavBar = e => {
 
                         <div className="modal-action ">
                             <label htmlFor="SignOut_PopupWindow" className="btn btn-ghost">No</label>
-                            <label onClick={() => _signOutUser()} htmlFor="SignOut_PopupWindow" className="btn btn-primary">Yes</label>
+                            <label onClick={() => SignOutUser()} htmlFor="SignOut_PopupWindow" className="btn btn-primary">Yes</label>
                         </div>
                     </div>
                 </div>

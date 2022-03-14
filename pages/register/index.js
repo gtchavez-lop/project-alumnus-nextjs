@@ -3,35 +3,93 @@ import { motion, useMotionValue, AnimateSharedLayout } from "framer-motion"
 import React, { useEffect, useState, CSSProperties, useRef } from 'react'
 import { CgDanger } from 'react-icons/cg'
 
-import { getAuth, } from 'firebase/auth'
-import { useAuthState } from 'react-firebase-hooks/auth'
+import { getAuth } from 'firebase/auth'
+import { useAuthState, useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth'
 import firebaseApp from '../../firebaseConfig'
 import Image from "next/image"
+import { gql, useMutation } from "@apollo/client"
+import slugify from "slugify"
+import apolloClient from "apolloClient"
 
 const RegisterPage = e => {
+    const [createUserWithEmailAndPassword, reg_user, reg_loading, reg_error] = useCreateUserWithEmailAndPassword(getAuth(firebaseApp));
 
-    const [_regStep, _setRegStep] = useState(4)
+    const [_regStep, _setRegStep] = useState(5)
     const [_isWorking, _setIsWorking] = useState(false)
 
     const [user, loading, error] = useAuthState(getAuth(firebaseApp));
+    const [reg_password, set_regPassword] = useState('');
 
     const _userDisplayPhoto = useRef()
-    // const [_userDisplayPhoto, _setUserDisplayPhoto] = useState({})
-    const [_userTOR, _setUserTOR] = useState()
+    const [regID, setRegID] = useState('')
 
-    const _setDisplayPhoto = async ctx => {
-        const file = ctx.target.files[0]
-        _userDisplayPhoto.current = file
-        console.log(_userDisplayPhoto.current)
+    const [_userRegData, _setUserRegData] = useState({
+        surname: "",
+        givenName: "",
+        middleInitial: "",
+        currentEmail: "",
+        isVerified: false,
+        slug: "",
+        birthdate: "",
+        currentLocation: "",
+        programCompleted: "",
+        graduationDate: "",
+        isCurrentlyWorking: false,
+        company: "",
+        workPosition: "",
+    })
 
-        // const response = await fetch(`${process.env.GRAPHCMS_URL}/upload`, {
-        //     method: 'POST',
-        //     headers: {
-        //         "Authorization": `Bearer ${process.env.GRAPHCMS_ASSET_KEY_DRAFT}`,
-        //     },
-        //     body: file,
-        // })
-        // const data = await response.json()
+    const CreateUser_Firebase = async e => {
+        createUserWithEmailAndPassword(_userRegData.currentEmail, reg_password)
+    }
+
+    const CreateUser_GraphCMS = async e => {
+        const query = gql`
+            mutation {
+                createAlumniList (data: {
+                    surname: "${_userRegData.surname}",
+                    givenName: "${_userRegData.givenName}",
+                    currentEmail: "${_userRegData.currentEmail}",
+                    isVerified: ${_userRegData.isVerified},
+                    slug: "${slugify(`${_userRegData.surname} ${_userRegData.givenName}`)}",
+                    birthdate: "${_userRegData.birthdate}",
+                    currentLocation: "${_userRegData.currentLocation}",
+                    programCompleted: "${_userRegData.programCompleted}",
+                    graduationDate: "${_userRegData.graduationDate}",
+                    isCurrentlyWorking: ${_userRegData.isCurrentlyWorking},
+                    company: "${_userRegData.company}",
+                    workPosition: "${_userRegData.workPosition}",
+                }) {
+                    id
+                }
+            }
+        `
+        const { data } = await apolloClient.query({
+            query: query,
+
+        })
+        setRegID(data.createAlumniList.id)
+    }
+
+    const PublishUser_GraphCMS = async e => {
+        const query = gql`
+            mutation {
+                publishAlumniList (where: {
+                    id: "${regID}"
+                }) {
+                    id
+                }
+            }
+        `
+
+        const { data } = await apolloClient.query({
+            query: query
+        })
+
+        if (data) {
+            // redirect to the alumni list
+            window.location.href = `/`
+        }
     }
 
     return (
@@ -82,8 +140,8 @@ const RegisterPage = e => {
                         initial="initial" animate="animate" exit="exit"
                         className="min-h-screen flex flex-col-reverse lg:flex-row justify-end lg:justify-between relative">
                         {/* form */}
-                        <motion.div layout className="flex flex-col w-full gap-3 max-w-xl">
-                            <AnimateSharedLayout>
+                        <motion.div className="flex flex-col w-full gap-3 max-w-xl">
+                            <>
                                 {/* step 1 */}
                                 {_regStep == 1 && (
                                     <motion.div
@@ -95,17 +153,28 @@ const RegisterPage = e => {
 
                                         <label className="input-group input-group-vertical">
                                             <span>Your email address</span>
-                                            <input type="text" placeholder="Type here" className="input input-bordered input-primary" />
+                                            <input
+                                                value={_userRegData.currentEmail}
+                                                onChange={e => _setUserRegData({ ..._userRegData, currentEmail: e.target.value })}
+                                                type="text" placeholder="Type here" className="input input-bordered input-primary" />
                                         </label>
 
                                         <label className="input-group input-group-vertical mt-2">
                                             <span>Your Password</span>
-                                            <input type="password" placeholder="Type here" className="input input-bordered input-primary" />
+                                            <input
+                                                value={reg_password}
+                                                onChange={e => (set_regPassword(e.target.value))}
+                                                type="password" placeholder="Type here" className="input input-bordered input-primary" />
                                         </label>
 
                                         <div className="flex w-full justify-between gap-2">
                                             <div />
-                                            <a onClick={() => _setRegStep(2)} className="btn btn-primary mt-7 flex items-center">
+                                            <a onClick={() => {
+                                                if (_userRegData.currentEmail &&
+                                                    reg_password) {
+                                                    _setRegStep(_regStep + 1)
+                                                }
+                                            }} className="btn btn-primary mt-7 flex items-center">
                                                 Next
                                             </a>
                                         </div>
@@ -125,33 +194,58 @@ const RegisterPage = e => {
                                         <label className="input-group input-group-vertical mt-2">
                                             <span>Your Full Name</span>
                                             <div className="input-group w-full">
-                                                <input type="text" placeholder="Surname" className="input input-bordered input-primary w-full" />
-                                                <input type="text" placeholder="Given Name" className="input input-bordered input-primary w-full" />
-                                                <input type="text" placeholder="Middle Initial" className="input input-bordered input-primary w-1/2" />
+                                                <input
+                                                    value={_userRegData.surname}
+                                                    onChange={e => _setUserRegData({ ..._userRegData, surname: e.target.value })}
+                                                    type="text" placeholder="Surname" className="input input-bordered input-primary w-full" />
+                                                <input
+                                                    value={_userRegData.givenName}
+                                                    onChange={e => _setUserRegData({ ..._userRegData, givenName: e.target.value })}
+                                                    type="text" placeholder="Given Name" className="input input-bordered input-primary w-full" />
+                                                <input
+                                                    value={_userRegData.middleInitial}
+                                                    onChange={e => _setUserRegData({ ..._userRegData, middleInitial: e.target.value })}
+                                                    type="text" placeholder="Middle Initial" className="input input-bordered input-primary w-1/2" />
                                             </div>
                                         </label>
                                         <label className="input-group input-group-vertical mt-2">
                                             <span>Your Birthdate</span>
                                             <div className="input-group w-full">
-                                                <input type="date" placeholder="Birthdate" className="input input-bordered input-primary w-full" />
+                                                <input
+                                                    value={_userRegData.birthdate}
+                                                    onChange={e => _setUserRegData({ ..._userRegData, birthdate: e.target.value })}
+                                                    type="date" placeholder="Birthdate" className="input input-bordered input-primary w-full" />
                                             </div>
                                         </label>
                                         <label className="input-group input-group-vertical mt-2">
                                             <span>Your Current Location (City Approximate)</span>
-                                            <input type="text" placeholder="Your current location here" className="input input-bordered input-primary" />
+                                            <input
+                                                value={_userRegData.currentLocation}
+                                                onChange={e => _setUserRegData({ ..._userRegData, currentLocation: e.target.value })}
+                                                type="text" placeholder="Your current location here" className="input input-bordered input-primary" />
                                         </label>
                                         <label className="input-group input-group-vertical mt-2">
                                             <span>Program Completed</span>
                                             <div className="input-group w-full">
-                                                <input type="text" placeholder="Program" className="input input-bordered input-primary w-full" />
-                                                <input type="date" placeholder="Date Graduated" className="input input-bordered input-primary w-full" />
+                                                <input
+                                                    value={_userRegData.programCompleted}
+                                                    onChange={e => _setUserRegData({ ..._userRegData, programCompleted: e.target.value })}
+                                                    type="text" placeholder="Program" className="input input-bordered input-primary w-full" />
+                                                <input
+                                                    value={_userRegData.graduationDate}
+                                                    onChange={e => _setUserRegData({ ..._userRegData, graduationDate: e.target.value })}
+                                                    type="date" placeholder="Date Graduated" className="input input-bordered input-primary w-full" />
                                             </div>
                                         </label>
 
 
                                         <div className="flex w-full justify-between gap-2">
-                                            <a onClick={() => _setRegStep(1)} className="btn btn-primary mt-7">Prev</a>
-                                            <a onClick={() => _setRegStep(3)} className="btn btn-primary mt-7">Next</a>
+                                            <a onClick={() => _setRegStep(_regStep - 1)} className="btn btn-primary mt-7">Prev</a>
+                                            <a onClick={() => {
+                                                if (_userRegData.surname && _userRegData.givenName && _userRegData.birthdate && _userRegData.currentLocation && _userRegData.programCompleted && _userRegData.graduationDate) {
+                                                    _setRegStep(_regStep + 1)
+                                                }
+                                            }} className="btn btn-primary mt-7">Next</a>
                                         </div>
                                     </motion.div>
                                 )}
@@ -166,18 +260,21 @@ const RegisterPage = e => {
                                         <p className="text-3xl mb-10">Current Status</p>
 
                                         <label className="flex items-center mt-2">
-                                            <input type="checkbox" checked={_isWorking} onChange={e => _setIsWorking(e.target.checked)} className="toggle toggle-primary mr-5" />
+                                            <input
+                                                checked={_userRegData.isCurrentlyWorking}
+                                                onChange={e => _setUserRegData({ ..._userRegData, isCurrentlyWorking: e.target.checked })}
+                                                type="checkbox" className="toggle toggle-primary mr-5" />
                                             <span>Do you currently work?</span>
                                         </label>
-                                        {_isWorking && (
+                                        {_userRegData.isCurrentlyWorking && (
                                             <motion.div className="mt-5">
                                                 <label className="input-group input-group-vertical mt-2">
                                                     <span>Current Work</span>
-                                                    <input type="text" placeholder="Middle Initial" className="input input-bordered input-primary" />
+                                                    <input type="text" placeholder="What do you do?" className="input input-bordered input-primary" />
                                                 </label>
                                                 <label className="input-group input-group-vertical mt-2">
                                                     <span>Current Company</span>
-                                                    <input type="text" placeholder="Middle Initial" className="input input-bordered input-primary" />
+                                                    <input type="text" placeholder="What is the name of your company?" className="input input-bordered input-primary" />
                                                 </label>
                                             </motion.div>
                                         )}
@@ -199,15 +296,14 @@ const RegisterPage = e => {
 
                                         <p className="text-3xl mb-10">Display Photo</p>
 
-                                        {_userDisplayPhoto.current && (
-                                            <Image src={`/${URL.createObjectURL(_userDisplayPhoto.current)}`} width={200} height={200} />
-                                        )}
+                                        {/* <Image src={`/${_userDisplayPhoto.current}`} width={200} height={200} /> */}
                                         <label className="input-group input-group-vertical mt-2">
-                                            <span>Upload Photo</span>
+                                            <span>Upload Display Photo (unavailable for now)</span>
                                             <input type="file" name="alumniDisplayPhoto"
                                                 accept="image/*"
+                                                disabled
                                                 onChange={e => _setDisplayPhoto(e)}
-                                                className="form-control w-full bg-base-100 px-2 py-3 text-base-content rounded cursor-pointer" />
+                                                className="form-control w-full bg-base-100 px-2 py-3 text-base-content rounded cursor-pointer " />
                                         </label>
 
 
@@ -226,30 +322,25 @@ const RegisterPage = e => {
 
                                         <p className="text-3xl mb-10">Verification</p>
 
-                                        <label className="flex items-center mt-2">
-                                            <input type="checkbox" checked={_isWorking} onChange={e => _setIsWorking(e.target.checked)} className="toggle toggle-primary mr-5" />
-                                            <span>Do you currently work?</span>
+                                        <label className="input-group input-group-vertical mt-2">
+                                            <span>Upload Transcript of Records (unavailable for now)</span>
+                                            <input type="file" name="alumniDisplayPhoto"
+                                                accept="image/*"
+                                                disabled
+                                                onChange={e => _setDisplayPhoto(e)}
+                                                className="form-control w-full bg-base-100 px-2 py-3 text-base-content rounded cursor-pointer " />
                                         </label>
-                                        {_isWorking && (
-                                            <motion.div className="mt-5">
-                                                <label className="input-group input-group-vertical mt-2">
-                                                    <span>Current Work</span>
-                                                    <input type="text" placeholder="Middle Initial" className="input input-bordered input-ghost" />
-                                                </label>
-                                                <label className="input-group input-group-vertical mt-2">
-                                                    <span>Current Company</span>
-                                                    <input type="text" placeholder="Middle Initial" className="input input-bordered input-ghost" />
-                                                </label>
-                                            </motion.div>
-                                        )}
 
                                         <div className="flex w-full justify-between gap-2">
                                             <a onClick={() => _setRegStep(_regStep - 1)} className="btn btn-primary mt-7">Prev</a>
-                                            <a onClick={() => _setRegStep(_regStep + 1)} className="btn btn-primary mt-7">Next</a>
+                                            <a onClick={async () => {
+                                                // await CreateUser_Firebase();
+                                                // await CreateUser_GraphCMS();
+                                            }} className="btn btn-primary mt-7">Register</a>
                                         </div>
                                     </motion.div>
                                 )}
-                            </AnimateSharedLayout>
+                            </>
                         </motion.div>
 
                         {/* steps */}

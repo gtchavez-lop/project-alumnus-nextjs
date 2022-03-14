@@ -8,9 +8,12 @@ import { _Transition_Page } from '../../components/_Animations'
 import apolloClient from 'apolloClient'
 import { gql } from '@apollo/client'
 
+// get single event data on page request (server side)
 export const getServerSideProps = async (context) => {
+    // get event id from url
     const { id } = context.query
 
+    // query single event from db based on event id
     const { data } = await apolloClient.query({
         query: gql`
             query  {
@@ -71,7 +74,7 @@ const Event_Blog = ({ id, content }) => {
         root: props => <div className=" text-xl mt-12">{props.children}</div>
     }
 
-    // tree shake content
+    // tree-shake content
     const { eventContent, displayImage, createdAt, eventTags, eventTitle, eventAuthors } = content
 
     useEffect(() => {
@@ -100,21 +103,29 @@ const Event_Blog = ({ id, content }) => {
                     </Link>
                 </div>
 
+                {/* content */}
                 <div className='pb-20 pt-10'>
+                    {/* get author's name */}
                     <p className='my-2 text-gray-400 flex flex-col'>Posted by <span className='ml-2 text-base-content font-bold'>{eventAuthors.name}</span></p>
+
+                    {/* get event tags */}
                     <div className='flex flex-wrap gap-2 mb-10 select-none'>
                         {eventTags.map((tag, index) => (
                             <div key={index} className="badge badge-primary capitalize">{tag}</div>
                         ))}
                     </div>
+
+                    {/* get event title */}
                     <p className='text-5xl my-5 font-bold'>{eventTitle}</p>
+
                     <div className='divider' />
+
+                    {/* render event content as a markdown to html */}
                     <div className='mb-32'>
                         <ReactMarkdown
                             components={renderers}>
                             {eventContent.markdown}
                         </ReactMarkdown>
-
                     </div>
                 </div>
             </section>

@@ -1,3 +1,4 @@
+// create Error Page
 const ErrorPage = e => {
     return (
         <>
@@ -13,4 +14,5 @@ const ErrorPage = e => {
     )
 }
 
+// throw this page if the route is not found
 export default ErrorPage

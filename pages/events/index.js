@@ -8,8 +8,9 @@ import apolloClient from "../../apolloClient"
 import { _Transition_Blob_Bottom, _Transition_Blob_Top, _Transition_Card, _Transition_Page } from "../../components/_Animations"
 import Event_Card from "../../components/events/Event_Card"
 
-// get blog data
+// get events as a static prop (for preloading) on page request
 export const getStaticProps = async () => {
+    // query events from db
     const { data } = await apolloClient.query({
         query: gql`
             query {
@@ -33,62 +34,54 @@ export const getStaticProps = async () => {
     }
 }
 
+// create Events page
 const Events = ({ Table_Events }) => {
-
+    // states
     const [events, setEvents] = useState()
     const [loaded, setLoaded] = useState(true)
 
     return (
         <>
+            {/* head */}
             <Head>
                 <title>News and Events - UCC Project Alumnus</title>
                 <meta name="description" content="University of Caloocan City - Alumni Management System" />
             </Head>
 
-            {/* desgn | blob */}
+            {/* animated background */}
             <motion.div
                 variants={_Transition_Blob_Top}
                 initial="initial" animate="animate" exit="exit"
                 className="absolute top-0 left-0 w-full h-full z-0 bg-gradient-to-tl from-teal-600 via-blue-700 to-purple-600"
             />
-            {/* event pag */}
+
+            {/* event page */}
             <motion.div
                 variants={_Transition_Page}
                 initial="initial" animate="animate" exit="exit"
                 className="relative min-h-screen flex flex-col px-5 lg:px-20 z-10 "
             >
 
-                {/* initial page */}
+                {/* landing section */}
                 <section className="relative min-h-screen flex flex-col justify-center items-center">
                     <h1 className="text-5xl font-bold text-center text-base-content ">
                         News and Events
                     </h1>
-                    {/* description */}
-                    <p className="text-center text-xl mt-5">
-                        See what is happening in the University of Caloocan City.
-
-                    </p>
-
-                    {/* scrolldown */}
+                    <p className="text-center text-xl mt-5">See what is happening in the University of Caloocan City.</p>
                     <motion.p
                         variants={_Transition_Card}
                         initial="initial" animate="animate" exit="exit"
-                        className="absolute bottom-10 select-none text-base-content text-opacity-50">Scroll down to see the events</motion.p>
+                        className="absolute bottom-10 select-none text-base-content text-opacity-50">
+                        Scroll down to see the events
+                    </motion.p>
 
                 </section>
 
-                {/* events content */}
+                {/* Events section */}
                 <section className="min-h-screen flex flex-col py-32">
                     <h1 className="text-4xl font-bold text-center">Events</h1>
 
-                    <AnimatePresence>
-                        <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                            {Table_Events.map((event) => (
-                                <Event_Card {...event} key={event.id} />
-                            ))}
-                        </div>
-                    </AnimatePresence>
-
+                    {/* loading state if prop is still loading */}
                     <AnimatePresence>
                         <div className="mt-10 flex flex-col gap-5 justify-center items-center">
                             {!loaded && (
@@ -104,11 +97,21 @@ const Events = ({ Table_Events }) => {
                             )}
                         </div>
                     </AnimatePresence>
-                </section>
 
+                    {/* loop events from Table_Events prop */}
+                    <AnimatePresence>
+                        <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
+                            {Table_Events.map((event) => (
+                                <Event_Card {...event} key={event.id} />
+                            ))}
+                        </div>
+                    </AnimatePresence>
+
+                </section>
             </motion.div>
         </>
     )
 }
 
+// export Events page
 export default Events
