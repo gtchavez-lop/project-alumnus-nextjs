@@ -37,7 +37,6 @@ const MerchandisePage = ({ merchList }) => {
     useEffect(e => {
         setTimeout(() => {
             setMerchListLoaded(Object.keys(merchList).length > 0 ? true : false);
-
         }, 200);
     }, [])
 

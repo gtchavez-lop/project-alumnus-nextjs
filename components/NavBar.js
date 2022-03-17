@@ -2,7 +2,8 @@ import { AnimatePresence, motion } from "framer-motion"
 import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useState } from "react"
-import { CgClose, CgDanger, CgMenu, CgMoon, CgProfile, CgShoppingCart, CgSun } from 'react-icons/cg'
+import { CgClose, CgDanger, CgMenu, CgMoon, CgProfile, CgShoppingCart, CgSun, CgList, CgFeed } from 'react-icons/cg'
+import { FaTshirt } from 'react-icons/fa'
 import { themeChange } from "theme-change"
 import SideMenu from "./SideMenu"
 
@@ -113,13 +114,13 @@ const NavBar = e => {
                 )}
             </AnimatePresence>
             {/* navbar */}
-            <motion.div className={`fixed top-0 left-0 w-full navbar justify-between px-5 lg:px-28 z-50 transition-all duration-100 ${_scrollY > 100 ? 'bg-neutral shadow-2xl text-neutral-content' : 'bg-transparent py-10 text-base-content'}`}>
+            <motion.div className={`fixed top-0 left-0 w-full navbar justify-between px-5 lg:px-28 z-50 transition-all duration-100 ${_scrollY < 100 ? 'py-7' : ' backdrop-blur-md'}`}>
                 {/* navbar start */}
                 <div className="flex">
                     <Link href='/' scroll={false}>
                         <div className="cursor-pointer hidden lg:flex items-center">
                             <Logo width={30} height={30} strokeWidth={100} strokeColor={_themeSelected == "business" ? "#D4D4D4" : "#181A2A"} />
-                            <span className={`ml-3 font-bold transition-all duration-100 ${_scrollY < 100 ? 'text-xl' : ''}`}>
+                            <span className={`ml-3 font-bold transition-all duration-100 text-xl ${_scrollY > 100 && 'opacity-0'}`}>
                                 UCC Project Alumnus
                             </span>
                         </div>
@@ -143,20 +144,35 @@ const NavBar = e => {
 
                 {/* navbar end */}
                 <div className="flex gap-2 items-center">
-                    <div className="lg:flex items-center hidden gap-2">
-                        <Link href='/events' scroll={false}>
-                            <a className="btn btn-ghost gap-2 items-center font-bold">  Events </a>
-                        </Link>
-                        <Link href='/listing' scroll={false}>
-                            <a className="btn btn-ghost gap-2 items-center font-bold">  Alumni List </a>
-                        </Link>
-                    </div>
-                    <div className="divider divider-vertical mx-2 hidden lg:block" />
+                    {_scrollY < 100 ? (
+                        <div className="lg:flex items-center hidden gap-2">
+                            <Link href='/events' scroll={false}>
+                                <a className="btn btn-ghost gap-2 items-center font-bold">  Events </a>
+                            </Link>
+                            <Link href='/listing' scroll={false}>
+                                <a className="btn btn-ghost gap-2 items-center font-bold">  Alumni List </a>
+                            </Link>
+                            <Link href="/merch" passHref>
+                                <a className="btn btn-ghost hidden lg:flex"> Merch </a>
+                            </Link>
+                        </div>
+                    ) : (
+                        <div className="lg:flex items-center hidden gap-2">
+                            <Link href='/events' scroll={false}>
+                                <a className="btn btn-ghost btn-square gap-2 items-center font-bold"> <CgList size={20} /> </a>
+                            </Link>
+                            <Link href='/listing' scroll={false}>
+                                <a className="btn btn-ghost btn-square gap-2 items-center font-bold">  <CgFeed size={20} /> </a>
+                            </Link>
+                            <Link href="/merch" passHref>
+                                <a className="btn btn-ghost btn-square hidden lg:flex"> <FaTshirt size={25} /> </a>
+                            </Link>
+                        </div>
+                    )
+                    }
+                    <div className={`divider divider-vertical mx-3`} />
                     <div className="flex items-center gap-1">
-                        <Link href="/merch" passHref>
-                            <a className="btn btn-ghost btn-square hidden lg:flex"> <CgShoppingCart size={25} /> </a>
-                        </Link>
-                        <label className="btn btn-ghost btn-square swap swap-rotate place-items-center content-center">
+                        <label className="btn btn-ghost btn-circle swap swap-rotate place-items-center content-center">
                             <input
                                 checked={_themeSelected === 'corporate' ? true : false}
                                 onChange={e => {
@@ -172,8 +188,8 @@ const NavBar = e => {
                             {
                                 ((_userData.alumniDisplayPhoto) && !loading) ? (
                                     <>
-                                        <label tabIndex={0} className="btn btn-ghost btn-square">
-                                            <div className="avatar">
+                                        <label tabIndex={0} className="btn btn-ghost btn-circle">
+                                            <div className="avatar ">
                                                 <div className="relative w-8 mask mask-squircle">
                                                     <Image src={_userData.alumniDisplayPhoto.url} layout="fill" objectFit="cover" />
                                                 </div>
@@ -218,7 +234,7 @@ const NavBar = e => {
 
                 {/* sign in window */}
                 <input type="checkbox" id="SignIn_PopupWindow" className="modal-toggle" />
-                <div className="modal bg-base-200 bg-opacity-80">
+                <div className="modal fixed bg-base-300 bg-opacity-90 h-screen">
                     <div className="modal-box">
                         <h3 className="font-bold text-xl">Sign in to your account</h3>
 
@@ -233,13 +249,6 @@ const NavBar = e => {
                             </label>
                         </div>
 
-                        {/* error alert */}
-                        {error && (
-                            <div className="alert alert-danger">
-                                {error}
-                            </div>
-                        )}
-
                         <div className="modal-action justify-between">
                             <label htmlFor="SignIn_PopupWindow" className="btn btn-ghost">Close</label>
                             <label onClick={() => SignInUser()} htmlFor="SignIn_PopupWindow" className="btn btn-primary">Sign In</label>
@@ -247,9 +256,17 @@ const NavBar = e => {
                     </div>
                 </div>
 
+                {/* error alert */}
+                {error && (
+                    <div className="alert alert-danger">
+                        {error}
+                    </div>
+                )}
+
+
                 {/* sign out window */}
                 <input type="checkbox" id="SignOut_PopupWindow" className="modal-toggle" />
-                <div className="modal bg-base-200 bg-opacity-80">
+                <div className="modal fixed bg-base-300 bg-opacity-90 h-screen">
                     <div className="modal-box">
                         <h3 className="font-bold text-xl">Sign out</h3>
                         <p>Do you want to sign out?</p>

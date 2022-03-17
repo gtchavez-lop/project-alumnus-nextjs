@@ -108,14 +108,16 @@ const Home = ({ latestEvent }) => {
       </motion.section>
 
       {/* latest event page */}
-      <motion.section>
-        <div className='flex flex-col text-center lg:text-left min-h-screen px-5 lg:px-28'>
-          <p className='text-5xl text-center lg:text-right mt-16'>Current Event</p>
+      <motion.section
+        className='min-h-screen '
+      >
+        {/* bavkground */}
+        {/* <div className='absolute'>
+          <Image src={} />
+        </div> */}
 
-          {/* display latest event */}
-          <div className='w-4/5 md:w-1/2 self-center lg:self-end mt-16 text-left'>
-            <Event_Card {...latestEvent} />
-          </div>
+        <div className='flex flex-col text-center lg:text-left px-5 lg:px-28'>
+
         </div>
 
       </motion.section>
