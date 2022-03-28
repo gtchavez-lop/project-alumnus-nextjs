@@ -54,19 +54,22 @@ const MerchandisePage = ({ merchList }) => {
                 <section className='min-h-screen flex flex-col gap-10'>
                     <p className='text-center text-3xl mt-10 mb-16'>Available Merchandises</p>
                     {merchListLoaded && (
-                        <div className='grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-5'>
+                        <div className='grid grid-cols-2 md:grid-cols-3 gap-5'>
                             {merchList.map((merch, index) => (
-                                <div key={index} className="card bg-base-200 shadow-xl">
-                                    <figure className="py-24 relative my-5">
-                                        <Image src={merch.merchImage.url} objectFit="contain" layout="fill" alt={merch.merchName} />
+                                <div key={index} className="card bg-base-200 shadow-sm">
+                                    <figure className="py-24 relative rounded-md overflow-hidden">
+                                        <Image src={merch.merchImage.url} objectFit="cover" layout="fill" alt={merch.merchName} />
                                     </figure>
                                     <div className="card-body p-4">
                                         <h2 className="card-title font-bold">&#8369;{(merch.merchPrice).toFixed(2)}</h2>
                                         <p>{merch.merchName}</p>
                                         <div className="card-actions self-end mt-5">
-                                            <button className="btn btn-primary flex items-center">
-                                                <CgShoppingCart size={25} className="mr-2" />
-                                                <span>Add to Cart</span>
+                                            <button className="hidden md:flex btn btn-primary items-center">
+                                                <CgShoppingCart size={25} className="md:mr-2" />
+                                                <span className='hidden md:block'>Add to Cart</span>
+                                            </button>
+                                            <button className="md:hidden btn btn-square btn-primary items-center">
+                                                <CgShoppingCart size={25} className="md:mr-2" />
                                             </button>
                                         </div>
                                     </div>

@@ -14,7 +14,7 @@ import apolloClient from "apolloClient"
 const RegisterPage = e => {
     const [createUserWithEmailAndPassword, reg_user, reg_loading, reg_error] = useCreateUserWithEmailAndPassword(getAuth(firebaseApp));
 
-    const [_regStep, _setRegStep] = useState(5)
+    const [_regStep, _setRegStep] = useState(1)
     const [_isWorking, _setIsWorking] = useState(false)
 
     const [user, loading, error] = useAuthState(getAuth(firebaseApp));

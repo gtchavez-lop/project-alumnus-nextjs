@@ -14,80 +14,117 @@ import apolloClient from "../../apolloClient"
 import { gql } from "@apollo/client"
 
 // get all alumnus as a server prop (for preloading) on page request
-export const getServerSideProps = async e => {
-    const { data } = await apolloClient.query({
-        query: gql`
-            query {
-                alumniLists (orderBy: createdAt_DESC) {
-                    createdAt
-                    id
-                    surname
-                    givenName
-                    slug
-                    alumniDisplayPhoto {url}
-                    currentEmail
-                    currentLocation
-                    programCompleted
-                    graduationDate
-                    isCurrentlyWorking
-                    company
-                    workPosition
-                }
-            }
-        `
-    })
+// export const getServerSideProps = async e => {
+//     const { data } = await apolloClient.query({
+//         query: gql`
+//             query {
+//                 alumniLists (orderBy: createdAt_DESC) {
+//                     createdAt
+//                     id
+//                     surname
+//                     givenName
+//                     slug
+//                     alumniDisplayPhoto {url}
+//                     currentEmail
+//                     currentLocation
+//                     programCompleted
+//                     graduationDate
+//                     isCurrentlyWorking
+//                     company
+//                     workPosition
+//                 }
+//             }
+//         `
+//     })
 
-    return {
-        props: {
-            alumnus: data
-        }
-    }
-}
+//     return {
+//         props: {
+//             alumnus: data
+//         }
+//     }
+// }
 
 // create Alumnus page
-const Listing = ({ alumnus }) => {
+const Listing = () => {
+    // alumni list raw data
+    const [_alumnus, set_alumnus] = useState([])
+    const [loaded, setLoaded] = useState(false)
     // states
     const [filteredAlumniList, setFilteredAlumniList] = useState([])
     const [user, loading, error] = useAuthState(getAuth(firebaseApp));
     const [_searchAndFilterState, set_searchAndFilterState] = useState({
         searchQuery: "",
-        orderBy: "createdAt",
+        orderBy: "surname",
         orderDirection: "ASC"
     })
 
+    // get alumnus at page load
+    useEffect(e => {
+        const fetchData = async e => {
+            const { data } = await apolloClient.query({
+                query: gql`
+                    query {
+                        alumniLists (orderBy: createdAt_DESC) {
+                            createdAt
+                            id
+                            surname
+                            givenName
+                            slug
+                            alumniDisplayPhoto {url}
+                            currentEmail
+                            currentLocation
+                            programCompleted
+                            graduationDate
+                            isCurrentlyWorking
+                            company
+                            workPosition
+                        }
+                    }
+                `
+            })
+            if (data) {
+                set_alumnus(data)
+                setLoaded(true)
+            }
+        }
+        fetchData()
+    }, [])
+
     // update and filter alumnus list and push to filteredAlumniList state
     const _ReassignAlumnuList = () => {
-        if (user) {
-            let outputArray = []
-
+        let outputArray = _alumnus.alumniLists
+        if (user && outputArray) {
             // search, filter, and sort alumni list based on _searchAndFilterState state
             if (_searchAndFilterState.searchQuery.length > 0) {
-                outputArray = alumnus.alumniLists.filter(alumnus => {
+                outputArray = _alumnus.alumniLists.filter(alumnus => {
                     return alumnus.surname.toLowerCase().includes(_searchAndFilterState.searchQuery.toLowerCase()) ||
                         alumnus.givenName.toLowerCase().includes(_searchAndFilterState.searchQuery.toLowerCase())
                 })
             } else {
-                outputArray = alumnus.alumniLists
+                outputArray = _alumnus.alumniLists
             }
-
             // sort alumni list using swtich
-            switch (_searchAndFilterState.orderBy) {
+            switch (_searchAndFilterState.orderBy && outputArray) {
                 case "createdAt":
+                    console.log("Selected")
                     outputArray.sort((a, b) => {
                         return a.createdAt > b.createdAt ? -1 : 1
                     })
                     break;
                 case "surname":
+                    console.log("Selected")
                     outputArray.sort((a, b) => {
                         return a.surname > b.surname ? 1 : -1
                     })
                     break;
                 case "givenName":
+                    console.log("Selected")
                     outputArray.sort((a, b) => {
                         return a.givenName > b.givenName ? 1 : -1
                     })
                     break;
                 case "currentEmail":
+                    console.log("Selected")
                     outputArray.sort((a, b) => {
                         return a.currentEmail > b.currentEmail ? 1 : -1
                     })
@@ -101,6 +138,12 @@ const Listing = ({ alumnus }) => {
                     tempArray.push(outputArray[i])
                 }
                 outputArray = tempArray
+            } else {
+                let tempArray = []
+                for (let i = 0; i < outputArray.length; i++) {
+                    tempArray.push(outputArray[i])
+                }
+                outputArray = tempArray
             }
 
             // remove alumni if the user's email is equal to the alumnus' current email
@@ -110,13 +153,13 @@ const Listing = ({ alumnus }) => {
                 })
             }
 
-
             setFilteredAlumniList(outputArray)
         }
     }
 
     // trigger _ReassignAlumnuList on _searchAndFilterState change
     useEffect(() => {
+        console.log("_searchAndFilterState changed")
         _ReassignAlumnuList()
     }, [_searchAndFilterState])
 
@@ -124,6 +167,11 @@ const Listing = ({ alumnus }) => {
     useEffect(() => {
         _ReassignAlumnuList()
     }, [user])
+
+    useEffect(e => {
+        _ReassignAlumnuList()
+    }, [loaded])
+
 
 
     return (

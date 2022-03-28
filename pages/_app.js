@@ -5,7 +5,7 @@ import Head from 'next/head'
 import { motion } from 'framer-motion'
 import { useRouter } from 'next/router'
 
-import NavBar from '../components/NavBar'
+// import NavBar from '../components/NavBar'
 import Footer from '../components/Footer'
 import Navbar_New from '../components/Navbar_New'
 
@@ -20,8 +20,8 @@ const RootApp = ({ Component, pageProps }) => {
       </Head>
 
       {/* navbar */}
-      <NavBar />
-      {/* <Navbar_New /> */}
+      {/* <NavBar /> */}
+      <Navbar_New />
 
       {/* body */}
       <AnimatePresence exitBeforeEnter  > {/* detect changes in navigation and trigger animation for all pages */}

@@ -11,8 +11,8 @@ module.exports = {
   ],
   daisyui: {
     themes: [
-      'business',
-      'corporate',
+      'winter',
+      'night',
     ]
   }
 }

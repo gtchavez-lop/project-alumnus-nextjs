@@ -8,37 +8,39 @@ import apolloClient from "../../apolloClient"
 import { _Transition_Blob_Bottom, _Transition_Blob_Top, _Transition_Card, _Transition_Page } from "../../components/_Animations"
 import Event_Card from "../../components/events/Event_Card"
 
-// get events as a static prop (for preloading) on page request
-export const getStaticProps = async () => {
-    // query events from db
-    const { data } = await apolloClient.query({
-        query: gql`
-            query {
-                news_And_Events {
-                    id
-                    createdAt
-                    eventTitle
-                    eventSlug
-                    eventContent { markdown }
-                    displayImage { url }
-                    eventAuthors { name authorSlug }
-                    eventTags
-                }
-            }
-        `
-    })
-    return {
-        props: {
-            Table_Events: data.news_And_Events
-        }
-    }
-}
-
 // create Events page
-const Events = ({ Table_Events }) => {
+const Events = ({ }) => {
     // states
     const [events, setEvents] = useState()
     const [loaded, setLoaded] = useState(true)
+    const [_Table_Events, set_Table_Events] = useState([])
+
+    // get events at page load
+    useEffect(e => {
+        const fetchData = async e => {
+            const { data } = await apolloClient.query({
+                query: gql`
+                    query {
+                        news_And_Events {
+                            id
+                            createdAt
+                            eventTitle
+                            eventSlug
+                            eventContent { markdown }
+                            displayImage { url }
+                            eventAuthors { name authorSlug }
+                            eventTags
+                        }
+                    }
+                `
+            })
+            if (data) {
+                set_Table_Events(data.news_And_Events)
+                setLoaded(true)
+            }
+        }
+        fetchData();
+    }, [])
 
     return (
         <>
@@ -101,7 +103,7 @@ const Events = ({ Table_Events }) => {
                     {/* loop events from Table_Events prop */}
                     <AnimatePresence>
                         <div className="mt-10 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-3">
-                            {Table_Events.map((event) => (
+                            {loaded && _Table_Events.map((event) => (
                                 <Event_Card {...event} key={event.id} />
                             ))}
                         </div>

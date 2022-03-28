@@ -1,6 +1,6 @@
 import reactMarkdown from 'react-markdown'
 import Link from 'next/link'
-import { CgChevronLeft } from 'react-icons/cg'
+import { CgArrowLeft } from 'react-icons/cg'
 import { motion } from 'framer-motion'
 import { useEffect } from 'react'
 
@@ -90,21 +90,21 @@ const Event_Blog = ({ id, content }) => {
             initial="initial" animate="animate" exit="exit"
         >
             {/* content */}
-            <section className='px-10 lg:px-28 mt-16'>
-                {/* back button */}
-                <div className='flex mt-32'>
+            <section className='px-10 lg:px-28 mt-36'>
+
+                {/* get event title */}
+                <div className='text-5xl my-5 font-bold flex items-center '>
                     <Link href={{
                         pathname: '/events',
                     }}>
-                        <button className='btn btn-secondary btn-link'>
-                            <CgChevronLeft size={25} />
-                            <span className='ml-2'>Back to events</span>
-                        </button>
+                        <motion.div className='flex items-center gap-5 cursor-pointer' whileHover={{ translateX: -10 }}>
+                            <CgArrowLeft size={40} />
+                            <span>{eventTitle}</span>
+                        </motion.div>
                     </Link>
                 </div>
-
                 {/* content */}
-                <div className='pb-20 pt-10'>
+                <div className='pb-20 pt-5'>
                     {/* get author's name */}
                     <p className='my-2 text-gray-400 flex flex-col'>Posted by <span className='ml-2 text-base-content font-bold'>{eventAuthors.name}</span></p>
 
@@ -115,8 +115,6 @@ const Event_Blog = ({ id, content }) => {
                         ))}
                     </div>
 
-                    {/* get event title */}
-                    <p className='text-5xl my-5 font-bold'>{eventTitle}</p>
 
                     <div className='divider' />
 

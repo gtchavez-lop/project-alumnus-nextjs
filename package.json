@@ -10,7 +10,7 @@
   "dependencies": {
     "@apollo/client": "^3.5.9",
     "apollo": "^2.33.9",
-    "daisyui": "^2.1.0",
+    "daisyui": "^2.13.3",
     "firebase": "^9.6.7",
     "framer-motion": "^6.2.8",
     "graphql": "^16.3.0",

@@ -8,7 +8,7 @@ import { themeChange } from "theme-change"
 import SideMenu from "./SideMenu"
 
 // firenase hooks
-import { getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth'
+import { getAuth, signOut } from 'firebase/auth'
 import { useAuthState, useSignInWithEmailAndPassword } from 'react-firebase-hooks/auth'
 import firebaseApp from '../firebaseConfig'
 import apolloClient from "apolloClient"
@@ -37,7 +37,7 @@ const NavBar = e => {
     useEffect(e => {
         themeChange(false)
         let temp = window.localStorage.getItem('theme')
-        _setThemeSelected(temp == 'corporate' ? 'corporate' : 'business')
+        _setThemeSelected(temp == 'winter' ? 'winter' : 'night')
     }, [])
 
     useEffect(() => {
@@ -119,7 +119,7 @@ const NavBar = e => {
                 <div className="flex">
                     <Link href='/' scroll={false}>
                         <div className="cursor-pointer hidden lg:flex items-center">
-                            <Logo width={30} height={30} strokeWidth={100} strokeColor={_themeSelected == "business" ? "#D4D4D4" : "#181A2A"} />
+                            <Logo width={30} height={30} strokeWidth={100} strokeColor={_themeSelected == "night" ? "#D4D4D4" : "#181A2A"} />
                             <span className={`ml-3 font-bold transition-all duration-100 text-xl ${_scrollY > 100 && 'opacity-0'}`}>
                                 UCC Project Alumnus
                             </span>
@@ -137,7 +137,7 @@ const NavBar = e => {
                 <div className="lg:hidden flex">
                     <Link href='/' scroll={false}>
                         <div className="cursor-pointer flex items-center">
-                            <Logo width={30} height={30} strokeWidth={100} strokeColor={_themeSelected == "business" ? "#D4D4D4" : "#181A2A"} />
+                            <Logo width={30} height={30} strokeWidth={100} strokeColor={_themeSelected == "night" ? "#D4D4D4" : "#181A2A"} />
                         </div>
                     </Link>
                 </div>
@@ -174,12 +174,12 @@ const NavBar = e => {
                     <div className="flex items-center gap-1">
                         <label className="btn btn-ghost btn-circle swap swap-rotate place-items-center content-center">
                             <input
-                                checked={_themeSelected === 'corporate' ? true : false}
+                                checked={_themeSelected === 'winter' ? true : false}
                                 onChange={e => {
                                     let activeTheme = window.localStorage.getItem('theme')
-                                    _setThemeSelected(activeTheme === 'business' ? 'business' : 'corporate')
+                                    _setThemeSelected(activeTheme === 'night' ? 'night' : 'winter')
                                 }}
-                                data-toggle-theme="business,corporate" type="checkbox" />
+                                data-toggle-theme="night,winter" type="checkbox" />
                             <CgSun className="swap-on" size={25} />
                             <CgMoon className="swap-off" size={25} />
                         </label>

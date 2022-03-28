@@ -80,8 +80,8 @@ const Home = ({ latestEvent }) => {
             ease: [0.2, 1, 0, 1]
           }
         }}
-        className='fixed top-0 -z-10 right-0 w-full lg:w-3/4 h-screen'>
-        <div className='absolute top-0 z-10 left-0 w-full h-full bg-base-100 bg-opacity-80 lg:bg-opacity-100 lg:bg-transparent lg:bg-gradient-to-r from-base-100  to-transparent' />
+        className='fixed top-0 -z-10 right-0 w-full h-screen'>
+        <div className='absolute top-0 z-10 left-0 w-full h-full bg-base-100 bg-opacity-80 ' />
         <Image src='/ucc-north.jpg' layout='fill' objectFit='cover' />
       </motion.div>
 
