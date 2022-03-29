@@ -10,39 +10,9 @@ import { useAuthState } from 'react-firebase-hooks/auth'
 import firebaseApp from '../../firebaseConfig'
 
 import Alumnus_Card from "../../components/listing/Alumnus_Card"
+import Alumnus_Card_New from "../../components/listing/Alumnus_Card_New"
 import apolloClient from "../../apolloClient"
 import { gql } from "@apollo/client"
-
-// get all alumnus as a server prop (for preloading) on page request
-// export const getServerSideProps = async e => {
-//     const { data } = await apolloClient.query({
-//         query: gql`
-//             query {
-//                 alumniLists (orderBy: createdAt_DESC) {
-//                     createdAt
-//                     id
-//                     surname
-//                     givenName
-//                     slug
-//                     alumniDisplayPhoto {url}
-//                     currentEmail
-//                     currentLocation
-//                     programCompleted
-//                     graduationDate
-//                     isCurrentlyWorking
-//                     company
-//                     workPosition
-//                 }
-//             }
-//         `
-//     })
-
-//     return {
-//         props: {
-//             alumnus: data
-//         }
-//     }
-// }
 
 // create Alumnus page
 const Listing = () => {
@@ -70,14 +40,8 @@ const Listing = () => {
                             surname
                             givenName
                             slug
-                            alumniDisplayPhoto {url}
-                            currentEmail
-                            currentLocation
                             programCompleted
-                            graduationDate
-                            isCurrentlyWorking
-                            company
-                            workPosition
+                            alumniDisplayPhoto {url}
                         }
                     }
                 `
@@ -312,10 +276,16 @@ const Listing = () => {
 
                         {/* loop filteredAlumniList and display card on each *IF* the user is existing  */}
                         <motion.div className="mt-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                            {user && filteredAlumniList.map((alumnus) => (
-                                <Alumnus_Card alumniData={alumnus} key={alumnus.id} />
+                            {user && filteredAlumniList.slice(0, 8).map((alumnus, index) => (
+                                <Alumnus_Card_New key={index} data={alumnus} />
                             ))}
+                            {_searchAndFilterState.searchQuery.length < 1 && (
+                                <div className="card bg-base-300 justify-center items-center">
+                                    <p>. . .</p>
+                                </div>
+                            )}
                         </motion.div>
+
 
                         {/* display a simple note that the searched user is not existing or the user is searching for himself/herself */}
                         <AnimatePresence>

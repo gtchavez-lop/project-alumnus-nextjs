@@ -201,8 +201,8 @@ const Navbar_New = e => {
                             <input value={_searchString}
                                 autoComplete="off"
                                 autoCorrect="off"
-                                autoFocus="false"
-                                spellCheck="false"
+                                autoFocus={false}
+                                spellCheck={false}
                                 tabIndex={-1}
                                 disabled
 
@@ -230,42 +230,10 @@ const Navbar_New = e => {
                     </motion.div>
                 </div>
 
-                {/* nav center on desktop only */}
-                <div className="hidden lg:flex navbar-center gap-1">
-                    <Link href="/" passHref>
-                        <div className="tooltip tooltip-bottom" data-tip="Home">
-                            <div className="btn btn-ghost btn-circle">
-                                <CgHome size={25} />
-                            </div>
-                        </div>
-                    </Link>
-                    <Link href="/events" passHref>
-                        <div className="tooltip tooltip-bottom" data-tip="News and Events">
-                            <div className="btn btn-ghost btn-circle">
-                                <CgCalendar size={25} />
-                            </div>
-                        </div>
-                    </Link>
-                    <Link href="/merch" passHref>
-                        <div className="tooltip tooltip-bottom" data-tip="Merchandise">
-                            <div className="btn btn-ghost btn-circle">
-                                <CgShoppingBag size={25} />
-                            </div>
-                        </div>
-                    </Link>
-                    <Link href="/listing" passHref>
-                        <div className="tooltip tooltip-bottom" data-tip="Alumni List">
-                            <div className="btn btn-ghost btn-circle">
-                                <CgUserList size={25} />
-                            </div>
-                        </div>
-                    </Link>
-                </div>
-
                 {/* navbar end */}
                 <div className="navbar-end gap-1">
-                    {/* links on mobile only */}
-                    <div className="lg:hidden flex gap-2">
+                    {/* links on desktop only */}
+                    <div className="hidden lg:flex gap-2 mr-3">
                         <Link href="/" passHref>
                             <div className="tooltip tooltip-bottom" data-tip="Home">
                                 <div className="btn btn-ghost btn-circle">
@@ -382,7 +350,6 @@ const Navbar_New = e => {
             <div className="modal fixed bg-base-300 bg-opacity-90 h-screen">
                 <div className="modal-box">
                     <h3 className="font-bold text-xl">Sign in to your account</h3>
-
                     <div className="form-control mt-10 gap-3">
                         <label className="input-group input-group-vertical">
                             <span>Email</span>
@@ -393,7 +360,6 @@ const Navbar_New = e => {
                             <input type="password" value={_userPassword} onChange={e => _setUserPassword(e.target.value)} placeholder="••••••••" className="input input-bordered input-primary" />
                         </label>
                     </div>
-
                     <div className="modal-action justify-between">
                         <label htmlFor="SignIn_PopupWindow" className="btn btn-ghost">Close</label>
                         <label onClick={SignInUser} htmlFor="SignIn_PopupWindow" className="btn btn-primary">Sign In</label>

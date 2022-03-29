@@ -1,53 +1,28 @@
 import Head from 'next/head'
-import { motion } from 'framer-motion'
+import { motion, useViewportScroll } from 'framer-motion'
 import { _Transition_Page, _Transition_HeroPage } from '../components/_Animations'
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
-import apolloClient from '../apolloClient'
-import { gql } from '@apollo/client'
-import Event_Card from '../components/events/Event_Card'
-
-// get events as a static prop
-export const getStaticProps = async e => {
-  const { data } = await apolloClient.query({
-    query: gql`
-      {
-          news_And_Events (last: 1) {
-              id
-              createdAt
-              eventTitle
-              eventSlug
-              eventAuthors { name authorSlug }
-          }
-      }
-    `
-  })
-
-  return {
-    props: {
-      latestEvent: data.news_And_Events[0]
-    },
-  }
-}
 
 // create Home page
-const Home = ({ latestEvent }) => {
+const Home = ({ }) => {
   const [_scrollY, _setScrollY] = useState(0)
   const [_innerHeight, _setInnerHeight] = useState(0)
+  const { scrollYProgress, scrollY } = useViewportScroll()
 
 
   // scroll to top using useEffect
-  useEffect(() => {
-    window.scrollTo(0, 0)
-  }, [])
+  // useEffect(() => {
+  //   window.scrollTo(0, 0)
+  // }, [])
 
 
   // set inner height and listen to scroll updates
   useEffect(() => {
-    _setInnerHeight(window.innerHeight)
+    // _setInnerHeight(window.innerHeight)
     window.addEventListener("scroll", e => {
-      _setScrollY(window.scrollY)
+      _setScrollY(scrollY.get())
     })
   }, [_scrollY])
 
@@ -65,25 +40,19 @@ const Home = ({ latestEvent }) => {
       <motion.div
         variants={_Transition_HeroPage}
         initial="initial" animate="animate" exit="exit"
-        whileInView={_scrollY < (_innerHeight - 250) ? {
-          opacity: 1,
-          scale: 1,
-          transition: {
-            duration: 1,
-            ease: [0.2, 1, 0, 1]
-          }
-        } : {
-          opacity: 0,
-          scale: 1.2,
-          transition: {
-            duration: 1,
-            ease: [0.2, 1, 0, 1]
-          }
-        }}
         className='fixed top-0 -z-10 right-0 w-full h-screen'>
-        <div className='absolute top-0 z-10 left-0 w-full h-full bg-base-100 bg-opacity-80 ' />
-        <Image src='/ucc-north.jpg' layout='fill' objectFit='cover' />
+        <div className='absolute top-0 z-10 left-0 w-full h-full bg-base-300 bg-opacity-80 ' />
+
+        <div
+          style={{ opacity: 1 - (scrollY.get() / 500), top: -(scrollY.get() / 20) }}
+          className='relative w-full h-full' >
+          <Image src='/ucc-north.jpg' layout='fill' objectFit='cover' />
+        </div>
       </motion.div>
+
+
+
+
 
       {/* hero page */}
       <motion.section
@@ -107,20 +76,46 @@ const Home = ({ latestEvent }) => {
         </div>
       </motion.section>
 
-      {/* latest event page */}
-      <motion.section
-        className='min-h-screen '
-      >
-        {/* bavkground */}
-        {/* <div className='absolute'>
-          <Image src={} />
-        </div> */}
 
-        <div className='flex flex-col text-center lg:text-left px-5 lg:px-28'>
+      {/* Reconnect Page */}
+      <section
+        className="py-28 flex flex-col justify-center items-center px-5 lg:px-28 select-none">
+        <motion.p className='text-5xl flex flex-col lg:flex-row text-center lg:gap-4' initial={{ opacity: 0, translateX: 100 }} whileInView={{ opacity: 1, translateX: 0 }}>
+          <span className='font-bold'>Reconnect</span>
+          <span className="font-thin">with the people you know</span>
+        </motion.p>
+        <motion.p className='max-w-lg text-center mt-5' initial={{ opacity: 0, translateX: -100 }} whileInView={{ opacity: 1, translateX: 0 }}>
+          We want you to find people you had a connection with on your days here in the university and to find something and get involved.
+        </motion.p>
 
-        </div>
+      </section>
 
-      </motion.section>
+      {/* Rekindle Page */}
+      <section
+        className="py-28 flex flex-col justify-center items-center px-5 lg:px-28 select-none">
+        <motion.p className='text-5xl flex flex-col lg:flex-row text-center lg:gap-4' initial={{ opacity: 0, translateX: -100 }} whileInView={{ opacity: 1, translateX: 0 }}>
+          <span className='font-bold'>Rekindle</span>
+          <span className="font-thin">memories you had</span>
+        </motion.p>
+        <motion.p className='max-w-lg text-center mt-5' initial={{ opacity: 0, translateX: 100 }} whileInView={{ opacity: 1, translateX: 0 }}>
+          See what other people you know or knew are doing and bring back memories that come back with it as well. Never forget the people who were there back then as we provide the platform to help you find them.
+        </motion.p>
+
+      </section>
+
+      {/* Relive Page */}
+      <section
+        className="py-28 flex flex-col justify-center items-center px-5 lg:px-28 select-none mb-32">
+        <motion.p className='text-5xl flex flex-col lg:flex-row text-center lg:gap-4' initial={{ opacity: 0, translateX: 100 }} whileInView={{ opacity: 1, translateX: 0 }}>
+          <span className='font-bold'>Relive</span>
+          <span className="font-thin">the lives you spent</span>
+        </motion.p>
+        <motion.p className='max-w-lg text-center mt-5' initial={{ opacity: 0, translateX: -100 }} whileInView={{ opacity: 1, translateX: 0 }}>
+          Be a part of their lives. Be a part of the community. Be something unique. Be yourself. This platform will help you to let those sparks burn again
+        </motion.p>
+
+      </section>
+
 
 
     </>
