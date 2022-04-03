@@ -4,6 +4,7 @@ import { _Transition_Page, _Transition_HeroPage } from '../components/_Animation
 import Image from 'next/image'
 import Link from 'next/link'
 import { useEffect, useState } from 'react'
+import { useAuth } from '../components/_AuthProvider'
 
 // create Home page
 const Home = ({ }) => {
@@ -11,6 +12,7 @@ const Home = ({ }) => {
   const [_innerHeight, _setInnerHeight] = useState(0)
   const { scrollYProgress, scrollY } = useViewportScroll()
 
+  const { currentUser } = useAuth()
 
   // scroll to top using useEffect
   // useEffect(() => {

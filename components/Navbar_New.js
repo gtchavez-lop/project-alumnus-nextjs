@@ -2,16 +2,14 @@ import Logo from "./Logo"
 import { useState, useEffect, useRef } from 'react'
 import Link from 'next/link'
 import Image from 'next/image'
-import { motion, AnimatePresence } from 'framer-motion'
+import { motion, AnimatePresence, useViewportScroll, LayoutGroup } from 'framer-motion'
+import { useAuth } from '../components/_AuthProvider'
 
 // icons
-import { CgSun, CgMoon, CgShoppingBag, CgHome, CgSearch, CgArrowLeft, CgChevronDown, CgLogOut, CgCalendar, CgUserList } from 'react-icons/cg'
+import { CgSun, CgMoon, CgShoppingBag, CgHome, CgSearch, CgArrowLeft, CgChevronDown, CgLogOut, CgCalendar, CgUserList, CgPen, CgLogIn } from 'react-icons/cg'
 import { themeChange } from "theme-change";
 
 // firebase auth
-import { getAuth, signInWithEmailAndPassword, signOut } from 'firebase/auth'
-import firebaseApp from '../firebaseConfig'
-import { useAuthState } from 'react-firebase-hooks/auth'
 import { gql } from "@apollo/client"
 import apolloClient from "apolloClient"
 
@@ -77,28 +75,54 @@ const Navbar_New = e => {
     // const [_themeSelected, _setThemeSelected] = useState("");
     const [_menuShown, _setMenuShown] = useState(false);
     const [_searchShown, _setSearchShown] = useState(false);
-    const [_user, _authLoading, _authError] = useAuthState(getAuth(firebaseApp))
-    const [_userData, _setUserData] = useState({})
     const [_isSearching, _setIsSearching] = useState(false)
-    const [_userDisplayImage, _setUserDisplayImage] = useState("")
+    const [_userDisplayImage, _setUserDisplayImage] = useState()
     const [_alumniList, _setAlumniList] = useState([])
     const [_searchResultOpen, _setSearchResultOpen] = useState(false)
     const [_searchString, _setSearchString] = useState("")
     const [_isThresholdReached, _setIsThresholdReached] = useState(false)
-    const _themeSelected = useRef("")
+    const [_themeSelected, _setThemeSelected] = useState("")
     const [_userEmail, _setUserEmail] = useState('')
     const [_userPassword, _setUserPassword] = useState('')
+    const { scrollY, scrollYProgress } = useViewportScroll()
+    const _userData_Ref = useRef()
 
-    // firebase
+    // user context
+    const { currentUser, loading, userData, login, logout } = useAuth()
+
+
+    // get user data method
+
+    const getAlumniList = async e => {
+        if (_user) {
+            const query = gql`
+                query {
+                    alumniLists {
+                        id
+                        surname
+                        givenName
+                        alumniDisplayPhoto { url }
+                    }
+                }
+            `
+
+            const { data } = await apolloClient.query({ query })
+            if (data) {
+                let temp = data.alumniLists
+                // console.log("data", data.alumniLists[0])
+                _setAlumniList(temp)
+                // _setUserDisplayImage(data.alumniLists[0].alumniDisplayPhoto.url)
+            }
+        }
+    }
 
 
     // get scrollY position
-    // const _scrollY = useRef(0)
-    const handleScroll = e => {
-        // _scrollY.current = window.scrollY
-        if (window.scrollY > 50) { _setIsThresholdReached(true) } else _setIsThresholdReached(false);
-    }
     useEffect(e => {
+        const handleScroll = e => {
+            // _scrollY.current = window.scrollY
+            if (scrollY.get() > 50) { _setIsThresholdReached(true) } else _setIsThresholdReached(false);
+        }
         window.addEventListener('scroll', handleScroll)
         return () => window.removeEventListener('scroll', handleScroll)
     }, [])
@@ -108,53 +132,12 @@ const Navbar_New = e => {
         themeChange(false);
 
         // get theme value
-        let temp = window.localStorage.getItem('theme')
-        _themeSelected.current = temp
-        // _setThemeSelected(temp == 'night' ? 'night' : 'winter')
-
-        // get all alumni data on page load
-        const query = gql`
-            query {
-                alumniLists {
-                    id
-                    surname
-                    givenName
-                    alumniDisplayPhoto { url }
-                }
-            }
-        `
-        apolloClient.query({ query }).then(res => {
-            _setAlumniList(res.data.alumniLists)
-        })
-
+        _setThemeSelected(window?.localStorage.getItem("theme"))
     }, [])
 
-    // get user data on auth state change
-    useEffect(e => {
-        if (_user) {
-            const query = gql`
-                query {
-                    alumniLists (where: {
-                        currentEmail: "${_user.email}"
-                    }) {
-                        surname
-                        givenName
-                        alumniDisplayPhoto { url }
-                    }
-                }
-            `
-
-            apolloClient.query({ query })
-                .then(res => res)
-                .then(data => {
-                    _setUserData(data.data.alumniLists[0])
-                    _setUserDisplayImage(data.data.alumniLists[0].alumniDisplayPhoto.url)
-                })
-        }
-    }, [_authLoading])
 
     const SignInUser = async e => {
-        await signInWithEmailAndPassword(getAuth(firebaseApp), _userEmail, _userPassword)
+        await login(_userEmail, _userPassword)
     }
 
     return (
@@ -193,23 +176,62 @@ const Navbar_New = e => {
                 <div className="hidden lg:flex navbar-start gap-5">
                     <Link href="/" passHref>
                         <div className="btn btn-ghost btn-square ">
-                            <Logo width={30} height={30} strokeWidth={75} strokeColor={_themeSelected.current === "winter" ? "#394E6A" : "#B3C5EF"} />
+                            <Logo width={30} height={30} strokeWidth={75} strokeColor={_themeSelected === "winter" ? "#394E6A" : "#E2E8F4"} />
                         </div>
                     </Link>
-                    {_user ? (
-                        <label className="input-group ">
-                            <input value={_searchString}
-                                autoComplete="off"
-                                autoCorrect="off"
-                                autoFocus={false}
-                                spellCheck={false}
-                                tabIndex={-1}
-                                disabled
-
-                                onChange={e => { e.currentTarget.value.length > 0 ? _setSearchResultOpen(true) : _setSearchResultOpen(false); _setSearchString(e.currentTarget.value) }}
-                                type="text" placeholder="Find someone here..." className="input input-bordered input-sm" />
-                            <span><CgSearch size={15} /></span>
-                        </label>
+                    {currentUser ? (
+                        // <label className="input-group ">
+                        //     <input value={_searchString}
+                        //         autoComplete="off"
+                        //         autoCorrect="off"
+                        //         autoFocus={false}
+                        //         spellCheck={false}
+                        //         tabIndex={-1}
+                        //         disabled
+                        //         onChange={e => { e.currentTarget.value.length > 0 ? _setSearchResultOpen(true) : _setSearchResultOpen(false); _setSearchString(e.currentTarget.value) }}
+                        //         type="text" placeholder="Find someone here..." className="input input-bordered input-sm" />
+                        //     <span><CgSearch size={15} /></span>
+                        // </label>
+                        <AnimatePresence AnimatePresence >
+                            {
+                                scrollY.get() < 50 && (
+                                    <motion.div
+                                        initial={{ opacity: 0, translateX: -20, transition: { duration: 0.2, easing: "easeOut" } }}
+                                        animate={{ opacity: 1, translateX: 0, transition: { duration: 0.2, easing: "easeIn" } }}
+                                        exit={{ opacity: 0, translateX: 20, transition: { duration: 0.2, easing: "easeOut" } }}
+                                        className="hidden lg:flex gap-2 ml-3 ">
+                                        <Link href="/" passHref>
+                                            <div className="tooltip tooltip-bottom" data-tip="Home">
+                                                <div className="btn btn-ghost btn-circle">
+                                                    <CgHome size={25} />
+                                                </div>
+                                            </div>
+                                        </Link>
+                                        <Link href="/events" passHref>
+                                            <div className="tooltip tooltip-bottom" data-tip="News and Events">
+                                                <div className="btn btn-ghost btn-circle">
+                                                    <CgCalendar size={25} />
+                                                </div>
+                                            </div>
+                                        </Link>
+                                        <Link href="/merch" passHref>
+                                            <div className="tooltip tooltip-bottom" data-tip="Merchandise">
+                                                <div className="btn btn-ghost btn-circle">
+                                                    <CgShoppingBag size={25} />
+                                                </div>
+                                            </div>
+                                        </Link>
+                                        <Link href="/listing" passHref>
+                                            <div className="tooltip tooltip-bottom" data-tip="Alumni List">
+                                                <div className="btn btn-ghost btn-circle">
+                                                    <CgUserList size={25} />
+                                                </div>
+                                            </div>
+                                        </Link>
+                                    </motion.div>
+                                )
+                            }
+                        </AnimatePresence>
                     ) : (
                         <p className="text-xl font-bold">UCC Alumnus</p>
                     )}
@@ -232,62 +254,57 @@ const Navbar_New = e => {
 
                 {/* navbar end */}
                 <div className="navbar-end gap-1">
-                    {/* links on desktop only */}
-                    <div className="hidden lg:flex gap-2 mr-3">
-                        <Link href="/" passHref>
-                            <div className="tooltip tooltip-bottom" data-tip="Home">
-                                <div className="btn btn-ghost btn-circle">
-                                    <CgHome size={25} />
-                                </div>
-                            </div>
-                        </Link>
-                        <Link href="/events" passHref>
-                            <div className="tooltip tooltip-bottom" data-tip="News and Events">
-                                <div className="btn btn-ghost btn-circle">
-                                    <CgCalendar size={25} />
-                                </div>
-                            </div>
-                        </Link>
-                        <Link href="/merch" passHref>
-                            <div className="tooltip tooltip-bottom" data-tip="Merchandise">
-                                <div className="btn btn-ghost btn-circle">
-                                    <CgShoppingBag size={25} />
-                                </div>
-                            </div>
-                        </Link>
-                        <Link href="/listing" passHref>
-                            <div className="tooltip tooltip-bottom" data-tip="Alumni List">
-                                <div className="btn btn-ghost btn-circle">
-                                    <CgUserList size={25} />
-                                </div>
-                            </div>
-                        </Link>
-                    </div>
+
                     {
-                        (_user && _userData && _userDisplayImage) ? (
-                            <Link href="/me" passHref>
-                                <div className="btn btn-secondary btn-outline items-center rounded-full hidden lg:flex">
-                                    <div className="avatar">
-                                        <div className="w-7 rounded-full overflow-hidden relative">
-                                            <Image src={_userDisplayImage} layout="fill" />
-                                        </div>
-                                    </div>
-                                    <span className="ml-3">
-                                        {_userData.givenName}
-                                    </span>
-                                </div>
+                        (currentUser && userData) ? (
+                            <Link href="/me" passHref scroll={false}>
+                                {/* <motion.div animate={{ transition: { duration: 0.2 } }} className={`btn btn-secondary btn-outline transition-all ${scrollY.get() > 50 && "btn-circle"} items-center rounded-full hidden lg:flex`}>
+                                    <motion.div className="avatar">
+                                        <motion.div layoutId="avatar" className="w-7 rounded-full overflow-hidden relative">
+                                            <Image src={userData.alumniDisplayPhoto?.url} layout="fill" />
+                                        </motion.div>
+                                    </motion.div>
+                                    {scrollY.get() < 50 && (
+                                        <motion.span className="ml-3">
+                                            {userData.givenName}
+                                        </motion.span>
+                                    )}
+                                </motion.div> */}
+
+                                {
+                                    scrollY.get() < 50 ? (
+                                        <motion.div transition={{ layout: { duration: 0.2, ease: [0.07, 0.85, 0.16, 0.94] } }} className="btn btn-primary btn-outline items-center rounded-full hidden lg:flex">
+                                            <motion.div className="avatar">
+                                                <motion.div layout className="w-7 rounded-full overflow-hidden relative">
+                                                    <Image src={userData.alumniDisplayPhoto?.url} layout="fill" />
+                                                </motion.div>
+                                            </motion.div>
+                                            <motion.span className="ml-3">
+                                                {userData.givenName}
+                                            </motion.span>
+                                        </motion.div>
+                                    ) : (
+                                        <motion.div transition={{ layout: { duration: 0.2, ease: [0.07, 0.85, 0.16, 0.94] } }} className="btn btn-primary btn-outline btn-circle items-center rounded-full hidden lg:flex">
+                                            <motion.div className="avatar">
+                                                <motion.div layout className="w-10 rounded-full overflow-hidden relative">
+                                                    <Image src={userData.alumniDisplayPhoto?.url} layout="fill" />
+                                                </motion.div>
+                                            </motion.div>
+                                        </motion.div>
+                                    )
+                                }
                             </Link>
                         ) : (
-                            <>
+                            <div className="flex items-center gap-2">
                                 <Link href="/register" passHref>
-                                    <div className="btn btn-primary rounded-full">
-                                        <p>Sign Up</p>
+                                    <div className="btn btn-primary btn-circle">
+                                        <span><CgPen size={18} /></span>
                                     </div>
                                 </Link>
-                                <div>
-                                    <label htmlFor="SignIn_PopupWindow" className="btn btn-primary btn-outline rounded-full modal-button">Sign In</label>
-                                </div>
-                            </>
+                                <label htmlFor="SignIn_PopupWindow" className="btn btn-primary btn-outline btn-circle modal-button">
+                                    <span><CgLogIn size={18} /></span>
+                                </label>
+                            </div>
                         )
                     }
                     <div className="dropdown dropdown-end text-right ">
@@ -296,43 +313,55 @@ const Navbar_New = e => {
                             <CgChevronDown size={25} />
                         </label>
                         <ul tabIndex={0} className="dropdown-content menu p-2 mt-5 shadow bg-base-300 rounded gap-1 w-64">
-                            {((_user && _userData && _userDisplayImage)) && (
+                            {(userData) && (
                                 <>
-                                    <Link href="/me" passHref>
+                                    <Link href="/me" passHref scroll={false}>
                                         <li className="flex flex-col">
                                             <a className="w-full text-left  relative flex justify-start items-center">
                                                 <div className="avatar">
                                                     <div className="w-10 rounded-full overflow-hidden relative">
-                                                        <Image width={40} height={40} objectFit="cover" src={_userDisplayImage} onError={e => {
+                                                        <Image width={40} height={40} objectFit="cover" src={userData.alumniDisplayPhoto.url} onError={e => {
                                                             _setUserDisplayImage("./pa-transparent-white.png")
                                                         }} loading="lazy" />
                                                     </div>
                                                 </div>
                                                 <div>
-                                                    <p className="text-sm">{_userData.surname}, {_userData.givenName}</p>
+                                                    <p className="text-sm">{userData.surname}, {userData.givenName}</p>
                                                     <p className="text-xs">See your profile</p>
                                                 </div>
                                             </a>
                                         </li>
                                     </Link>
-                                    <li onClick={e => {
-                                        signOut(getAuth(firebaseApp))
-                                    }}><a className="w-full text-right"> <CgLogOut size={25} /> <span>Logout</span> </a></li>
+                                    <li onClick={logout}><a className="w-full text-right"> <CgLogOut size={25} /> <span>Logout</span> </a></li>
                                     <div className="divider"></div>
                                 </>
                             )}
-                            <li><a className="w-full text-right">News and Events</a></li>
-                            <li><a className="w-full text-right">Merchandise</a></li>
                             <li>
+                                <Link href="/events" passHref scroll={false}>
+                                    <a className="w-full text-right">News and Events</a>
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/merch" passHref scroll={false}>
+                                    <a className="w-full text-right">Merchandise</a>
+                                </Link>
+                            </li>
+                            <li>
+                                <Link href="/listing" passHref scroll={false}>
+                                    <a className="w-full text-right">Alumni List</a>
+                                </Link>
+                            </li>
+                            <li onClick={e => {
+                                let temp = window.localStorage.getItem('theme')
+                                _setThemeSelected(temp)
+                            }}>
                                 <label className="w-full swap swap-rotate place-items-center content-center">
                                     <input
-                                        data-toggle-theme="night,winter"
-                                        checked={_themeSelected.current === 'winter' ? true : false}
+                                        checked={_themeSelected === "winter"}
                                         onChange={e => {
-                                            let temp = window.localStorage.getItem('theme')
-                                            _themeSelected.current = temp
-                                            console.log(_themeSelected.current)
+                                            e.target.checked = _themeSelected === "winter" ? true : false
                                         }}
+                                        data-toggle-theme="night,winter"
                                         type="checkbox" />
                                     <CgMoon className="swap-on" size={25} />
                                     <CgSun className="swap-off" size={25} />

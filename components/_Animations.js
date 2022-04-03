@@ -269,6 +269,32 @@ export const _Transition_Blob_Profile = {
         }
     }
 }
+export const _Transition_Blob_Top_Center = {
+    initial: {
+        clipPath: "circle(0% at 50% 0%)",
+        opacity: 0,
+        transition: {
+            duration: 0,
+            ease: [0.2, 1, 0, 1]
+        }
+    },
+    animate: {
+        clipPath: "circle(60% at 50% 0%)",
+        opacity: 0.5,
+        transition: {
+            duration: 0.75,
+            ease: [0.2, 1, 0, 1]
+        }
+    },
+    exit: {
+        clipPath: "circle(30% at 50% 0%)",
+        opacity: 0,
+        transition: {
+            duration: 0.25,
+            ease: [1, 0, 0.8, 0]
+        }
+    }
+}
 
 // slide transitions
 export const _Transition_Slide_Left = {

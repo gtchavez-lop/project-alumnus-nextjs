@@ -5,14 +5,11 @@ import { useEffect, useRef, useState } from "react"
 import { _Transition_Blob_Bottom, _Transition_Blob_Top, _Transition_Card, _Transition_Page } from "../../components/_Animations"
 import { CgDanger } from "react-icons/cg"
 
-import { getAuth, } from 'firebase/auth'
-import { useAuthState } from 'react-firebase-hooks/auth'
-import firebaseApp from '../../firebaseConfig'
-
 import Alumnus_Card from "../../components/listing/Alumnus_Card"
 import Alumnus_Card_New from "../../components/listing/Alumnus_Card_New"
 import apolloClient from "../../apolloClient"
 import { gql } from "@apollo/client"
+import { useAuth } from '../../components/_AuthProvider'
 
 // create Alumnus page
 const Listing = () => {
@@ -21,12 +18,13 @@ const Listing = () => {
     const [loaded, setLoaded] = useState(false)
     // states
     const [filteredAlumniList, setFilteredAlumniList] = useState([])
-    const [user, loading, error] = useAuthState(getAuth(firebaseApp));
     const [_searchAndFilterState, set_searchAndFilterState] = useState({
         searchQuery: "",
         orderBy: "surname",
         orderDirection: "ASC"
     })
+
+    const { currentUser, loading, userData, login, logout } = useAuth()
 
     // get alumnus at page load
     useEffect(e => {
@@ -57,7 +55,7 @@ const Listing = () => {
     // update and filter alumnus list and push to filteredAlumniList state
     const _ReassignAlumnuList = () => {
         let outputArray = _alumnus.alumniLists
-        if (user && outputArray) {
+        if (currentUser && outputArray) {
             // search, filter, and sort alumni list based on _searchAndFilterState state
             if (_searchAndFilterState.searchQuery.length > 0) {
                 outputArray = _alumnus.alumniLists.filter(alumnus => {
@@ -111,9 +109,9 @@ const Listing = () => {
             }
 
             // remove alumni if the user's email is equal to the alumnus' current email
-            if (user.email) {
+            if (currentUser.email) {
                 outputArray = outputArray.filter(alumnus => {
-                    return alumnus.currentEmail !== user.email
+                    return alumnus.currentEmail !== currentUser.email
                 })
             }
 
@@ -130,7 +128,7 @@ const Listing = () => {
     // trigger _ReassignAlumnuList on user state change
     useEffect(() => {
         _ReassignAlumnuList()
-    }, [user])
+    }, [currentUser])
 
     useEffect(e => {
         _ReassignAlumnuList()
@@ -166,11 +164,11 @@ const Listing = () => {
                     <p className="text-center text-xl mt-5">See people who became part of the University of Caloocan City.</p>
 
                     {/* display a toast if the user is not signed in */}
-                    {(user && !loading) ? (
+                    {(currentUser) ? (
                         <motion.p
                             variants={_Transition_Card}
                             initial="initial" animate="animate" exit="exit"
-                            className="absolute bottom-10 select-none text-base-content text-opacity-50">Scroll Down to see the form</motion.p>
+                            className="absolute bottom-10 select-none text-base-content text-opacity-50">Scroll Down to see the list</motion.p>
                     ) : (
                         <motion.div
                             variants={_Transition_Card}
@@ -186,7 +184,7 @@ const Listing = () => {
 
                 {/* alumnus list section */}
                 {/* only show alumnus list section if user object is existing and has value */}
-                {user && (
+                {currentUser && (
                     <section className="min-h-screen flex flex-col pt-28 mb-36">
                         <h1 className="text-4xl font-bold text-center">Alumnus List</h1>
 
@@ -276,7 +274,7 @@ const Listing = () => {
 
                         {/* loop filteredAlumniList and display card on each *IF* the user is existing  */}
                         <motion.div className="mt-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                            {user && filteredAlumniList.slice(0, 8).map((alumnus, index) => (
+                            {currentUser && filteredAlumniList.slice(0, 8).map((alumnus, index) => (
                                 <Alumnus_Card_New key={index} data={alumnus} />
                             ))}
                             {_searchAndFilterState.searchQuery.length < 1 && (
