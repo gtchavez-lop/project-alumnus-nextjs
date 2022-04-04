@@ -10,60 +10,33 @@ import Alumnus_Card_New from "../../components/listing/Alumnus_Card_New"
 import apolloClient from "../../apolloClient"
 import { gql } from "@apollo/client"
 import { useAuth } from '../../components/_AuthProvider'
+import { useListing } from "../../components/_AlumniListProvider"
 
 // create Alumnus page
 const Listing = () => {
-    // alumni list raw data
-    const [_alumnus, set_alumnus] = useState([])
-    const [loaded, setLoaded] = useState(false)
     // states
     const [filteredAlumniList, setFilteredAlumniList] = useState([])
     const [_searchAndFilterState, set_searchAndFilterState] = useState({
         searchQuery: "",
-        orderBy: "surname",
+        orderBy: "givenName",
         orderDirection: "ASC"
     })
 
     const { currentUser, loading, userData, login, logout } = useAuth()
-
-    // get alumnus at page load
-    useEffect(e => {
-        const fetchData = async e => {
-            const { data } = await apolloClient.query({
-                query: gql`
-                    query {
-                        alumniLists (orderBy: createdAt_DESC) {
-                            createdAt
-                            id
-                            surname
-                            givenName
-                            slug
-                            programCompleted
-                            alumniDisplayPhoto {url}
-                        }
-                    }
-                `
-            })
-            if (data) {
-                set_alumnus(data)
-                setLoaded(true)
-            }
-        }
-        fetchData()
-    }, [])
+    const { alumniList, loading: loadingList, getAlumniList } = useListing()
 
     // update and filter alumnus list and push to filteredAlumniList state
     const _ReassignAlumnuList = () => {
-        let outputArray = _alumnus.alumniLists
+        let outputArray = alumniList
         if (currentUser && outputArray) {
             // search, filter, and sort alumni list based on _searchAndFilterState state
             if (_searchAndFilterState.searchQuery.length > 0) {
-                outputArray = _alumnus.alumniLists.filter(alumnus => {
+                outputArray = alumniList.filter(alumnus => {
                     return alumnus.surname.toLowerCase().includes(_searchAndFilterState.searchQuery.toLowerCase()) ||
                         alumnus.givenName.toLowerCase().includes(_searchAndFilterState.searchQuery.toLowerCase())
                 })
             } else {
-                outputArray = _alumnus.alumniLists
+                outputArray = alumniList
             }
             // sort alumni list using swtich
             switch (_searchAndFilterState.orderBy && outputArray) {
@@ -132,7 +105,7 @@ const Listing = () => {
 
     useEffect(e => {
         _ReassignAlumnuList()
-    }, [loaded])
+    }, [loadingList])
 
 
 
@@ -274,14 +247,14 @@ const Listing = () => {
 
                         {/* loop filteredAlumniList and display card on each *IF* the user is existing  */}
                         <motion.div className="mt-5 grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-3">
-                            {currentUser && filteredAlumniList.slice(0, 8).map((alumnus, index) => (
+                            {currentUser && filteredAlumniList.map((alumnus, index) => (
                                 <Alumnus_Card_New key={index} data={alumnus} />
                             ))}
-                            {_searchAndFilterState.searchQuery.length < 1 && (
+                            {/* {_searchAndFilterState.searchQuery.length < 1 && (
                                 <div className="card bg-base-300 justify-center items-center">
                                     <p>. . .</p>
                                 </div>
-                            )}
+                            )} */}
                         </motion.div>
 
 

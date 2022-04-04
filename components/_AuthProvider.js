@@ -3,6 +3,8 @@ import firebaseApp from '../firebaseConfig';
 import { getAuth, onAuthStateChanged, signInWithEmailAndPassword } from 'firebase/auth';
 import { gql } from "@apollo/client"
 import apolloClient from "apolloClient"
+import { motion } from 'framer-motion';
+import { CgSpinner } from 'react-icons/cg'
 
 const AuthContext = createContext();
 
@@ -48,8 +50,7 @@ export const AuthProvider = ({ children }) => {
             })
 
             setUserData(data.alumniLists[0])
-
-            return data.alumniLists[0]
+            return data.alumniLists[0];
         }
 
     }
@@ -75,7 +76,18 @@ export const AuthProvider = ({ children }) => {
 
     return (
         <AuthContext.Provider value={user}>
-            {(!loading) && children}
+            {loading ? (
+                <div className='absolute top-0 left-0 w-full h-full bg-zinc-900 text-white flex flex-col items-center justify-center'>
+                    <motion.div animate={{ rotate: 360 }} transition={{ ease: 'linear', duration: 1, repeat: Infinity }}>
+                        <CgSpinner size={30} />
+                    </motion.div>
+                    <p className='mt-4'>Loading Authentication Module</p>
+                </div>
+            ) : (
+                <>
+                    {children}
+                </>
+            )}
         </AuthContext.Provider>
     )
 } 

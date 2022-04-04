@@ -6,7 +6,7 @@ import { motion, AnimatePresence, useViewportScroll, LayoutGroup } from 'framer-
 import { useAuth } from '../components/_AuthProvider'
 
 // icons
-import { CgSun, CgMoon, CgShoppingBag, CgHome, CgSearch, CgArrowLeft, CgChevronDown, CgLogOut, CgCalendar, CgUserList, CgPen, CgLogIn } from 'react-icons/cg'
+import { CgSun, CgMoon, CgShoppingBag, CgHome, CgSearch, CgArrowLeft, CgChevronDown, CgLogOut, CgCalendar, CgUserList, CgPen, CgLogIn, CgSpinner } from 'react-icons/cg'
 import { themeChange } from "theme-change";
 
 // firebase auth
@@ -194,7 +194,7 @@ const Navbar_New = e => {
                         // </label>
                         <AnimatePresence AnimatePresence >
                             {
-                                scrollY.get() < 50 && (
+                                !_isThresholdReached && (
                                     <motion.div
                                         initial={{ opacity: 0, translateX: -20, transition: { duration: 0.2, easing: "easeOut" } }}
                                         animate={{ opacity: 1, translateX: 0, transition: { duration: 0.2, easing: "easeIn" } }}
@@ -258,24 +258,19 @@ const Navbar_New = e => {
                     {
                         (currentUser && userData) ? (
                             <Link href="/me" passHref scroll={false}>
-                                {/* <motion.div animate={{ transition: { duration: 0.2 } }} className={`btn btn-secondary btn-outline transition-all ${scrollY.get() > 50 && "btn-circle"} items-center rounded-full hidden lg:flex`}>
-                                    <motion.div className="avatar">
-                                        <motion.div layoutId="avatar" className="w-7 rounded-full overflow-hidden relative">
-                                            <Image src={userData.alumniDisplayPhoto?.url} layout="fill" />
-                                        </motion.div>
-                                    </motion.div>
-                                    {scrollY.get() < 50 && (
-                                        <motion.span className="ml-3">
-                                            {userData.givenName}
-                                        </motion.span>
-                                    )}
-                                </motion.div> */}
-
                                 {
-                                    scrollY.get() < 50 ? (
-                                        <motion.div transition={{ layout: { duration: 0.2, ease: [0.07, 0.85, 0.16, 0.94] } }} className="btn btn-primary btn-outline items-center rounded-full hidden lg:flex">
+                                    _isThresholdReached ? (
+                                        <motion.div className="btn btn-primary btn-outline btn-circle items-center rounded-full hidden lg:flex">
                                             <motion.div className="avatar">
-                                                <motion.div layout className="w-7 rounded-full overflow-hidden relative">
+                                                <motion.div layout transition={{ layout: { duration: 0.25, ease: [0.07, 0.85, 0.16, 0.94] } }} className="w-10 rounded-full overflow-hidden relative">
+                                                    <Image src={userData.alumniDisplayPhoto?.url} layout="fill" />
+                                                </motion.div>
+                                            </motion.div>
+                                        </motion.div>
+                                    ) : (
+                                        <motion.div className="btn btn-primary btn-outline items-center rounded-full hidden lg:flex">
+                                            <motion.div className="avatar">
+                                                <motion.div layout transition={{ layout: { duration: 0.25, ease: [0.07, 0.85, 0.16, 0.94] } }} className="w-7 rounded-full overflow-hidden relative">
                                                     <Image src={userData.alumniDisplayPhoto?.url} layout="fill" />
                                                 </motion.div>
                                             </motion.div>
@@ -283,27 +278,31 @@ const Navbar_New = e => {
                                                 {userData.givenName}
                                             </motion.span>
                                         </motion.div>
-                                    ) : (
-                                        <motion.div transition={{ layout: { duration: 0.2, ease: [0.07, 0.85, 0.16, 0.94] } }} className="btn btn-primary btn-outline btn-circle items-center rounded-full hidden lg:flex">
-                                            <motion.div className="avatar">
-                                                <motion.div layout className="w-10 rounded-full overflow-hidden relative">
-                                                    <Image src={userData.alumniDisplayPhoto?.url} layout="fill" />
-                                                </motion.div>
-                                            </motion.div>
-                                        </motion.div>
                                     )
                                 }
                             </Link>
                         ) : (
                             <div className="flex items-center gap-2">
-                                <Link href="/register" passHref>
-                                    <div className="btn btn-primary btn-circle">
-                                        <span><CgPen size={18} /></span>
-                                    </div>
-                                </Link>
-                                <label htmlFor="SignIn_PopupWindow" className="btn btn-primary btn-outline btn-circle modal-button">
-                                    <span><CgLogIn size={18} /></span>
-                                </label>
+                                {
+                                    !loading ? (
+                                        <div className="flex items-center gap-2">
+                                            <Link href="/register" passHref>
+                                                <div className="btn btn-primary btn-circle">
+                                                    <span><CgPen size={18} /></span>
+                                                </div>
+                                            </Link>
+                                            <label htmlFor="SignIn_PopupWindow" className="btn btn-primary btn-outline btn-circle modal-button">
+                                                <span><CgLogIn size={18} /></span>
+                                            </label>
+                                        </div>
+                                    ) : (
+                                        <div className="flex items-center gap-2">
+                                            <motion.div animate={{ rotate: 360 }} transition={{ ease: 'linear', duration: 1, repeat: Infinity }}>
+                                                <CgSpinner size={30} />
+                                            </motion.div>
+                                        </div>
+                                    )
+                                }
                             </div>
                         )
                     }
