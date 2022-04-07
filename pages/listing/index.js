@@ -137,7 +137,7 @@ const Listing = () => {
                     <p className="text-center text-xl mt-5">See people who became part of the University of Caloocan City.</p>
 
                     {/* display a toast if the user is not signed in */}
-                    {(currentUser) ? (
+                    {(userData) ? (
                         <motion.p
                             variants={_Transition_Card}
                             initial="initial" animate="animate" exit="exit"
@@ -157,7 +157,7 @@ const Listing = () => {
 
                 {/* alumnus list section */}
                 {/* only show alumnus list section if user object is existing and has value */}
-                {currentUser && (
+                {userData && (
                     <section className="min-h-screen flex flex-col pt-28 mb-36">
                         <h1 className="text-4xl font-bold text-center">Alumnus List</h1>
 

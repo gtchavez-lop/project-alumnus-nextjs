@@ -4,6 +4,7 @@ import Link from 'next/link'
 import Image from 'next/image'
 import { motion, AnimatePresence, useViewportScroll, LayoutGroup } from 'framer-motion'
 import { useAuth } from '../components/_AuthProvider'
+import { useListing } from "../components/_AlumniListProvider"
 
 // icons
 import { CgSun, CgMoon, CgShoppingBag, CgHome, CgSearch, CgArrowLeft, CgChevronDown, CgLogOut, CgCalendar, CgUserList, CgPen, CgLogIn, CgSpinner } from 'react-icons/cg'
@@ -89,48 +90,21 @@ const Navbar_New = e => {
 
     // user context
     const { currentUser, loading, userData, login, logout } = useAuth()
-
-
-    // get user data method
-
-    const getAlumniList = async e => {
-        if (_user) {
-            const query = gql`
-                query {
-                    alumniLists {
-                        id
-                        surname
-                        givenName
-                        alumniDisplayPhoto { url }
-                    }
-                }
-            `
-
-            const { data } = await apolloClient.query({ query })
-            if (data) {
-                let temp = data.alumniLists
-                // console.log("data", data.alumniLists[0])
-                _setAlumniList(temp)
-                // _setUserDisplayImage(data.alumniLists[0].alumniDisplayPhoto.url)
-            }
-        }
-    }
-
+    // alumni context
+    const { alumniList, loading: alumniLoading, getAlumniList } = useListing()
 
     // get scrollY position
     useEffect(e => {
         const handleScroll = e => {
-            // _scrollY.current = window.scrollY
-            if (scrollY.get() > 50) { _setIsThresholdReached(true) } else _setIsThresholdReached(false);
+            _setIsThresholdReached(scrollY.get() > 100 ? true : false)
         }
         window.addEventListener('scroll', handleScroll)
         return () => window.removeEventListener('scroll', handleScroll)
     }, [])
 
-    // initiate theme state
     useEffect(e => {
+        // initiate theme state
         themeChange(false);
-
         // get theme value
         _setThemeSelected(window?.localStorage.getItem("theme"))
     }, [])
@@ -179,8 +153,7 @@ const Navbar_New = e => {
                             <Logo width={30} height={30} strokeWidth={75} strokeColor={_themeSelected === "winter" ? "#394E6A" : "#E2E8F4"} />
                         </div>
                     </Link>
-                    {currentUser ? (
-                        // <label className="input-group ">
+                    {/* // <label className="input-group ">
                         //     <input value={_searchString}
                         //         autoComplete="off"
                         //         autoCorrect="off"
@@ -191,50 +164,56 @@ const Navbar_New = e => {
                         //         onChange={e => { e.currentTarget.value.length > 0 ? _setSearchResultOpen(true) : _setSearchResultOpen(false); _setSearchString(e.currentTarget.value) }}
                         //         type="text" placeholder="Find someone here..." className="input input-bordered input-sm" />
                         //     <span><CgSearch size={15} /></span>
-                        // </label>
-                        <AnimatePresence AnimatePresence >
-                            {
-                                !_isThresholdReached && (
-                                    <motion.div
-                                        initial={{ opacity: 0, translateX: -20, transition: { duration: 0.2, easing: "easeOut" } }}
-                                        animate={{ opacity: 1, translateX: 0, transition: { duration: 0.2, easing: "easeIn" } }}
-                                        exit={{ opacity: 0, translateX: 20, transition: { duration: 0.2, easing: "easeOut" } }}
-                                        className="hidden lg:flex gap-2 ml-3 ">
-                                        <Link href="/" passHref>
-                                            <div className="tooltip tooltip-bottom" data-tip="Home">
-                                                <div className="btn btn-ghost btn-circle">
-                                                    <CgHome size={25} />
-                                                </div>
+                        // </label> */}
+                    <>
+                        {
+                            !_isThresholdReached && (
+                                <motion.div
+                                    initial={{ opacity: 0, translateX: -20, transition: { duration: 0.2, easing: "easeOut" } }}
+                                    animate={{ opacity: 1, translateX: 0, transition: { duration: 0.2, easing: "easeIn" } }}
+                                    exit={{ opacity: 0, translateX: 20, transition: { duration: 0.2, easing: "easeOut" } }}
+                                    className="hidden lg:flex gap-2 ">
+                                    <Link href="/" passHref>
+                                        <div className="tooltip tooltip-bottom" data-tip="Home">
+                                            <div className="btn btn-ghost btn-circle">
+                                                <CgHome size={25} />
                                             </div>
-                                        </Link>
-                                        <Link href="/events" passHref>
-                                            <div className="tooltip tooltip-bottom" data-tip="News and Events">
-                                                <div className="btn btn-ghost btn-circle">
-                                                    <CgCalendar size={25} />
-                                                </div>
+                                        </div>
+                                    </Link>
+                                    <Link href="/events" passHref>
+                                        <div className="tooltip tooltip-bottom" data-tip="News and Events">
+                                            <div className="btn btn-ghost btn-circle">
+                                                <CgCalendar size={25} />
                                             </div>
-                                        </Link>
-                                        <Link href="/merch" passHref>
-                                            <div className="tooltip tooltip-bottom" data-tip="Merchandise">
-                                                <div className="btn btn-ghost btn-circle">
-                                                    <CgShoppingBag size={25} />
-                                                </div>
+                                        </div>
+                                    </Link>
+                                    <Link href="/merch" passHref>
+                                        <div className="tooltip tooltip-bottom" data-tip="Merchandise">
+                                            <div className="btn btn-ghost btn-circle">
+                                                <CgShoppingBag size={25} />
                                             </div>
-                                        </Link>
-                                        <Link href="/listing" passHref>
-                                            <div className="tooltip tooltip-bottom" data-tip="Alumni List">
-                                                <div className="btn btn-ghost btn-circle">
-                                                    <CgUserList size={25} />
-                                                </div>
+                                        </div>
+                                    </Link>
+                                    <Link href="/listing" passHref>
+                                        <div className="tooltip tooltip-bottom" data-tip="Alumni List">
+                                            <div className="btn btn-ghost btn-circle">
+                                                <CgUserList size={25} />
                                             </div>
-                                        </Link>
-                                    </motion.div>
-                                )
-                            }
-                        </AnimatePresence>
-                    ) : (
-                        <p className="text-xl font-bold">UCC Alumnus</p>
-                    )}
+                                        </div>
+                                    </Link>
+                                </motion.div>
+                            )
+                        }
+                        {_isThresholdReached && (
+                            <motion.div
+                                initial={{ opacity: 0, translateX: -20, transition: { duration: 0.2, easing: "easeOut" } }}
+                                animate={{ opacity: 1, translateX: 0, transition: { duration: 0.2, easing: "easeIn" } }}
+                                exit={{ opacity: 0, translateX: 20, transition: { duration: 0.2, easing: "easeOut" } }}
+                                className="hidden lg:flex ">
+                                <p className="text-lg font-semibold">Project Alumnus</p>
+                            </motion.div>
+                        )}
+                    </>
                 </div>
 
                 {/* mobile navstart */}
@@ -262,7 +241,7 @@ const Navbar_New = e => {
                                     _isThresholdReached ? (
                                         <motion.div className="btn btn-primary btn-outline btn-circle items-center rounded-full hidden lg:flex">
                                             <motion.div className="avatar">
-                                                <motion.div layout transition={{ layout: { duration: 0.25, ease: [0.07, 0.85, 0.16, 0.94] } }} className="w-10 rounded-full overflow-hidden relative">
+                                                <motion.div layoutId="avatar_navbar" transition={{ layout: { duration: 0.25, ease: [0.07, 0.85, 0.16, 0.94] } }} className="w-10 rounded-full overflow-hidden relative">
                                                     <Image src={userData.alumniDisplayPhoto?.url} layout="fill" />
                                                 </motion.div>
                                             </motion.div>
@@ -270,7 +249,7 @@ const Navbar_New = e => {
                                     ) : (
                                         <motion.div className="btn btn-primary btn-outline items-center rounded-full hidden lg:flex">
                                             <motion.div className="avatar">
-                                                <motion.div layout transition={{ layout: { duration: 0.25, ease: [0.07, 0.85, 0.16, 0.94] } }} className="w-7 rounded-full overflow-hidden relative">
+                                                <motion.div layoutId="avatar_navbar" transition={{ layout: { duration: 0.25, ease: [0.07, 0.85, 0.16, 0.94] } }} className="w-7 rounded-full overflow-hidden relative">
                                                     <Image src={userData.alumniDisplayPhoto?.url} layout="fill" />
                                                 </motion.div>
                                             </motion.div>
@@ -284,22 +263,18 @@ const Navbar_New = e => {
                         ) : (
                             <div className="flex items-center gap-2">
                                 {
-                                    !loading ? (
-                                        <div className="flex items-center gap-2">
+                                    !loading && (
+                                        <div className="flex items-center gap-2 lg:mr-5">
                                             <Link href="/register" passHref>
-                                                <div className="btn btn-primary btn-circle">
-                                                    <span><CgPen size={18} /></span>
+                                                <div className="btn btn-primary lg:rounded-full">
+                                                    <CgPen size={18} className="lg:mr-2" />
+                                                    <span className="hidden lg:block">Sign Up</span>
                                                 </div>
                                             </Link>
-                                            <label htmlFor="SignIn_PopupWindow" className="btn btn-primary btn-outline btn-circle modal-button">
-                                                <span><CgLogIn size={18} /></span>
+                                            <label htmlFor="SignIn_PopupWindow" className="btn btn-primary btn-outline modal-button lg:rounded-full">
+                                                <CgLogIn size={18} className="lg:mr-2" />
+                                                <span className="hidden lg:block">Sign In</span>
                                             </label>
-                                        </div>
-                                    ) : (
-                                        <div className="flex items-center gap-2">
-                                            <motion.div animate={{ rotate: 360 }} transition={{ ease: 'linear', duration: 1, repeat: Infinity }}>
-                                                <CgSpinner size={30} />
-                                            </motion.div>
                                         </div>
                                     )
                                 }

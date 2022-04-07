@@ -12,7 +12,7 @@ const Home = ({ }) => {
   const [_innerHeight, _setInnerHeight] = useState(0)
   const { scrollYProgress, scrollY } = useViewportScroll()
 
-  const { currentUser } = useAuth()
+  const { currentUser, userData } = useAuth()
 
   // scroll to top using useEffect
   // useEffect(() => {
@@ -72,9 +72,13 @@ const Home = ({ }) => {
           <p className=''>Graduating from the University doesn&#39;t end there. Find and invite people to see what&#39;s the life of the next generation</p>
 
           {/* coa to "/register" */}
-          <Link href='/register' scroll={false} passHref>
-            <a className='btn btn-primary lg:w-max mt-5'>Apply for an Alumnus Account</a>
-          </Link>
+          {
+            !userData && (
+              <Link href='/register' scroll={false} passHref>
+                <a className='btn btn-primary lg:w-max mt-5'>Apply for an Alumnus Account</a>
+              </Link>
+            )
+          }
         </div>
       </motion.section>
 

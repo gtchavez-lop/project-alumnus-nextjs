@@ -1,7 +1,7 @@
 import { _Transition_Blob_Left, _Transition_Card, _Transition_Page, _Transition_Slide_Left } from "../../components/_Animations"
 import { motion, useMotionValue, AnimateSharedLayout } from "framer-motion"
 import React, { useEffect, useState, CSSProperties, useRef } from 'react'
-import { CgDanger } from 'react-icons/cg'
+import { CgDanger, CgUser } from 'react-icons/cg'
 
 import { getAuth } from 'firebase/auth'
 import { useAuthState, useCreateUserWithEmailAndPassword } from 'react-firebase-hooks/auth'
@@ -10,17 +10,18 @@ import Image from "next/image"
 import { gql, useMutation } from "@apollo/client"
 import slugify from "slugify"
 import apolloClient from "apolloClient"
+import { useAuth } from "../../components/_AuthProvider"
 
 const RegisterPage = e => {
     const [createUserWithEmailAndPassword, reg_user, reg_loading, reg_error] = useCreateUserWithEmailAndPassword(getAuth(firebaseApp));
+    const { loading: currentUserLoading, currentUser } = useAuth()
 
     const [_regStep, _setRegStep] = useState(1)
     const [_isWorking, _setIsWorking] = useState(false)
 
-    const [user, loading, error] = useAuthState(getAuth(firebaseApp));
     const [reg_password, set_regPassword] = useState('');
 
-    const _userDisplayPhoto = useRef()
+    const [_userDisplayPhoto, _setUserDisplayPhoto] = useState()
     const [regID, setRegID] = useState('')
 
     const [_userRegData, _setUserRegData] = useState({
@@ -39,55 +40,57 @@ const RegisterPage = e => {
         workPosition: "",
     })
 
+    // queries
+    const query_publishUser = gql`
+        mutation {
+            publishAlumniList (where: {
+                id: "${regID}"
+            }) {
+                id
+            }
+        }
+    `
+    const query_createUser = gql`
+        mutation {
+            createAlumniList (data: {
+                surname: "${_userRegData.surname}",
+                givenName: "${_userRegData.givenName}",
+                currentEmail: "${_userRegData.currentEmail}",
+                isVerified: ${_userRegData.isVerified},
+                slug: "${slugify(`${_userRegData.surname} ${_userRegData.givenName}`)}",
+                birthdate: "${_userRegData.birthdate}",
+                currentLocation: "${_userRegData.currentLocation}",
+                programCompleted: "${_userRegData.programCompleted}",
+                graduationDate: "${_userRegData.graduationDate}",
+                isCurrentlyWorking: ${_userRegData.isCurrentlyWorking},
+                company: "${_userRegData.company}",
+                workPosition: "${_userRegData.workPosition}",
+            }) {
+                id
+            }
+        }
+    `
+    const [mutate_publishUser, { data: publishUserData, loading: publishUserLoading, error: publishUserError }] = useMutation(query_publishUser, { client: apolloClient })
+    const [mutate_createUser, { data: createUserData, loading: createUserLoading, error: createUserError }] = useMutation(query_createUser, { client: apolloClient })
+
+
     const CreateUser_Firebase = async e => {
         createUserWithEmailAndPassword(_userRegData.currentEmail, reg_password)
+        await CreateUser_GraphCMS();
     }
 
     const CreateUser_GraphCMS = async e => {
-        const query = gql`
-            mutation {
-                createAlumniList (data: {
-                    surname: "${_userRegData.surname}",
-                    givenName: "${_userRegData.givenName}",
-                    currentEmail: "${_userRegData.currentEmail}",
-                    isVerified: ${_userRegData.isVerified},
-                    slug: "${slugify(`${_userRegData.surname} ${_userRegData.givenName}`)}",
-                    birthdate: "${_userRegData.birthdate}",
-                    currentLocation: "${_userRegData.currentLocation}",
-                    programCompleted: "${_userRegData.programCompleted}",
-                    graduationDate: "${_userRegData.graduationDate}",
-                    isCurrentlyWorking: ${_userRegData.isCurrentlyWorking},
-                    company: "${_userRegData.company}",
-                    workPosition: "${_userRegData.workPosition}",
-                }) {
-                    id
-                }
-            }
-        `
-        const { data } = await apolloClient.query({
-            query: query,
-
-        })
-        setRegID(data.createAlumniList.id)
+        await mutate_createUser()
+        console.log(createUserData, createUserLoading, createUserError)
+        setRegID(publishUserData.createAlumniList.id)
+        await PublishUser_GraphCMS();
     }
 
     const PublishUser_GraphCMS = async e => {
-        const query = gql`
-            mutation {
-                publishAlumniList (where: {
-                    id: "${regID}"
-                }) {
-                    id
-                }
-            }
-        `
-
-        const { data } = await apolloClient.query({
-            query: query
-        })
-
-        if (data) {
+        await mutate_publishUser()
+        if (publishUserData) {
             // redirect to the alumni list
+            alert("Successfully registered! Please login to continue.")
             window.location.href = `/`
         }
     }
@@ -99,28 +102,28 @@ const RegisterPage = e => {
             />
             <motion.div
                 variants={_Transition_Page} initial="initial" animate="animate" exit="exit"
-                className="min-h-screen px-5 lg:px-32 gap-5 lg:mt-0">
+                className=" px-5 lg:px-32 gap-5 lg:mt-0 flex flex-col lg:grid lg:grid-cols-2 lg:gap-10">
 
-                <section className="min-h-screen flex justify-center items-center relative">
-                    <div className="flex flex-col text-center">
-                        <h1 className="text-5xl font-bold text-center text-base-content ">
+                <section className="h-[100vh] flex justify-center items-center relative">
+                    <div className="flex flex-col text-center ">
+                        <h1 className="text-5xl font-bold text-center text-base-content lg:text-left">
                             Register an Account
                         </h1>
-                        <p className="text-center text-xl mt-5">
+                        <p className="text-center text-xl mt-5 lg:text-left">
                             Register an account to get started and get access to the most of the features.
                         </p>
-                        <p className="text-center text-sm">
+                        <p className="text-center text-sm lg:text-left">
                             <span className="text-red-500">*</span>
                             Only graduates of University of Caloocan City can register an account.
                         </p>
                     </div>
 
                     {/* scroll down to register */}
-                    {(!user && !loading) ? (
+                    {(!currentUser && !currentUserLoading) ? (
                         <motion.p
                             variants={_Transition_Card}
                             initial="initial" animate="animate" exit="exit"
-                            className="absolute bottom-10 select-none text-base-content text-opacity-50">Scroll Down to see the form</motion.p>
+                            className="absolute bottom-10 select-none text-base-content text-opacity-50 lg:hidden">Scroll Down to see the form</motion.p>
                     ) : (
                         <motion.div
                             variants={_Transition_Card}
@@ -134,13 +137,15 @@ const RegisterPage = e => {
                     )}
                 </section>
 
-                {(!user && !loading) && (
+                {(!currentUser && !currentUserLoading) && (
                     <motion.section
                         variants={_Transition_Card}
                         initial="initial" animate="animate" exit="exit"
-                        className="min-h-screen flex flex-col-reverse lg:flex-row justify-end lg:justify-between relative">
+                        className="min-h-screen flex flex-col items-center lg:justify-center relative">
+
+                        <progress class="progress progress-primary w-1/2 my-10" value={_regStep} max={5} />
                         {/* form */}
-                        <motion.div className="flex flex-col w-full gap-3 max-w-xl">
+                        <motion.div className="flex w-full gap-3 max-w-xl">
                             <>
                                 {/* step 1 */}
                                 {_regStep == 1 && (
@@ -295,15 +300,29 @@ const RegisterPage = e => {
 
 
                                         <p className="text-3xl mb-10">Display Photo</p>
-
-                                        {/* <Image src={`/${_userDisplayPhoto.current}`} width={200} height={200} /> */}
+                                        {
+                                            _userDisplayPhoto ? (
+                                                <div className="avatar self-center mb-5">
+                                                    <div className="w-40 mask mask-squircle relative">
+                                                        <Image src={URL.createObjectURL(_userDisplayPhoto)} layout="fill" />
+                                                    </div>
+                                                </div>
+                                            ) : (
+                                                <div className="w-40 h-40 self-center mask mask-squircle bg-base-300 mb-5 flex justify-center items-center">
+                                                    <CgUser size={70} />
+                                                </div>
+                                            )
+                                        }
                                         <label className="input-group input-group-vertical mt-2">
                                             <span>Upload Display Photo (unavailable for now)</span>
                                             <input type="file" name="alumniDisplayPhoto"
                                                 accept="image/*"
                                                 disabled
-                                                onChange={e => _setDisplayPhoto(e)}
-                                                className="form-control w-full bg-base-100 px-2 py-3 text-base-content rounded cursor-pointer " />
+                                                onChange={e => {
+                                                    _setUserDisplayPhoto(e.target.files[0])
+                                                    console.log(e.target.files[0])
+                                                }}
+                                                className=" w-full bg-base-100 px-2 py-3 text-base-content rounded cursor-pointer " />
                                         </label>
 
 
@@ -334,26 +353,13 @@ const RegisterPage = e => {
                                         <div className="flex w-full justify-between gap-2">
                                             <a onClick={() => _setRegStep(_regStep - 1)} className="btn btn-primary mt-7">Prev</a>
                                             <a onClick={async () => {
-                                                // await CreateUser_Firebase();
-                                                // await CreateUser_GraphCMS();
+                                                await CreateUser_Firebase();
                                             }} className="btn btn-primary mt-7">Register</a>
                                         </div>
                                     </motion.div>
                                 )}
                             </>
                         </motion.div>
-
-                        {/* steps */}
-                        <div>
-                            <ul className="steps steps-horizontal lg:steps-vertical mb-16 lg:mb-0 lg:mt-10 transition-all duration-100">
-                                <li className={`step ${_regStep >= 1 ? 'step-primary' : ""}`}>Account Detail</li>
-                                <li className={`step ${_regStep >= 2 ? 'step-primary' : ""}`}>Personal Information</li>
-                                <li className={`step ${_regStep >= 3 ? 'step-primary' : ""}`}>Current Status</li>
-                                <li className={`step ${_regStep >= 4 ? 'step-primary' : ""}`}>Display Photo</li>
-                                <li className={`step ${_regStep >= 5 ? 'step-primary' : ""}`}>Verification</li>
-                            </ul>
-
-                        </div>
                     </motion.section>
                 )}
 
