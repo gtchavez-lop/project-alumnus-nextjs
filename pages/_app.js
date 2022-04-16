@@ -1,23 +1,33 @@
-import '../styles/globals.css'
-import { useEffect } from 'react'
+import '../styles/globals.css';
+import { useEffect } from 'react';
+import { useRouter } from 'next/router';
+import App from 'next/app';
 
-import { themeChange } from 'theme-change'
-import Navbar from '../components/Navbar'
+import { themeChange } from 'theme-change';
+import { motion, AnimatePresence } from 'framer-motion';
+import Navbar from '../components/Navbar';
+import UserDataProvider from '../components/Context_UserData';
 
 const RootApp = ({ Component, pageProps }) => {
+	const router = useRouter();
 
-  return (
-    <>
+	return (
+		<>
+			<UserDataProvider>
+				<Navbar />
 
-      <Navbar />
+				<div className="flex w-full justify-center overflow-x-hidden">
+					<div className="flex w-full max-w-5xl flex-col self-center px-10 md:px-20 xl:px-0">
+						<AnimatePresence exitBeforeEnter>
+							<motion.div key={router.route}>
+								<Component {...pageProps} />
+							</motion.div>
+						</AnimatePresence>
+					</div>
+				</div>
+			</UserDataProvider>
+		</>
+	);
+};
 
-      <div className='flex justify-center w-full'>
-        <div className='w-full max-w-5xl flex flex-col self-center px-10 md:px-20 xl:px-0'>
-          <Component {...pageProps} />
-        </div>
-      </div>
-    </>
-  )
-}
-
-export default RootApp
+export default RootApp;

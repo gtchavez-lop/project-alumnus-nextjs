@@ -2,6 +2,43 @@
 @tailwind components;
 @tailwind utilities;
 
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:ital,wght@0,200;0,300;0,400;0,500;0,600;0,700;0,800;1,200;1,300;1,400;1,500;1,600;1,700;1,800&display=swap');
+
 html {
-    overflow-x: hidden;
+	overflow-x: hidden;
+	font-family: 'Plus Jakarta Sans', sans-serif;
+}
+
+::-webkit-scrollbar {
+	width: 2px;
+	height: 2px;
+}
+::-webkit-scrollbar-button {
+	width: 0px;
+	height: 0px;
+}
+::-webkit-scrollbar-thumb {
+	background: #e1e1e1;
+	border: 0px none #ffffff;
+	border-radius: 50px;
+}
+::-webkit-scrollbar-thumb:hover {
+	background: #ffffff;
+}
+::-webkit-scrollbar-thumb:active {
+	background: #000000;
+}
+::-webkit-scrollbar-track {
+	background: #666666;
+	border: 0px none #ffffff;
+	border-radius: 50px;
+}
+::-webkit-scrollbar-track:hover {
+	background: #666666;
+}
+::-webkit-scrollbar-track:active {
+	background: #333333;
+}
+::-webkit-scrollbar-corner {
+	background: transparent;
 }

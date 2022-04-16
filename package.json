@@ -9,18 +9,26 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@apollo/client": "^3.5.10",
     "autoprefixer": "^10.4.4",
     "daisyui": "^2.13.6",
+    "dayjs": "^1.11.0",
+    "firebase": "^9.6.10",
     "framer-motion": "^6.2.9",
+    "graphql": "^16.3.0",
     "next": "12.1.4",
     "postcss": "^8.4.12",
     "react": "18.0.0",
     "react-dom": "18.0.0",
+    "react-firebase-hooks": "^5.0.3",
     "react-icons": "^4.3.1",
+    "react-markdown": "^8.0.2",
     "theme-change": "^2.0.2"
   },
   "devDependencies": {
     "eslint": "8.13.0",
-    "eslint-config-next": "12.1.4"
+    "eslint-config-next": "12.1.4",
+    "prettier": "^2.6.2",
+    "prettier-plugin-tailwindcss": "^0.1.8"
   }
 }
