@@ -7,6 +7,7 @@ import { themeChange } from 'theme-change';
 import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '../components/Navbar';
 import UserDataProvider from '../components/Context_UserData';
+import Footer from '../components/Footer';
 
 const RootApp = ({ Component, pageProps }) => {
 	const router = useRouter();
@@ -25,6 +26,8 @@ const RootApp = ({ Component, pageProps }) => {
 						</AnimatePresence>
 					</div>
 				</div>
+
+				<Footer />
 			</UserDataProvider>
 		</>
 	);

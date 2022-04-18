@@ -177,7 +177,7 @@ const Listing = ({ alumniListData }) => {
 							</div>
 							<div className="col-span-1 flex items-center justify-evenly">
 								<div className="dropdown">
-									<label tabIndex={0} className="btn btn-accent btn-outline">
+									<label tabIndex={0} className="btn btn-outline btn-accent">
 										Sort by
 									</label>
 									<ul
@@ -195,7 +195,7 @@ const Listing = ({ alumniListData }) => {
 							</div>
 							<div className="col-span-1 flex items-center justify-evenly">
 								<div className="dropdown">
-									<label tabIndex={0} className="btn btn-accent btn-outline">
+									<label tabIndex={0} className="btn btn-outline btn-accent">
 										Filter by
 									</label>
 									<ul
@@ -223,9 +223,18 @@ const Listing = ({ alumniListData }) => {
 						{/* loop filteredAlumniList and display card on each *IF* the user is existing  */}
 						<motion.div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
 							{auth_user &&
-								filteredAlumniList.map((alumnus, index) => {
-									return <Alumnus_Card_New key={index} data={alumnus} />;
+								filteredAlumniList.map((alumni, index) => {
+									if (alumni.id != userData.id) {
+										return <Alumnus_Card_New key={index} data={alumni} />;
+									}
 								})}
+
+							{filteredAlumniList.length == 0 && (
+								<div className="col-span-2 flex items-center justify-center">
+									<CgDanger size={25} />
+									<span>No alumni found</span>
+								</div>
+							)}
 						</motion.div>
 					</section>
 				)}

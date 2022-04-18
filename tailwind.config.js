@@ -6,7 +6,11 @@ module.exports = {
 	theme: {
 		extend: {},
 	},
-	plugins: [require('daisyui'), require('prettier-plugin-tailwindcss')],
+	plugins: [
+		require('daisyui'),
+		require('prettier-plugin-tailwindcss'),
+		require('@tailwindcss/forms'),
+	],
 	daisyui: {
 		themes: ['light', 'dark'],
 	},

@@ -38,7 +38,6 @@ const Navbar = (e) => {
 	useEffect(() => {
 		themeChange(false);
 		_setThemeSelected(window.localStorage.getItem('theme'));
-		console.log(hasUserData, userData);
 	}, []);
 
 	useEffect(() => {
@@ -114,13 +113,13 @@ const Navbar = (e) => {
 									<a
 										onClick={(e) => _setModalOpen(true)}
 										className="btn btn-ghost">
-										Login
+										Sign In
 									</a>
-									<a className="btn btn-ghost">Register</a>
+									<a className="btn btn-ghost">Sign Up</a>
 								</>
 							)}
 						</div>
-						<div className="dropdown-end dropdown">
+						<div className="dropdown-hover dropdown dropdown-end">
 							<label tabIndex={0} className="avatar btn btn-ghost btn-circle">
 								{auth_user && hasUserData ? (
 									<div className="relative w-10 overflow-hidden rounded-full">
@@ -137,7 +136,7 @@ const Navbar = (e) => {
 							</label>
 							<ul
 								tabIndex={0}
-								className="dropdown-content menu rounded-box menu-compact mt-3 w-52 bg-base-100 p-2 shadow">
+								className="dropdown-content menu rounded-box menu-compact w-52 bg-base-100 p-2 shadow">
 								{auth_user && hasUserData ? (
 									<>
 										<li
@@ -156,10 +155,10 @@ const Navbar = (e) => {
 								) : (
 									<>
 										<li onClick={(e) => _setModalOpen(true)}>
-											<a>Login</a>
+											<a>Sign In</a>
 										</li>
 										<li>
-											<a>Signup</a>
+											<a>Sign Up</a>
 										</li>
 										<div className="divider" />
 									</>

@@ -98,11 +98,11 @@ const Alumnus_Card_Information = ({ data, closeModal }) => {
 						</m.p>
 
 						<div className="my-10 grid grid-cols-2 gap-5">
-							<div onClick={closeModal} className="btn btn-primary btn-outline">
+							<div onClick={closeModal} className="btn btn-outline btn-primary">
 								Close
 							</div>
 
-							<Link href={`/alumni/${slug}&${id}`} passHref scroll>
+							<Link href={`/listing/${slug}&${id}`} passHref>
 								<div onClick={closeModal} className="btn btn-primary">
 									Go to Profile
 								</div>
