@@ -91,7 +91,7 @@ const Navbar = (e) => {
 					</div>
 					<div className="navbar-start md:hidden">
 						<Link href="/" passHref scroll>
-							<div className="btn btn-square btn-ghost">
+							<div className="btn btn-ghost btn-square">
 								<Logo width={25} height={25} />
 							</div>
 						</Link>
@@ -103,7 +103,6 @@ const Navbar = (e) => {
 									<Link href="/events" passHref scroll={false}>
 										<a className="btn btn-ghost">Events</a>
 									</Link>
-									<a className="btn btn-ghost">Merch</a>
 									<Link href="/listing" passHref scroll={false}>
 										<a className="btn btn-ghost">Listing</a>
 									</Link>
@@ -119,7 +118,7 @@ const Navbar = (e) => {
 								</>
 							)}
 						</div>
-						<div className="dropdown-hover dropdown dropdown-end">
+						<div className="dropdown-hover dropdown-end dropdown">
 							<label tabIndex={0} className="avatar btn btn-ghost btn-circle">
 								{auth_user && hasUserData ? (
 									<div className="relative w-10 overflow-hidden rounded-full">
@@ -168,9 +167,6 @@ const Navbar = (e) => {
 										<a>Events</a>
 									</li>
 								</Link>
-								<li>
-									<a>Merch</a>
-								</li>
 								<Link href="/listing" passHref scroll={false}>
 									<li>
 										<a>Listing</a>

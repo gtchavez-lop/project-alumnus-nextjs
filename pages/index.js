@@ -39,7 +39,7 @@ const Home = (e) => {
 				exit="exit"
 				variants={_Transition_HeroPage}
 				className="fixed top-0 right-0 -z-10 h-screen w-screen">
-				<div className="absolute top-0 left-0 z-10 h-full w-full bg-base-300 bg-opacity-80 " />
+				<div className=" absolute top-0 left-0 z-10 h-full w-full bg-gradient-to-br from-base-100 to-base-300 opacity-90 " />
 
 				<div
 					style={{

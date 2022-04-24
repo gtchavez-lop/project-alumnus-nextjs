@@ -12,9 +12,6 @@ const Footer = (e) => {
 					<Link href={'/listing'} passHref scroll>
 						<p className="link underline-offset-4">Alumni Listing</p>
 					</Link>
-					<Link href={'/merch'} passHref scroll>
-						<p className="link underline-offset-4">Merch</p>
-					</Link>
 					<Link href={'/register'} passHref scroll>
 						<p className="link underline-offset-4">Registration</p>
 					</Link>
