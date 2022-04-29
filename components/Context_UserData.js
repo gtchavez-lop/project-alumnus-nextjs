@@ -28,48 +28,20 @@ const UserDataProvider = ({ children }) => {
 		hasUserData,
 	};
 
-	const fetchQuery = gql`
-		{
-			alumniLists {
-				id
-				surname
-				givenName
-				middleInitial
-				alumniDisplayPhoto {
-					url
-				}
-				birthDate
-				createdAt
-				slug
-				currentEmail
-				currentLocation
-				programCompleted
-				graduationDate
-				isCurrentlyWorking
-				company
-				workPosition
-				merchCart {
-					merchName
-					merchImage {
-						id
-					}
-					merchPrice
-				}
-			}
-		}
-	`;
-
 	const fetchData = async (e) => {
-		const { data } = await _ApolloClient.query({
-			query: fetchQuery,
-		});
+		try {
+			const response = await fetch('/api/alumniList');
+			const { alumniLists } = await response.json();
 
-		// filter the data to only include the user's data
-		const localData = data.alumniLists.filter(
-			(user) => user.currentEmail === auth_user.email
-		);
-		setUserData(localData[0]);
-		setHasUserData(true);
+			// filter the data to only include the user's data
+			const localData = alumniLists.filter(
+				(user) => user.currentEmail === auth_user.email
+			);
+			setUserData(localData[0]);
+			setHasUserData(true);
+		} catch (error) {
+			console.log(error);
+		}
 	};
 
 	useEffect(() => {

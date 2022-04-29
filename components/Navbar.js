@@ -83,7 +83,7 @@ const Navbar = (e) => {
 						<Link href="/" passHref scroll>
 							<a className="btn btn-ghost flex gap-3 text-lg normal-case">
 								<span>
-									<Logo width={25} height={25} />
+									<Logo width={25} height={25} strokeColor="#D926A9" />
 								</span>
 								<span>Project Alumnus</span>
 							</a>
@@ -106,12 +106,13 @@ const Navbar = (e) => {
 									<Link href="/listing" passHref scroll={false}>
 										<a className="btn btn-ghost">Listing</a>
 									</Link>
+									<Link href="/about" passHref scroll={false}>
+										<a className="btn btn-ghost">About Us</a>
+									</Link>
 								</>
 							) : (
 								<>
-									<a
-										onClick={(e) => _setModalOpen(true)}
-										className="btn btn-ghost">
+									<a onClick={(e) => _setModalOpen(true)} className="btn btn-ghost">
 										Sign In
 									</a>
 									<a className="btn btn-ghost">Sign Up</a>
@@ -119,7 +120,7 @@ const Navbar = (e) => {
 							)}
 						</div>
 						<div className="dropdown-hover dropdown-end dropdown">
-							<label tabIndex={0} className="avatar btn btn-ghost btn-circle">
+							<label tabIndex={0} className="avatar btn btn-circle btn-ghost">
 								{auth_user && hasUserData ? (
 									<div className="relative w-10 overflow-hidden rounded-full">
 										<Image
@@ -175,15 +176,11 @@ const Navbar = (e) => {
 								<div className="divider" />
 								<li>
 									{_themeSelected === 'dark' ? (
-										<a
-											data-set-theme="light"
-											onClick={() => _setThemeSelected('light')}>
+										<a data-set-theme="light" onClick={() => _setThemeSelected('light')}>
 											Light Mode
 										</a>
 									) : (
-										<a
-											data-set-theme="dark"
-											onClick={() => _setThemeSelected('dark')}>
+										<a data-set-theme="dark" onClick={() => _setThemeSelected('dark')}>
 											Dark Mode
 										</a>
 									)}

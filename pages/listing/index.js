@@ -1,7 +1,7 @@
 import Head from 'next/head';
 // import { createClient } from 'contentful'
 import { motion } from 'framer-motion';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import {
 	_Transition_Blob_Bottom,
 	_Transition_Page,
@@ -9,61 +9,41 @@ import {
 } from '../../components/_Animations';
 import Alumnus_Card_New from '../../components/listing/AlumniCard';
 
-import { CgDanger } from 'react-icons/cg';
+import { CgDanger, CgInfo } from 'react-icons/cg';
 import { useUserData } from '../../components/Context_UserData';
 import _ApolloClient from '../../apolloClient';
-import { gql } from '@apollo/client';
+import { getAlumniList } from '../api/alumniList';
 
-export const getServerSideProps = async (e) => {
-	const { data } = await _ApolloClient.query({
-		query: gql`
-			{
-				alumniLists {
-					id
-					surname
-					givenName
-					alumniDisplayPhoto {
-						url
-					}
-					birthDate
-					createdAt
-					slug
-					currentEmail
-					currentLocation
-					programCompleted
-					graduationDate
-					isCurrentlyWorking
-					company
-					workPosition
-					merchCart {
-						merchName
-						merchImage {
-							url
-						}
-						merchPrice
-					}
-				}
-			}
-		`,
-	});
-
-	return {
-		props: {
-			alumniListData: data.alumniLists,
-		},
-	};
-};
-
-const Listing = ({ alumniListData }) => {
+const Listing = ({}) => {
+	const [alumniListData, setAlumniListData] = useState([]);
 	const [search, setSearch] = useState('');
 	const [filter, setFilter] = useState('surname');
 	const [sort, setSort] = useState('ASC');
-	const [filteredAlumniList, setFilteredAlumniList] = useState(alumniListData);
 	const { userData, setUserData, hasUserData, auth_user } = useUserData();
+	const [filteredAlumniList, setFilteredAlumniList] = useState([]);
+	const [loaded, setLoaded] = useState(false);
+	const [pagination, setPagination] = useState({
+		page: 1,
+		limit: 4,
+	});
+
+	const fetchData = async (e) => {
+		const res = await fetch('/api/alumniList');
+		const { alumniLists } = await res.json();
+
+		if (alumniLists) {
+			let temp = alumniLists.filter((alumni) => {
+				return alumni.currentEmail !== userData.currentEmail;
+			});
+			setAlumniListData(temp);
+			setFilteredAlumniList(temp);
+			setLoaded(temp ? true : false);
+		}
+	};
 
 	const handleSort = (e) => {
-		let temp = filteredAlumniList.sort((a, b) => {
-			if (sort === 'DSC') {
+		let temp = alumniListData.sort((a, b) => {
+			if (sort === 'ASC') {
 				return a[filter] > b[filter] ? 1 : -1;
 			} else {
 				return a[filter] < b[filter] ? 1 : -1;
@@ -74,10 +54,11 @@ const Listing = ({ alumniListData }) => {
 
 	const handleSearch = (e) => {
 		if (search) {
-			const temp = filteredAlumniList.filter((alumni) => {
+			let temp = alumniListData.filter((alumni) => {
 				return (
+					alumni.surname.toLowerCase().includes(search.toLowerCase()) ||
 					alumni.givenName.toLowerCase().includes(search.toLowerCase()) ||
-					alumni.surname.toLowerCase().includes(search.toLowerCase())
+					alumni.currentEmail.toLowerCase().includes(search.toLowerCase())
 				);
 			});
 			setFilteredAlumniList(temp);
@@ -86,21 +67,25 @@ const Listing = ({ alumniListData }) => {
 		}
 	};
 
+	// trigger on load
+	useEffect(
+		(e) => {
+			fetchData();
+		},
+		[userData]
+	);
+
 	useEffect(() => {
 		handleSearch();
 	}, [search]);
 
 	useEffect(() => {
-		handleSearch();
+		handleSort();
 	}, [filter]);
 
 	useEffect(() => {
 		handleSort();
 	}, [sort]);
-
-	useEffect(() => {
-		handleSort();
-	}, []);
 
 	return (
 		<>
@@ -162,12 +147,12 @@ const Listing = ({ alumniListData }) => {
 				</section>
 
 				{auth_user && (
-					<section className="mb-36 flex min-h-screen flex-col pt-28">
+					<motion.section className="mb-36 flex min-h-screen flex-col pt-28">
 						<h1 className="text-center text-4xl font-bold">Alumnus List</h1>
 
 						{/* search and filter bar */}
-						<div className="my-5 mb-10 grid grid-cols-1 gap-2 md:grid-cols-2 lg:grid-cols-4 ">
-							<div className="col-span-2 flex items-center">
+						<div className="my-5 mb-10 grid grid-cols-1 gap-2 lg:grid-cols-4 ">
+							<div className="col-span-4 flex items-center lg:col-span-2">
 								<input
 									onChange={(e) => setSearch(e.target.value)}
 									type="text"
@@ -175,68 +160,104 @@ const Listing = ({ alumniListData }) => {
 									className="input input-bordered w-full"
 								/>
 							</div>
-							<div className="col-span-1 flex items-center justify-evenly">
-								<div className="dropdown">
-									<label tabIndex={0} className="btn btn-outline btn-accent">
-										Sort by
-									</label>
-									<ul
-										tabIndex={0}
-										className="dropdown-content menu rounded-box mt-3 w-52 bg-base-300 p-2 shadow">
-										<li onClick={(e) => setSort('ASC')}>
-											<a>Ascending</a>
-										</li>
-										<li onClick={(e) => setSort('DSC')}>
-											<a>Descending</a>
-										</li>
-									</ul>
+							<div className="col-span-4 flex items-center lg:col-span-2 lg:gap-16">
+								<div className=" flex items-center justify-evenly gap-3">
+									<div className="dropdown">
+										<label tabIndex={0} className="btn btn-outline btn-accent">
+											Sort by
+										</label>
+										<ul
+											tabIndex={0}
+											className="dropdown-content menu rounded-box mt-3 w-52 bg-base-300 p-2 shadow">
+											<li onClick={(e) => setSort('ASC')}>
+												<a>Ascending</a>
+											</li>
+											<li onClick={(e) => setSort('DSC')}>
+												<a>Descending</a>
+											</li>
+										</ul>
+									</div>
+									<p>{sort === 'ASC' ? 'Ascending' : 'Descending'}</p>
 								</div>
-								<p>{sort === 'ASC' ? 'Ascending' : 'Descending'}</p>
-							</div>
-							<div className="col-span-1 flex items-center justify-evenly">
-								<div className="dropdown">
-									<label tabIndex={0} className="btn btn-outline btn-accent">
-										Filter by
-									</label>
-									<ul
-										tabIndex={0}
-										className="dropdown-content menu rounded-box mt-3 w-52 bg-base-300 p-2 shadow">
-										<li onClick={(e) => setFilter('givenName')}>
-											<a>Given Name</a>
-										</li>
-										<li onClick={(e) => setFilter('surname')}>
-											<a>Surname</a>
-										</li>
-										<li onClick={(e) => setFilter('createdAt')}>
-											<a>Created at</a>
-										</li>
-									</ul>
+								<div className=" flex items-center justify-evenly gap-3">
+									<div className="dropdown">
+										<label tabIndex={0} className="btn btn-outline btn-accent">
+											Filter by
+										</label>
+										<ul
+											tabIndex={0}
+											className="dropdown-content menu rounded-box mt-3 w-52 bg-base-300 p-2 shadow">
+											<li onClick={(e) => setFilter('givenName')}>
+												<a>Given Name</a>
+											</li>
+											<li onClick={(e) => setFilter('surname')}>
+												<a>Surname</a>
+											</li>
+											<li onClick={(e) => setFilter('createdAt')}>
+												<a>Created at</a>
+											</li>
+										</ul>
+									</div>
+									<p>
+										{(filter === 'givenName' && 'Given Name') ||
+											(filter === 'surname' && 'Surname') ||
+											(filter === 'createdAt' && 'Created at')}
+									</p>
 								</div>
-								<p>
-									{(filter === 'givenName' && 'Given Name') ||
-										(filter === 'surname' && 'Surname') ||
-										(filter === 'createdAt' && 'Created at')}
-								</p>
 							</div>
 						</div>
 
 						{/* loop filteredAlumniList and display card on each *IF* the user is existing  */}
-						<motion.div className="mt-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+						<motion.div className="my-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
 							{auth_user &&
+								filteredAlumniList &&
 								filteredAlumniList.map((alumni, index) => {
-									if (alumni.id != userData.id) {
+									if (index < pagination.limit * pagination.page) {
 										return <Alumnus_Card_New key={index} data={alumni} />;
 									}
 								})}
-
-							{filteredAlumniList.length == 0 && (
-								<div className="col-span-2 flex items-center justify-center">
-									<CgDanger size={25} />
-									<span>No alumni found</span>
-								</div>
-							)}
 						</motion.div>
-					</section>
+						{/* check if filteredAlumniList is empty  */}
+						{filteredAlumniList.length < 1 && (
+							<motion.div
+								variants={_Transition_Card}
+								initial="initial"
+								animate="animate"
+								className="flex flex-grow flex-col items-center gap-3">
+								<div className="flex gap-3">
+									<CgInfo size={25} />
+									<span className="text-base">No alumni found</span>
+								</div>
+								<div>
+									<span className="text-base">
+										If you are searching for yourself, please go to your profile here
+									</span>
+								</div>
+							</motion.div>
+						)}
+
+						{/* load more */}
+						{/* check if limit is reached to alumnilistdata */}
+						{filteredAlumniList.length > pagination.limit * pagination.page ? (
+							<div
+								onClick={(e) => {
+									e.preventDefault();
+									setPagination({ ...pagination, page: pagination.page + 1 });
+								}}
+								className="btn btn-block mt-5">
+								Load More
+							</div>
+						) : (
+							<div
+								onClick={(e) => {
+									e.preventDefault();
+									setPagination({ ...pagination, page: 1 });
+								}}
+								className="btn btn-outline btn-ghost btn-block mt-5">
+								See Less
+							</div>
+						)}
+					</motion.section>
 				)}
 			</motion.section>
 		</>

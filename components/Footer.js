@@ -1,28 +1,136 @@
 import Link from 'next/link';
-import { CgFacebook, CgTwitter, CgInstagram } from 'react-icons/cg';
+import Image from 'next/image';
+import {
+	RiFacebookCircleFill,
+	RiDiscordFill,
+	RiTwitterFill,
+	RiInstagramFill,
+} from 'react-icons/ri';
+import Logo from './Logo';
+
+// privacy statement modal
+// const Modal_Privacy = ({ closeHandler }) => {};
 
 const Footer = (e) => {
 	return (
 		<>
-			<div className="flex w-full flex-col items-center justify-evenly gap-5 bg-base-300 py-14 px-10">
-				<div className="flex gap-10">
-					<Link href={'/events'} passHref scroll>
-						<p className="link underline-offset-4">Events</p>
-					</Link>
-					<Link href={'/listing'} passHref scroll>
-						<p className="link underline-offset-4">Alumni Listing</p>
-					</Link>
-					<Link href={'/register'} passHref scroll>
-						<p className="link underline-offset-4">Registration</p>
-					</Link>
+			<footer className="flex select-none justify-center bg-base-300 p-10 text-base-content">
+				<div className="w-full max-w-5xl">
+					{/* app links */}
+					<div className="flex flex-col lg:flex-row lg:justify-between">
+						<div className="mb-10 lg:mb-0">
+							<Link href="/" passHref scroll>
+								<p className="flex cursor-pointer items-center gap-3">
+									<div className="relative h-8 w-8 ">
+										<Logo strokeColor="#D926A9" width={30} height={30} />
+									</div>
+									<span className="self-center whitespace-nowrap text-2xl font-semibold ">
+										Project Alumnus
+									</span>
+								</p>
+							</Link>
+						</div>
+						<div className="grid grid-cols-3 sm:gap-6">
+							<div>
+								<h2 className="mb-6 text-sm font-bold uppercase text-secondary">
+									Links
+								</h2>
+								<ul className="flex flex-col gap-4 ">
+									<Link href="/events">
+										<li>
+											<a className="cursor-pointer hover:underline">News and Events</a>
+										</li>
+									</Link>
+									<Link href={'/listing'}>
+										<li>
+											<a className="cursor-pointer hover:underline">Alumni Listing</a>
+										</li>
+									</Link>
+									<Link href="/about">
+										<li>
+											<a className="cursor-pointer hover:underline">About Us</a>
+										</li>
+									</Link>
+								</ul>
+							</div>
+							<div>
+								<p className="mb-6 text-sm font-bold uppercase text-secondary ">
+									Follow us
+								</p>
+								<ul className="flex flex-col gap-4 ">
+									<Link href="https://www.facebook.com">
+										<li>
+											<p className="cursor-pointer hover:underline">Facebook</p>
+										</li>
+									</Link>
+									<Link href="https://www.discord.com">
+										<li>
+											<p className="cursor-pointer hover:underline">Discord</p>
+										</li>
+									</Link>
+									<Link href="https://www.twitter.com">
+										<li>
+											<p className="cursor-pointer hover:underline">Twitter</p>
+										</li>
+									</Link>
+									<Link href="https://www.instagram.com">
+										<li>
+											<p className="cursor-pointer hover:underline">Instagram</p>
+										</li>
+									</Link>
+								</ul>
+							</div>
+							<div>
+								<h2 className="mb-6 text-sm font-bold uppercase text-secondary">
+									Legal
+								</h2>
+								<ul className="flex flex-col gap-4 ">
+									<li>
+										<p className="cursor-pointer hover:underline">Privacy Policy</p>
+									</li>
+									<li>
+										<p className="cursor-pointer hover:underline">
+											Terms &amp; Conditions
+										</p>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
+					<hr className="my-8 border-base-content opacity-30 sm:mx-auto" />
+
+					{/* copyright and social links */}
+					<div className="sm:flex sm:items-center sm:justify-between">
+						<span className="flex gap-2  text-sm text-gray-500 sm:text-center">
+							&copy; 2022{' '}
+							<p className="cursor-pointer hover:underline">Project Alumnus&trade;</p>.
+							All Rights Reserved.
+						</span>
+						<div className="mt-4 flex space-x-6 sm:mt-0 sm:justify-center">
+							<Link href="https://www.facebook.com">
+								<p className="cursor-pointer text-base-content opacity-50 transition-opacity hover:opacity-100">
+									<RiFacebookCircleFill size={25} />
+								</p>
+							</Link>
+							<Link href="https://www.discord.com">
+								<p className="cursor-pointer text-base-content opacity-50 transition-opacity hover:opacity-100">
+									<RiDiscordFill size={25} />
+								</p>
+							</Link>
+							<Link href="https://www.twitter.com">
+								<p className="cursor-pointer text-base-content opacity-50 transition-opacity hover:opacity-100">
+									<RiTwitterFill size={25} />
+								</p>
+							</Link>
+							<Link href="https://www.instagram.com">
+								<p className="cursor-pointer text-base-content opacity-50 transition-opacity hover:opacity-100">
+									<RiInstagramFill size={25} />
+								</p>
+							</Link>
+						</div>
+					</div>
 				</div>
-				<div className="flex gap-5">
-					<CgFacebook size={25} className="opacity-50" />
-					<CgTwitter size={25} className="opacity-50" />
-					<CgInstagram size={25} className="opacity-50" />
-				</div>
-				<p className="">&#169; BSCS3A Team Alumnus, All Rights Reserved</p>
-			</div>
+			</footer>
 		</>
 	);
 };

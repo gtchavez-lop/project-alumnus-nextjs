@@ -1,6 +1,6 @@
 import Head from 'next/head';
 // import { createClient } from 'contentful'
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { gql } from '@apollo/client';
 import { CgSpinner } from 'react-icons/cg';
@@ -13,29 +13,10 @@ import {
 import EventCard from '../../components/events/EventCard';
 import _ApolloClient from '../../apolloClient';
 
-export const getStaticProps = async (e) => {
-	const { data } = await _ApolloClient.query({
-		query: gql`
-			{
-				news_And_Events {
-					eventTitle
-					eventSlug
-					eventTags
-					eventContent {
-						markdown
-					}
-					eventAuthors {
-						name
-					}
-					id
-					publishedAt
-					publishedBy {
-						id
-					}
-				}
-			}
-		`,
-	});
+export const getInitialProps = async (e) => {
+	const res = await fetch('/api/events');
+	const data = await res.json();
+
 	return {
 		props: {
 			events: data.news_And_Events,
@@ -43,8 +24,31 @@ export const getStaticProps = async (e) => {
 	};
 };
 
-const NewsAndEvents = ({ events }) => {
-	const [loaded, setLoaded] = useState(true);
+const NewsAndEvents = ({}) => {
+	const [loaded, setLoaded] = useState(false);
+	const [events, setEvents] = useState([]);
+
+	const fetchData = async (e) => {
+		const res = await fetch('/api/events');
+		const { data } = await res.json();
+
+		if (data) {
+			setEvents(data.news_And_Events);
+			setLoaded(true);
+		}
+	};
+
+	useEffect((e) => {
+		fetchData();
+	}, []);
+
+	useCallback(
+		(e) => {
+			setLoaded(events ? true : false);
+		},
+		[events]
+	);
+
 	return (
 		<>
 			<Head>

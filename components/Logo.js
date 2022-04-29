@@ -9,6 +9,7 @@ const Logo = ({ strokeWidth, strokeColor, width, height }) => {
 			width={width}
 			height={height}
 			viewBox="0 0 1500 1500"
+			className="relative"
 			fill="none"
 			xmlns="http://www.w3.org/2000/svg">
 			<circle

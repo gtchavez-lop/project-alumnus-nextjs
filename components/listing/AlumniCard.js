@@ -60,14 +60,18 @@ const Alumnus_Card_Information = ({ data, closeModal }) => {
 								<div
 									className="mask mask-squircle relative w-32 bg-base-100"
 									data-theme="night">
-									{/* <Image layout='fill' src={displayImage.fields.file.url} /> */}
-									<img src={alumniDisplayPhoto.url} />
+									<Image layout="fill" src={alumniDisplayPhoto.url} />
+									{/* <img src={alumniDisplayPhoto.url} /> */}
 								</div>
 							</m.div>
 						) : (
 							<m.div className="avatar justify-center">
-								<div className="mask mask-squircle relative w-32">
-									<CgUser className="h-32 w-32" />
+								<div className="mask mask-squircle relative w-32 bg-base-100">
+									<Image
+										layout="fill"
+										src={`https://avatars.dicebear.com/api/identicon/${surname}.svg`}
+									/>
+									{/* <CgUser className="h-32 w-32" /> */}
 								</div>
 							</m.div>
 						)}
@@ -88,9 +92,7 @@ const Alumnus_Card_Information = ({ data, closeModal }) => {
 						</m.p>
 						<m.p className="flex w-full max-w-lg flex-col justify-between self-center text-center md:flex-row md:text-left  ">
 							Currently located at{' '}
-							<span className="font-bold text-secondary">
-								{currentLocation}
-							</span>
+							<span className="font-bold text-secondary">{currentLocation}</span>
 						</m.p>
 						<m.p className="flex w-full max-w-lg flex-col justify-between self-center text-center md:flex-row md:text-left  ">
 							Current Email Address{' '}
@@ -102,7 +104,7 @@ const Alumnus_Card_Information = ({ data, closeModal }) => {
 								Close
 							</div>
 
-							<Link href={`/listing/${slug}&${id}`} passHref>
+							<Link href={`/listing/${slug}&${id}`} passHref scroll>
 								<div onClick={closeModal} className="btn btn-primary">
 									Go to Profile
 								</div>
@@ -143,7 +145,7 @@ const AlumnusCard = ({ index, data }) => {
 					<m.div
 						variants={_Transition_Card}
 						initial="initial"
-						animate={{ opacity: isClicked ? 0 : 1, scale: isClicked ? 0.9 : 1 }}
+						animate="animate"
 						transition={{ ease: 'easeOut', duration: 0.2 }}
 						onClick={() => setIsClicked(true)}
 						className="transition-color card relative select-none bg-base-200 shadow hover:bg-base-300">
@@ -164,8 +166,8 @@ const AlumnusCard = ({ index, data }) => {
 											<div
 												className="mask mask-squircle relative w-10 bg-base-100"
 												data-theme="night">
-												{/* <Image layout='fill' src={displayImage.url} /> */}
-												<img src={alumniDisplayPhoto.url} />
+												<Image layout="fill" src={alumniDisplayPhoto.url} />
+												{/* <img src={alumniDisplayPhoto.url} /> */}
 											</div>
 										</m.div>
 									) : (
@@ -174,8 +176,12 @@ const AlumnusCard = ({ index, data }) => {
 												layout: { duration: 0.2, ease: 'easeOut' },
 											}}
 											className=" avatar">
-											<div className="mask mask-squircle relative w-10">
-												<CgUser className="h-10 w-10" />
+											<div className="mask mask-squircle relative w-10 bg-base-100">
+												<Image
+													layout="fill"
+													src={`https://avatars.dicebear.com/api/identicon/${surname}.svg`}
+												/>
+												{/* <CgUser className="h-10 w-10" /> */}
 											</div>
 										</m.div>
 									)}
