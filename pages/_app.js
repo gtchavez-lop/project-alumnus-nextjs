@@ -4,12 +4,18 @@ import { motion, AnimatePresence } from 'framer-motion';
 import Navbar from '../components/Navbar';
 import UserDataProvider from '../components/Context_UserData';
 import Footer from '../components/Footer';
+import Head from 'next/head';
 
 const RootApp = ({ Component, pageProps }) => {
 	const router = useRouter();
-	
+
 	return (
 		<>
+			<Head>
+				{/* favicon */}
+				<link rel="icon" href="/pa-transparent-white.png" />
+			</Head>
+
 			<UserDataProvider>
 				<Navbar />
 

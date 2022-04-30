@@ -64,6 +64,10 @@ const Listing = ({}) => {
 			setFilteredAlumniList(temp);
 		} else {
 			setFilteredAlumniList(alumniListData);
+			setPagination({
+				page: 1,
+				limit: 4,
+			});
 		}
 	};
 
@@ -248,14 +252,18 @@ const Listing = ({}) => {
 								Load More
 							</div>
 						) : (
-							<div
-								onClick={(e) => {
-									e.preventDefault();
-									setPagination({ ...pagination, page: 1 });
-								}}
-								className="btn btn-outline btn-ghost btn-block mt-5">
-								See Less
-							</div>
+							<>
+								{filteredAlumniList.length > 4 && (
+									<div
+										onClick={(e) => {
+											e.preventDefault();
+											setPagination({ ...pagination, page: 1 });
+										}}
+										className="btn btn-outline btn-ghost btn-block mt-5">
+										See Less
+									</div>
+								)}
+							</>
 						)}
 					</motion.section>
 				)}
