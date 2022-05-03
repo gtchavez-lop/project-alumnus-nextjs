@@ -2,6 +2,7 @@ import { motion } from 'framer-motion';
 import Link from 'next/link';
 import { _Transition_Page } from '../../components/_Animations';
 import { useEffect } from 'react';
+import GradientBackground from '../../components/GradientBackground';
 
 const Terms = () => {
 	useEffect((e) => {
@@ -10,6 +11,7 @@ const Terms = () => {
 
 	return (
 		<>
+			<GradientBackground colorLeft="#1E40AF" colorRight={'#EA580C'} />
 			<motion.main
 				variants={_Transition_Page}
 				initial="initial"

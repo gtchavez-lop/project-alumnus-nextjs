@@ -47,12 +47,7 @@ const Home = (e) => {
 						top: -(scrollY.get() / 20),
 					}}
 					className="relative h-full w-full">
-					<Image
-						src="/ucc-north.jpg"
-						layout="fill"
-						objectFit="cover"
-						priority
-					/>
+					<Image src="/ucc-north.jpg" layout="fill" objectFit="cover" priority />
 				</div>
 			</motion.div>
 
@@ -70,8 +65,8 @@ const Home = (e) => {
 				</div>
 				<div className="mt-7 flex max-w-sm flex-col self-center text-center lg:max-w-md lg:self-start lg:text-left">
 					<p className="">
-						Graduating from the University doesn&#39;t end there. Find and
-						invite people to see what&#39;s the life of the next generation
+						Graduating from the University doesn&#39;t end there. Find and invite
+						people to see what&#39;s the life of the next generation
 					</p>
 
 					{/* coa to "/register" */}
@@ -86,7 +81,7 @@ const Home = (e) => {
 			{/* Reconnect Page */}
 			<section className="flex select-none flex-col items-center justify-center py-28">
 				<motion.p
-					className="flex flex-col text-center text-5xl lg:flex-row lg:gap-4"
+					className="flex flex-col text-center text-5xl lg:gap-4"
 					initial={{ opacity: 0, translateX: 100 }}
 					whileInView={{ opacity: 1, translateX: 0 }}>
 					<span className="font-bold">Reconnect</span>
@@ -96,15 +91,15 @@ const Home = (e) => {
 					className="mt-5 max-w-lg text-center"
 					initial={{ opacity: 0, translateX: -100 }}
 					whileInView={{ opacity: 1, translateX: 0 }}>
-					We want you to find people you had a connection with on your days here
-					in the university and to find something and get involved.
+					We want you to find people you had a connection with on your days here in
+					the university and to find something and get involved.
 				</motion.p>
 			</section>
 
 			{/* Rekindle Page */}
 			<section className="flex select-none flex-col items-center justify-center py-28">
 				<motion.p
-					className="flex flex-col text-center text-5xl lg:flex-row lg:gap-4"
+					className="flex flex-col text-center text-5xl lg:gap-4"
 					initial={{ opacity: 0, translateX: -100 }}
 					whileInView={{ opacity: 1, translateX: 0 }}>
 					<span className="font-bold">Rekindle</span>
@@ -114,16 +109,16 @@ const Home = (e) => {
 					className="mt-5 max-w-lg text-center"
 					initial={{ opacity: 0, translateX: 100 }}
 					whileInView={{ opacity: 1, translateX: 0 }}>
-					See what other people you know or knew are doing and bring back
-					memories that come back with it as well. Never forget the people who
-					were there back then as we provide the platform to help you find them.
+					See what other people you know or knew are doing and bring back memories
+					that come back with it as well. Never forget the people who were there back
+					then as we provide the platform to help you find them.
 				</motion.p>
 			</section>
 
 			{/* Relive Page */}
 			<section className="mb-32 flex select-none flex-col items-center justify-center py-28">
 				<motion.p
-					className="flex flex-col text-center text-5xl lg:flex-row lg:gap-4"
+					className="flex flex-col text-center text-5xl  lg:gap-4"
 					initial={{ opacity: 0, translateX: 100 }}
 					whileInView={{ opacity: 1, translateX: 0 }}>
 					<span className="font-bold">Relive</span>
@@ -133,9 +128,8 @@ const Home = (e) => {
 					className="mt-5 max-w-lg text-center"
 					initial={{ opacity: 0, translateX: -100 }}
 					whileInView={{ opacity: 1, translateX: 0 }}>
-					Be a part of their lives. Be a part of the community. Be something
-					unique. Be yourself. This platform will help you to let those sparks
-					burn again
+					Be a part of their lives. Be a part of the community. Be something unique.
+					Be yourself. This platform will help you to let those sparks burn again
 				</motion.p>
 			</section>
 		</>

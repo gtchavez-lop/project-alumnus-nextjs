@@ -12,6 +12,7 @@ import {
 } from '../../components/_Animations';
 import EventCard from '../../components/events/EventCard';
 import _ApolloClient from '../../apolloClient';
+import GradientBackground from '../../components/GradientBackground';
 
 export const getInitialProps = async (e) => {
 	const res = await fetch('/api/events');
@@ -59,14 +60,8 @@ const NewsAndEvents = ({}) => {
 				/>
 			</Head>
 
-			{/* animated background */}
-			<motion.div
-				variants={_Transition_Blob_Top}
-				initial="initial"
-				animate="animate"
-				exit="exit"
-				className="absolute top-0 left-0 z-0 h-full w-full bg-gradient-to-tl from-teal-600 via-blue-700 to-purple-600"
-			/>
+			{/* animated gradent bg */}
+			<GradientBackground colorLeft={'#0D9488'} colorRight={'#60A5FA'} />
 
 			<motion.div
 				variants={_Transition_Page}
@@ -75,26 +70,28 @@ const NewsAndEvents = ({}) => {
 				exit="exit"
 				className="relative z-10 flex min-h-screen flex-col ">
 				{/* landing section */}
-				<section className="relative flex min-h-screen flex-col items-center justify-center">
-					<h1 className="text-center text-5xl font-bold text-base-content ">
+				<section className="relative my-32 flex flex-col items-center justify-center">
+					<h1 className="mt-16 text-center text-4xl font-bold text-base-content lg:mt-24 lg:text-5xl">
 						News and Events
 					</h1>
 					<p className="mt-5 text-center text-xl">
 						See what is happening in the University of Caloocan City.
 					</p>
+
 					<motion.p
 						variants={_Transition_Card}
 						initial="initial"
 						animate="animate"
 						exit="exit"
-						className="absolute bottom-10 select-none text-base-content text-opacity-50">
-						Scroll down to see the events
+						className="bottom-10 mt-5 flex select-none gap-1 text-base-content text-opacity-50">
+						<span className="hidden lg:block">Scroll down</span>
+						<span className="lg:hidden">Swipe up</span> to see the list
 					</motion.p>
 				</section>
 
 				{/* Events section */}
 				<section className="flex min-h-screen flex-col py-32">
-					<h1 className="text-center text-4xl font-bold">Events</h1>
+					<h1 className="text-center text-4xl font-bold">Events List</h1>
 
 					{/* loading state if prop is still loading */}
 					<AnimatePresence>

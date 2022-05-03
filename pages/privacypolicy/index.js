@@ -1,6 +1,7 @@
 import { motion } from 'framer-motion';
 import { _Transition_Page } from '../../components/_Animations';
 import { useEffect } from 'react';
+import GradientBackground from '../../components/GradientBackground';
 
 const PrivacyStatement = (e) => {
 	useEffect(() => {
@@ -9,12 +10,13 @@ const PrivacyStatement = (e) => {
 
 	return (
 		<>
+			<GradientBackground colorLeft="#EA580C" colorRight={'#1E40AF'} />
 			<motion.main
 				variants={_Transition_Page}
 				initial="initial"
 				animate="animate"
 				exit="exit"
-				className="my-32 mt-64 min-h-screen">
+				className="my-32 mt-64 min-h-screen ">
 				<div className="flex flex-col gap-20">
 					<div className="flex flex-col">
 						<h1 className="text-5xl font-bold">Privacy Policy</h1>

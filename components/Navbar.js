@@ -120,7 +120,7 @@ const Navbar = (e) => {
 				className={`${
 					!_thresholdReached ? 'bg-opacity-0' : 'bg-opacity-100'
 				} fixed z-[90] flex w-full items-center justify-center bg-base-200 px-10 transition-colors md:px-20 xl:px-0`}>
-				<div className="navbar max-w-5xl">
+				<div className="navbar max-w-4xl">
 					<div className="navbar-start hidden md:flex">
 						<Link href="/" passHref scroll>
 							<a className="btn btn-ghost flex gap-3 text-lg normal-case">
@@ -133,7 +133,7 @@ const Navbar = (e) => {
 					</div>
 					<div className="navbar-start md:hidden">
 						<Link href="/" passHref scroll>
-							<div className="btn btn-ghost btn-square">
+							<div className="btn btn-square btn-ghost">
 								<Logo width={25} height={25} />
 							</div>
 						</Link>
@@ -172,7 +172,7 @@ const Navbar = (e) => {
 						<div
 							aria-disabled={!auth_loading}
 							className="dropdown dropdown-end dropdown-hover">
-							<label tabIndex={0} className="avatar btn btn-circle btn-ghost">
+							<label tabIndex={0} className="avatar btn btn-ghost btn-circle">
 								{auth_user && hasUserData ? (
 									<div className="relative w-10 overflow-hidden rounded-full">
 										<Image

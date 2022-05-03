@@ -62,7 +62,7 @@ const About = (e) => {
 						<p className="relative max-w-lg text-center text-3xl lg:text-4xl">
 							Meet the team
 						</p>
-						<div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-2 lg:grid-cols-4">
+						<div className="mt-10 grid grid-cols-1 gap-5 md:grid-cols-3 ">
 							{/* lead dev card */}
 							<div className="card col-span-full bg-base-100 shadow transition-all hover:shadow-lg">
 								<figure className="px-10 pt-10">

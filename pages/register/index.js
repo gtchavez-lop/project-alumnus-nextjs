@@ -5,19 +5,22 @@ import {
 	_Transition_Card,
 } from '../../components/_Animations';
 import { useUserData } from '../../components/Context_UserData';
+import GradientBackground from '../../components/GradientBackground';
 
 const RegisterPage = (e) => {
 	const { auth_user, hasUserData, userData } = useUserData();
 
 	return (
 		<>
-			<motion.div
+			{/* <motion.div
 				variants={_Transition_Blob_Left}
 				initial="initial"
 				animate="animate"
 				exit="exit"
 				className="absolute top-0 left-0 -z-20 h-full w-full bg-gradient-to-tr from-pink-500 via-red-500 to-yellow-500"
-			/>
+			/> */}
+
+			<GradientBackground colorLeft={'#EC4899'} colorRight={'#EAB308'} />
 
 			<AnimatePresence>
 				<div className="flex min-h-screen flex-col justify-center">
@@ -28,9 +31,7 @@ const RegisterPage = (e) => {
 							animate="animate"
 							exit="exit"
 							className="flex w-full flex-col items-center justify-center">
-							<p className="text-3xl font-bold">
-								Register to get a basic account
-							</p>
+							<p className="text-3xl font-bold">Register to get a basic account</p>
 
 							<motion.form className="form-control mt-10 w-full max-w-md gap-3">
 								<label className="form-control">
@@ -45,15 +46,12 @@ const RegisterPage = (e) => {
 									<div className="btn btn-block">
 										<span>Sign Up</span>
 									</div>
-									<div className="dropdown-hover dropdown flex flex-col items-center">
-										<span className="text-center">
-											What is a basic account?
-										</span>
+									<div className="dropdown dropdown-hover flex flex-col items-center">
+										<span className="text-center">What is a basic account?</span>
 										<span className="dropdown-content mt-7 max-w-sm rounded bg-base-300 p-5">
 											<p>
-												A basic account is an entry type of user account that
-												lets the user to view upcoming news and events on the
-												university
+												A basic account is an entry type of user account that lets the user
+												to view upcoming news and events on the university
 											</p>
 										</span>
 									</div>
@@ -73,9 +71,7 @@ const RegisterPage = (e) => {
 							className="card  max-w-fit select-none self-center bg-base-300 ">
 							<div className="card-body items-center">
 								<CgDanger size={40} />
-								<span className="mt-5">
-									Please sign out to register an account
-								</span>
+								<span className="mt-5">Please sign out to register an account</span>
 							</div>
 						</motion.div>
 					)}

@@ -15,9 +15,10 @@ const Footer = (e) => {
 	return (
 		<>
 			<footer className="flex select-none justify-center bg-base-300 p-10 text-base-content">
-				<div className="w-full max-w-5xl">
+				<div className="w-full max-w-4xl">
 					{/* app links */}
 					<div className="flex flex-col lg:flex-row lg:justify-between">
+						{/* logo */}
 						<div className="mb-10 lg:mb-0">
 							<Link href="/" passHref scroll>
 								<p className="flex cursor-pointer items-center gap-3">
@@ -30,7 +31,9 @@ const Footer = (e) => {
 								</p>
 							</Link>
 						</div>
-						<div className="grid grid-cols-3 sm:gap-6">
+
+						{/* links */}
+						<div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 							<div>
 								<h2 className="mb-6 text-sm font-bold uppercase text-secondary">
 									Links
@@ -101,15 +104,19 @@ const Footer = (e) => {
 							</div>
 						</div>
 					</div>
-					<hr className="my-8 border-base-content opacity-30 sm:mx-auto" />
+
+					{/* divider */}
+					<div className="divider my-8" />
 
 					{/* copyright and social links */}
-					<div className="sm:flex sm:items-center sm:justify-between">
-						<span className="flex gap-2  text-sm text-gray-500 sm:text-center">
+					<div className="flex flex-col items-center justify-between gap-2 lg:flex-row">
+						<p className="text-sm text-gray-500 sm:text-center">
 							&copy; 2022{' '}
-							<p className="cursor-pointer hover:underline">Project Alumnus&trade;</p>.
-							All Rights Reserved.
-						</span>
+							<span className="cursor-pointer hover:underline">
+								Project Alumnus&trade;
+							</span>
+							. All Rights Reserved.
+						</p>
 						<div className="mt-4 flex space-x-6 sm:mt-0 sm:justify-center">
 							<Link href="https://www.facebook.com">
 								<p className="cursor-pointer text-base-content opacity-50 transition-opacity hover:opacity-100">

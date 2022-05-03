@@ -13,6 +13,7 @@ import { CgDanger, CgInfo } from 'react-icons/cg';
 import { useUserData } from '../../components/Context_UserData';
 import _ApolloClient from '../../apolloClient';
 import { getAlumniList } from '../api/alumniList';
+import GradientBackground from '../../components/GradientBackground';
 
 const Listing = ({}) => {
 	const [alumniListData, setAlumniListData] = useState([]);
@@ -101,14 +102,8 @@ const Listing = ({}) => {
 				/>
 			</Head>
 
-			{/* animated background */}
-			<motion.div
-				variants={_Transition_Blob_Bottom}
-				initial="initial"
-				animate="animate"
-				exit="exit"
-				className="absolute top-0 left-0 z-0 h-screen w-full bg-gradient-to-tl from-green-300 via-blue-500 to-purple-600"
-			/>
+			{/* gradient background */}
+			<GradientBackground colorLeft={'#10B981'} colorRight={'#9333EA'} />
 
 			{/* listing section */}
 			<motion.section
@@ -116,9 +111,9 @@ const Listing = ({}) => {
 				initial="initial"
 				animate="animate"
 				exit="exit"
-				className="relative z-10 flex min-h-screen flex-col ">
-				<section className="relative flex min-h-screen flex-col items-center justify-center">
-					<h1 className="text-center text-5xl font-bold text-base-content ">
+				className="bg relative z-10 flex min-h-screen flex-col">
+				<section className="relative my-32 flex flex-col items-center justify-center">
+					<h1 className="mt-16 text-center text-4xl font-bold text-base-content lg:mt-24 lg:text-5xl">
 						Alumni Members List
 					</h1>
 					<p className="mt-5 text-center text-xl">
@@ -132,8 +127,9 @@ const Listing = ({}) => {
 							initial="initial"
 							animate="animate"
 							exit="exit"
-							className="absolute bottom-10 select-none text-base-content text-opacity-50">
-							Scroll Down to see the list
+							className="bottom-10 mt-5 flex select-none gap-1 text-base-content text-opacity-50">
+							<span className="hidden lg:block">Scroll down</span>
+							<span className="lg:hidden">Swipe up</span> to see the list
 						</motion.p>
 					) : (
 						<motion.div
@@ -141,17 +137,20 @@ const Listing = ({}) => {
 							initial="initial"
 							animate="animate"
 							exit="exit"
-							className="alert absolute bottom-10 select-none bg-base-300 shadow-lg">
-							<div>
-								<CgDanger size={25} />
-								<span>Please sign in to view the list</span>
-							</div>
+							className="alert relative mt-32 max-w-xl select-none justify-center bg-base-300 shadow-lg">
+							<CgDanger size={25} />
+							<p>Please sign in to view the list</p>
 						</motion.div>
 					)}
 				</section>
 
 				{auth_user && (
-					<motion.section className="mb-36 flex min-h-screen flex-col pt-28">
+					<motion.section
+						variants={_Transition_Card}
+						initial="initial"
+						animate="animate"
+						exit="exit"
+						className="mb-36 flex min-h-screen flex-col pt-28">
 						<h1 className="text-center text-4xl font-bold">Alumnus List</h1>
 
 						{/* search and filter bar */}
@@ -165,48 +164,20 @@ const Listing = ({}) => {
 								/>
 							</div>
 							<div className="col-span-4 flex items-center lg:col-span-2 lg:gap-16">
-								<div className=" flex items-center justify-evenly gap-3">
-									<div className="dropdown">
-										<label tabIndex={0} className="btn btn-outline btn-accent">
-											Sort by
-										</label>
-										<ul
-											tabIndex={0}
-											className="dropdown-content menu rounded-box mt-3 w-52 bg-base-300 p-2 shadow">
-											<li onClick={(e) => setSort('ASC')}>
-												<a>Ascending</a>
-											</li>
-											<li onClick={(e) => setSort('DSC')}>
-												<a>Descending</a>
-											</li>
-										</ul>
-									</div>
-									<p>{sort === 'ASC' ? 'Ascending' : 'Descending'}</p>
-								</div>
-								<div className=" flex items-center justify-evenly gap-3">
-									<div className="dropdown">
-										<label tabIndex={0} className="btn btn-outline btn-accent">
-											Filter by
-										</label>
-										<ul
-											tabIndex={0}
-											className="dropdown-content menu rounded-box mt-3 w-52 bg-base-300 p-2 shadow">
-											<li onClick={(e) => setFilter('givenName')}>
-												<a>Given Name</a>
-											</li>
-											<li onClick={(e) => setFilter('surname')}>
-												<a>Surname</a>
-											</li>
-											<li onClick={(e) => setFilter('createdAt')}>
-												<a>Created at</a>
-											</li>
-										</ul>
-									</div>
-									<p>
-										{(filter === 'givenName' && 'Given Name') ||
-											(filter === 'surname' && 'Surname') ||
-											(filter === 'createdAt' && 'Created at')}
-									</p>
+								<div className="grid w-full grid-cols-2 gap-3">
+									<select
+										className="select w-full"
+										onChange={(e) => setSort(e.target.value)}>
+										<option value="ASC">Ascending</option>
+										<option value="DSC">Descending</option>
+									</select>
+									<select
+										className="select w-full"
+										onChange={(e) => setFilter(e.target.value)}>
+										<option value="givenName">Given Name</option>
+										<option value="suname">Surname</option>
+										<option value="createdAt">Created At</option>
+									</select>
 								</div>
 							</div>
 						</div>
