@@ -1,4 +1,9 @@
-import { ApolloClient, InMemoryCache, gql } from '@apollo/client';
+import { ApolloClient, InMemoryCache, gql, createHttpLink } from '@apollo/client';
+import {setContext} from '@apollo/client/link/context';
+import { getAuth } from 'firebase/auth';
+import firebaseApp from '../../firebaseConfig';
+
+const { currentUser } = getAuth(firebaseApp);
 
 const query = gql`
 	{
@@ -23,8 +28,22 @@ const query = gql`
 	}
 `;
 
+const httpLink = createHttpLink({
+	uri: process.env.GraphCMS_ContentAPI
+})
+
+const authLink = setContext((_, {headers}) => {
+	const token = process.env.GraphCMS_MutationToken;
+	return {
+		headers: {
+			...headers,
+			authorization: token ? `Bearer ${token}` : '',
+		}
+	}
+})
+
 const _ApolloClient = new ApolloClient({
-	uri: process.env.GraphCMS_ContentAPI,
+	link: authLink.concat(httpLink),
 	cache: new InMemoryCache(),
 	connectToDevTools: true,
 });

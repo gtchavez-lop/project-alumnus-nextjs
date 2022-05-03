@@ -1,7 +1,27 @@
-import { ApolloClient, gql, InMemoryCache } from '@apollo/client';
+import {
+	ApolloClient,
+	gql,
+	InMemoryCache,
+	createHttpLink,
+} from '@apollo/client';
+import { setContext } from '@apollo/client/link/context';
+
+const httpLink = createHttpLink({
+	uri: process.env.GraphCMS_ContentAPI,
+});
+
+const authLink = setContext((_, { headers }) => {
+	const token = process.env.GraphCMS_EventsToken;
+	return {
+		headers: {
+			...headers,
+			authorization: token ? `Bearer ${token}` : '',
+		},
+	};
+});
 
 const _ApolloClient = new ApolloClient({
-	uri: process.env.GraphCMS_ContentAPI,
+	link: authLink.concat(httpLink),
 	cache: new InMemoryCache(),
 	connectToDevTools: true,
 });
@@ -20,10 +40,6 @@ const fetchData = async (req, res) => {
 					name
 				}
 				id
-				publishedAt
-				publishedBy {
-					id
-				}
 			}
 		}
 	`;

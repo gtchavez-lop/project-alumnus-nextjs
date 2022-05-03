@@ -19,6 +19,7 @@ import { useUserData } from './Context_UserData';
 const Navbar = (e) => {
 	const { scrollY } = useViewportScroll();
 	const [_scrollY, _setScrollY] = useState(0);
+	const [isSigningOut, setIsSigningOut] = useState(false);
 	const [_thresholdReached, _setThresholdReached] = useState(false);
 	const [_themeSelected, _setThemeSelected] = useState('');
 	const [_modalOpen, _setModalOpen] = useState(false);
@@ -33,7 +34,7 @@ const Navbar = (e) => {
 		signInWithEmailAndPasswordError,
 	] = useSignInWithEmailAndPassword(getAuth(firebaseApp));
 
-	const { auth_user, hasUserData, userData } = useUserData();
+	const { auth_user, hasUserData, userData, auth_loading } = useUserData();
 
 	useEffect(() => {
 		themeChange(false);
@@ -74,6 +75,47 @@ const Navbar = (e) => {
 
 	return (
 		<>
+			<AnimatePresence>
+				{isSigningOut && (
+					<motion.div
+						initial={{ opacity: 0 }}
+						animate={{ opacity: 1 }}
+						exit={{ opacity: 0 }}
+						onClick={(e) => {
+							if (e.target === e.currentTarget) setIsSigningOut(false);
+						}}
+						className="fixed z-[98] flex h-screen w-screen items-center justify-center bg-base-300 bg-opacity-[98]">
+						<motion.div
+							variants={_Transition_Card}
+							initial="initial"
+							animate="animate"
+							exit="exit"
+							className="card bg-base-100 shadow">
+							<div className="card-body">
+								<h2 className="card-title justify-center text-center">
+									Are you sure you want to sign out?
+								</h2>
+								<div className="card-actions mt-5 grid grid-cols-1 md:grid-cols-2">
+									<div
+										className="btn btn-ghost w-full"
+										onClick={() => {
+											signOut(getAuth(firebaseApp));
+											setIsSigningOut(false);
+										}}>
+										Yes
+									</div>
+									<div
+										className="btn btn-secondary w-full"
+										onClick={() => setIsSigningOut(false)}>
+										No
+									</div>
+								</div>
+							</div>
+						</motion.div>
+					</motion.div>
+				)}
+			</AnimatePresence>
+
 			<div
 				className={`${
 					!_thresholdReached ? 'bg-opacity-0' : 'bg-opacity-100'
@@ -98,7 +140,8 @@ const Navbar = (e) => {
 					</div>
 					<div className="navbar-end gap-4">
 						<div className="hidden justify-end gap-1 md:flex">
-							{auth_user && hasUserData ? (
+							{auth_loading && <p>Authentication in process</p>}
+							{auth_user && hasUserData && !auth_loading ? (
 								<>
 									<Link href="/events" passHref scroll={false}>
 										<a className="btn btn-ghost">Events</a>
@@ -112,14 +155,23 @@ const Navbar = (e) => {
 								</>
 							) : (
 								<>
-									<a onClick={(e) => _setModalOpen(true)} className="btn btn-ghost">
-										Sign In
-									</a>
-									<a className="btn btn-ghost">Sign Up</a>
+									{!auth_loading && (
+										<>
+											<div onClick={(e) => _setModalOpen(true)} className="btn btn-ghost">
+												Sign In
+											</div>
+											<Link href={'/register'} passHref scroll>
+												<div className="btn btn-ghost">Sign Up</div>
+											</Link>
+										</>
+									)}
 								</>
 							)}
 						</div>
-						<div className="dropdown-hover dropdown-end dropdown">
+
+						<div
+							aria-disabled={!auth_loading}
+							className="dropdown dropdown-end dropdown-hover">
 							<label tabIndex={0} className="avatar btn btn-circle btn-ghost">
 								{auth_user && hasUserData ? (
 									<div className="relative w-10 overflow-hidden rounded-full">
@@ -141,7 +193,7 @@ const Navbar = (e) => {
 									<>
 										<li
 											onClick={(e) => {
-												signOut(getAuth(firebaseApp));
+												setIsSigningOut(true);
 											}}>
 											<a>Logout</a>
 										</li>

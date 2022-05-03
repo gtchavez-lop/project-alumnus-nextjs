@@ -9,7 +9,7 @@ import {
 } from 'framer-motion';
 import { useState } from 'react';
 
-import { CgUser, CgCloseO } from 'react-icons/cg';
+import { CgArrowRight, CgCloseO } from 'react-icons/cg';
 import { _Transition_Card } from '../../components/_Animations';
 import dayjs from 'dayjs';
 
@@ -71,7 +71,7 @@ const Alumnus_Card_Information = ({ data, closeModal }) => {
 										layout="fill"
 										src={`https://avatars.dicebear.com/api/identicon/${surname}.svg`}
 									/>
-									{/* <CgUser className="h-32 w-32" /> */}
+									{/* <CgUser className="h-32 w-32" /> */}``
 								</div>
 							</m.div>
 						)}
@@ -104,7 +104,7 @@ const Alumnus_Card_Information = ({ data, closeModal }) => {
 								Close
 							</div>
 
-							<Link href={`/listing/${slug}&${id}`} passHref scroll>
+							<Link href={`/listing/${slug}&${id}`} passHref>
 								<div onClick={closeModal} className="btn btn-primary">
 									Go to Profile
 								</div>
@@ -141,77 +141,57 @@ const AlumnusCard = ({ index, data }) => {
 			</AnimatePresence>
 
 			{data && (
-				<>
-					<m.div
-						variants={_Transition_Card}
-						initial="initial"
-						animate="animate"
-						transition={{ ease: 'easeOut', duration: 0.2 }}
-						onClick={() => setIsClicked(true)}
-						className="transition-color card relative select-none bg-base-200 shadow hover:bg-base-300">
-						<m.label
-							transition={{ layout: { duration: 0.2, ease: 'easeOut' } }}
-							htmlFor={`modal_${id}`}
-							className="modal-button cursor-pointer">
-							<m.div
-								className="card-body p-5"
-								transition={{ layout: { duration: 0.2, ease: 'easeOut' } }}>
-								<div className="card-title">
-									{alumniDisplayPhoto ? (
-										<m.div
-											transition={{
-												layout: { duration: 0.2, ease: 'easeOut' },
-											}}
-											className=" avatar">
-											<div
-												className="mask mask-squircle relative w-10 bg-base-100"
-												data-theme="night">
-												<Image layout="fill" src={alumniDisplayPhoto.url} />
-												{/* <img src={alumniDisplayPhoto.url} /> */}
-											</div>
-										</m.div>
-									) : (
-										<m.div
-											transition={{
-												layout: { duration: 0.2, ease: 'easeOut' },
-											}}
-											className=" avatar">
-											<div className="mask mask-squircle relative w-10 bg-base-100">
-												<Image
-													layout="fill"
-													src={`https://avatars.dicebear.com/api/identicon/${surname}.svg`}
-												/>
-												{/* <CgUser className="h-10 w-10" /> */}
-											</div>
-										</m.div>
-									)}
-									<div className="flex flex-col">
-										<m.span
-											transition={{
-												layout: { duration: 0.2, ease: 'easeOut' },
-											}}>
-											{surname}, {givenName}
-										</m.span>
-										<m.span
-											transition={{
-												layout: { duration: 0.2, ease: 'easeOut' },
-											}}
-											className="text-sm">
-											{programCompleted}
-										</m.span>
+				<m.div
+					variants={_Transition_Card}
+					initial="initial"
+					animate="animate"
+					transition={{ ease: 'easeOut', duration: 0.2 }}
+					onClick={() => setIsClicked(true)}
+					className="transition-color card relative cursor-pointer select-none bg-base-200 shadow hover:bg-base-300">
+					<div className="card-body p-6">
+						{/* main card container */}
+						<div className="flex justify-between">
+							{/* user heading */}
+							<div className="flex gap-2">
+								{/* display photo */}
+								{alumniDisplayPhoto ? (
+									<div className=" avatar">
+										<div
+											className="mask mask-squircle relative w-10 bg-base-100"
+											data-theme="night">
+											<Image layout="fill" src={alumniDisplayPhoto.url} />
+										</div>
 									</div>
-								</div>
-								<div className="card-actions mt-3 justify-end">
-									<p className="flex justify-end text-right text-base-content text-opacity-30">
-										<span className="lg:hidden">Tap</span>
-										<span className="hidden lg:block">Click</span>
-										<span>&nbsp;to see more</span>
+								) : (
+									<m.div
+										transition={{
+											layout: { duration: 0.2, ease: 'easeOut' },
+										}}
+										className=" avatar">
+										<div className="mask mask-squircle relative w-10 bg-base-100">
+											<Image
+												layout="fill"
+												src={`https://avatars.dicebear.com/api/identicon/${surname}.svg`}
+											/>
+										</div>
+									</m.div>
+								)}
+								{/* user detail */}
+								<div className="flex flex-col">
+									<p>
+										{surname}, {givenName}
 									</p>
+									<p className="text-sm">{programCompleted}</p>
 								</div>
-							</m.div>
-						</m.label>
-					</m.div>
-				</>
+							</div>
+
+							{/* arrow icon */}
+							<div className="flex items-center">
+								<CgArrowRight size={25} />
+							</div>
+						</div>
+					</div>
+				</m.div>
 			)}
 		</>
 	);

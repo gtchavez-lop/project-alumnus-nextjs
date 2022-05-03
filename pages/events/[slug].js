@@ -1,6 +1,4 @@
 import Link from 'next/link';
-import Image from 'next/image';
-import { Fragment } from 'react';
 import { motion } from 'framer-motion';
 import { _Transition_Page } from '../../components/_Animations';
 import { CgArrowLeft } from 'react-icons/cg';
@@ -8,49 +6,37 @@ import _ApolloClient from '../../apolloClient';
 import { gql } from '@apollo/client';
 import ReactMarkdown from 'react-markdown';
 import markdownComponents from '../../components/events/_MarkdownComponents';
-
-export const getServerSideProps = async (e) => {
-	const { slug } = e.query;
-
-	const { data } = await _ApolloClient.query({
-		query: gql`
-			{
-				newsAndEvents(where: { eventSlug: "${slug}" }) {
-					createdAt
-					createdBy {
-						id
-					}
-					eventContent {
-						html
-						markdown
-					}
-					eventAuthors {
-						name
-					}
-					eventTags
-					displayImage {
-						url
-					}
-					eventTitle
-				}
-			}
-		`,
-	});
-
-	return {
-		props: {
-			event: data.newsAndEvents,
-			slug: slug,
-		},
-	};
-};
+import { useEffect, useState } from 'react';
+import { useRouter } from 'next/router';
 
 const SingleEvent = ({ slug, event }) => {
-	const { eventContent, eventTags, eventTitle, eventAuthors } = event;
+	const router = useRouter();
+	const [thisEvent, setThisEvent] = useState({});
+	const [loaded, setLoaded] = useState(false);
+
+	const fetchData = async (e) => {
+		const { slug } = router.query;
+		const res = await fetch('/api/events');
+		const { data } = await res.json();
+		const { news_And_Events } = data;
+
+		if (news_And_Events) {
+			let temp = news_And_Events.filter((event) => {
+				return event.eventSlug === slug;
+			});
+			setLoaded(temp[0] ? true : false);
+			setThisEvent(temp[0]);
+		}
+	};
+	// scroll to top on page load
+	useEffect((e) => {
+		window.scrollTo(0, 0);
+		fetchData();
+	}, []);
 
 	return (
 		<>
-			{event && (
+			{loaded ? (
 				<motion.div
 					variants={_Transition_Page}
 					initial="initial"
@@ -58,7 +44,7 @@ const SingleEvent = ({ slug, event }) => {
 					exit="exit"
 					className="min-h-screen">
 					{/* get event title */}
-					<div className="flex items-center py-5 pt-32 text-3xl font-bold lg:text-5xl ">
+					<div className="flex items-center py-5 pt-40 text-3xl font-bold lg:text-5xl ">
 						<Link
 							href={{
 								pathname: '/events',
@@ -67,7 +53,7 @@ const SingleEvent = ({ slug, event }) => {
 								className="flex cursor-pointer items-center gap-5"
 								whileHover={{ translateX: -10 }}>
 								<CgArrowLeft size={40} />
-								<span>{eventTitle}</span>
+								<span>{thisEvent.eventTitle}</span>
 							</motion.div>
 						</Link>
 					</div>
@@ -78,13 +64,13 @@ const SingleEvent = ({ slug, event }) => {
 						<p className="my-2 flex text-gray-400 ">Posted by</p>
 						<p className="my-2 mb-5 flex items-center text-gray-400">
 							<span className="ml-2  font-bold text-base-content">
-								{eventAuthors.name}
+								{thisEvent.eventAuthors ? thisEvent.eventAuthors.name : 'Admin'}
 							</span>
 						</p>
 
 						{/* get event tags */}
 						<div className="mb-10 flex select-none flex-wrap gap-2">
-							{eventTags.map((tag, index) => (
+							{thisEvent.eventTags.map((tag, index) => (
 								<div key={index} className="badge badge-primary capitalize">
 									{tag}
 								</div>
@@ -96,11 +82,16 @@ const SingleEvent = ({ slug, event }) => {
 						{/* render event content as a markdown to html */}
 						<div className="mb-32">
 							<ReactMarkdown components={markdownComponents}>
-								{eventContent.markdown}
+								{thisEvent.eventContent.markdown}
 							</ReactMarkdown>
 						</div>
 					</div>
 				</motion.div>
+			) : (
+				<div className="flex min-h-screen flex-col items-center justify-center">
+					<p>Something went wrong here.</p>
+					<p>Please go back or go home</p>
+				</div>
 			)}
 		</>
 	);

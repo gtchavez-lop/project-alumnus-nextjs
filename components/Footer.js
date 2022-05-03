@@ -21,9 +21,9 @@ const Footer = (e) => {
 						<div className="mb-10 lg:mb-0">
 							<Link href="/" passHref scroll>
 								<p className="flex cursor-pointer items-center gap-3">
-									<div className="relative h-8 w-8 ">
+									<span className="relative h-8 w-8 ">
 										<Logo strokeColor="#D926A9" width={30} height={30} />
-									</div>
+									</span>
 									<span className="self-center whitespace-nowrap text-2xl font-semibold ">
 										Project Alumnus
 									</span>
@@ -86,12 +86,16 @@ const Footer = (e) => {
 								</h2>
 								<ul className="flex flex-col gap-4 ">
 									<li>
-										<p className="cursor-pointer hover:underline">Privacy Policy</p>
+										<Link href={'/privacypolicy'} passHref scroll={false}>
+											<p className="cursor-pointer hover:underline">Privacy Policy</p>
+										</Link>
 									</li>
 									<li>
-										<p className="cursor-pointer hover:underline">
-											Terms &amp; Conditions
-										</p>
+										<Link href={'/terms'} passHref scroll={false}>
+											<p className="cursor-pointer hover:underline">
+												Terms &amp; Conditions
+											</p>
+										</Link>
 									</li>
 								</ul>
 							</div>

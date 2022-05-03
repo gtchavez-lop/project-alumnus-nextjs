@@ -1,6 +1,6 @@
 import Head from 'next/head';
-// import { createClient } from 'contentful'
-import { motion } from 'framer-motion';
+import Link from 'next/link';
+import { AnimatePresence, motion } from 'framer-motion';
 import { useState, useEffect, useCallback } from 'react';
 import {
 	_Transition_Blob_Bottom,
@@ -24,7 +24,7 @@ const Listing = ({}) => {
 	const [loaded, setLoaded] = useState(false);
 	const [pagination, setPagination] = useState({
 		page: 1,
-		limit: 4,
+		limit: 6,
 	});
 
 	const fetchData = async (e) => {
@@ -233,9 +233,12 @@ const Listing = ({}) => {
 									<span className="text-base">No alumni found</span>
 								</div>
 								<div>
-									<span className="text-base">
-										If you are searching for yourself, please go to your profile here
-									</span>
+									<p className="text-base">
+										If you are searching for yourself, please go to your profile{' '}
+										<Link href={'/me'}>
+											<span className="cursor-pointer font-bold">here</span>
+										</Link>
+									</p>
 								</div>
 							</motion.div>
 						)}
@@ -243,26 +246,28 @@ const Listing = ({}) => {
 						{/* load more */}
 						{/* check if limit is reached to alumnilistdata */}
 						{filteredAlumniList.length > pagination.limit * pagination.page ? (
-							<div
+							<motion.div
 								onClick={(e) => {
 									e.preventDefault();
 									setPagination({ ...pagination, page: pagination.page + 1 });
 								}}
 								className="btn btn-block mt-5">
 								Load More
-							</div>
+							</motion.div>
 						) : (
 							<>
-								{filteredAlumniList.length > 4 && (
-									<div
-										onClick={(e) => {
-											e.preventDefault();
-											setPagination({ ...pagination, page: 1 });
-										}}
-										className="btn btn-outline btn-ghost btn-block mt-5">
-										See Less
-									</div>
-								)}
+								<AnimatePresence>
+									{filteredAlumniList.length > 6 && (
+										<motion.div
+											onClick={(e) => {
+												e.preventDefault();
+												setPagination({ ...pagination, page: 1 });
+											}}
+											className="btn btn-outline btn-ghost btn-block mt-5">
+											See Less
+										</motion.div>
+									)}
+								</AnimatePresence>
 							</>
 						)}
 					</motion.section>
