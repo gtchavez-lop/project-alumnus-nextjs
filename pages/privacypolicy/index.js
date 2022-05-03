@@ -2,9 +2,9 @@ import { motion } from 'framer-motion';
 import { _Transition_Page } from '../../components/_Animations';
 import { useEffect } from 'react';
 
-const privacyStatement = (e) => {
-	useEffect((e) => {
-		window.scroll(0, 0);
+const PrivacyStatement = (e) => {
+	useEffect(() => {
+		window?.scrollTo(0, 0);
 	}, []);
 
 	return (
@@ -116,10 +116,7 @@ const privacyStatement = (e) => {
 							<li>
 								<p>
 									<strong>Website</strong> refers to UCC Project Alumnus, accessible from{' '}
-									<a
-										href="https://ucc-alumnus.vercel.app"
-										rel="external nofollow noopener"
-										target="_blank">
+									<a href="https://ucc-alumnus.vercel.app">
 										https://ucc-alumnus.vercel.app
 									</a>
 								</p>
@@ -157,7 +154,7 @@ const privacyStatement = (e) => {
 						<h3 className="mt-3 text-xl">Usage Data</h3>
 						<p>Usage Data is collected automatically when using the Service.</p>
 						<p>
-							Usage Data may include information such as Your Device's Internet
+							Usage Data may include information such as Your Device&#39;s Internet
 							Protocol address (e.g. IP address), browser type, browser version, the
 							pages of our Service that You visit, the time and date of Your visit, the
 							time spent on those pages, unique device identifiers and other diagnostic
@@ -201,10 +198,7 @@ const privacyStatement = (e) => {
 								Cookies. For more information on how You can delete Flash Cookies,
 								please read &quot;Where can I change the settings for disabling, or
 								deleting local shared objects?&quot; available at{' '}
-								<a
-									href="https://helpx.adobe.com/flash-player/kb/disable-local-shared-objects-flash.html#main_Where_can_I_change_the_settings_for_disabling__or_deleting_local_shared_objects_"
-									rel="external nofollow noopener"
-									target="_blank">
+								<a href="https://helpx.adobe.com/flash-player/kb/disable-local-shared-objects-flash.html#main_Where_can_I_change_the_settings_for_disabling__or_deleting_local_shared_objects_">
 									https://helpx.adobe.com/flash-player/kb/disable-local-shared-objects-flash.html#main_Where_can_I_change_the_settings_for_disabling__or_deleting_local_shared_objects_
 								</a>
 							</li>
@@ -223,9 +217,7 @@ const privacyStatement = (e) => {
 							Persistent Cookies remain on Your personal computer or mobile device when
 							You go offline, while Session Cookies are deleted as soon as You close
 							Your web browser. Learn more about cookies:{' '}
-							<a
-								href="https://www.freeprivacypolicy.com/blog/sample-privacy-policy-template/#Use_Of_Cookies_And_Tracking"
-								target="_blank">
+							<a href="https://www.freeprivacypolicy.com/blog/sample-privacy-policy-template/#Use_Of_Cookies_And_Tracking">
 								Use of Cookies by Free Privacy Policy
 							</a>
 							.
@@ -311,7 +303,7 @@ const privacyStatement = (e) => {
 								<p>
 									<strong>To contact You:</strong> To contact You by email, telephone
 									calls, SMS, or other equivalent forms of electronic communication, such
-									as a mobile application's push notifications regarding updates or
+									as a mobile application&#39;s push notifications regarding updates or
 									informative communications related to the functionalities, products or
 									contracted services, including the security updates, when necessary or
 									reasonable for their implementation.
@@ -405,12 +397,12 @@ const privacyStatement = (e) => {
 						</p>
 						<h2 className="text-2xl">Transfer of Your Personal Data</h2>
 						<p>
-							Your information, including Personal Data, is processed at the Company's
-							operating offices and in any other places where the parties involved in
-							the processing are located. It means that this information may be
-							transferred to — and maintained on — computers located outside of Your
-							state, province, country or other governmental jurisdiction where the
-							data protection laws may differ than those from Your jurisdiction.
+							Your information, including Personal Data, is processed at the
+							Company&#39;s operating offices and in any other places where the parties
+							involved in the processing are located. It means that this information
+							may be transferred to — and maintained on — computers located outside of
+							Your state, province, country or other governmental jurisdiction where
+							the data protection laws may differ than those from Your jurisdiction.
 						</p>
 						<p>
 							Your consent to this Privacy Policy followed by Your submission of such
@@ -477,7 +469,7 @@ const privacyStatement = (e) => {
 
 					{/* children's policy */}
 					<div className="flex flex-col gap-5">
-						<h1 className="mb-3 text-3xl">Children's Privacy</h1>
+						<h1 className="mb-3 text-3xl">Children&#39;s Privacy</h1>
 						<p>
 							Our Service does not address anyone under the age of 13. We do not
 							knowingly collect personally identifiable information from anyone under
@@ -490,7 +482,8 @@ const privacyStatement = (e) => {
 						<p>
 							If We need to rely on consent as a legal basis for processing Your
 							information and Your country requires consent from a parent, We may
-							require Your parent's consent before We collect and use that information.
+							require Your parent&#39;s consent before We collect and use that
+							information.
 						</p>
 					</div>
 
@@ -500,8 +493,8 @@ const privacyStatement = (e) => {
 						<p>
 							Our Service may contain links to other websites that are not operated by
 							Us. If You click on a third party link, You will be directed to that
-							third party's site. We strongly advise You to review the Privacy Policy
-							of every site You visit.
+							third party&#39;s site. We strongly advise You to review the Privacy
+							Policy of every site You visit.
 						</p>
 						<p>
 							We have no control over and assume no responsibility for the content,
@@ -545,4 +538,4 @@ const privacyStatement = (e) => {
 		</>
 	);
 };
-export default privacyStatement;
+export default PrivacyStatement;

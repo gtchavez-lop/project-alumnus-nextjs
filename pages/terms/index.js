@@ -27,7 +27,7 @@ const Terms = () => {
 						<p className="text-xl font-semibold">Welcome to UCC Project Alumnus!</p>
 						<p>
 							These terms and conditions outline the rules and regulations for the use
-							of Team Alumnus's Website, located at https://ucc-alumnus.vercel.app.
+							of Team Alumnus&#39;s Website, located at https://ucc-alumnus.vercel.app.
 						</p>
 						<p>
 							By accessing this website we assume you accept these terms and
@@ -36,18 +36,20 @@ const Terms = () => {
 						</p>
 						<p>
 							The following terminology applies to these Terms and Conditions, Privacy
-							Statement and Disclaimer Notice and all Agreements: "Client", "You" and
-							"Your" refers to you, the person log on this website and compliant to the
-							Company’s terms and conditions. "The Company", "Ourselves", "We", "Our"
-							and "Us", refers to our Company. "Party", "Parties", or "Us", refers to
-							both the Client and ourselves. All terms refer to the offer, acceptance
-							and consideration of payment necessary to undertake the process of our
-							assistance to the Client in the most appropriate manner for the express
-							purpose of meeting the Client’s needs in respect of provision of the
-							Company’s stated services, in accordance with and subject to, prevailing
-							law of Netherlands. Any use of the above terminology or other words in
-							the singular, plural, capitalization and/or he/she or they, are taken as
-							interchangeable and therefore as referring to same.
+							Statement and Disclaimer Notice and all Agreements: &#34;Client&#34;,
+							&#34;You&#34; and &#34;Your&#34; refers to you, the person log on this
+							website and compliant to the Company’s terms and conditions. &#34;The
+							Company&#34;, &#34;Ourselves&#34;, &#34;We&#34;, &#34;Our&#34; and
+							&#34;Us&#34;, refers to our Company. &#34;Party&#34;, &#34;Parties&#34;,
+							or &#34;Us&#34;, refers to both the Client and ourselves. All terms refer
+							to the offer, acceptance and consideration of payment necessary to
+							undertake the process of our assistance to the Client in the most
+							appropriate manner for the express purpose of meeting the Client’s needs
+							in respect of provision of the Company’s stated services, in accordance
+							with and subject to, prevailing law of Netherlands. Any use of the above
+							terminology or other words in the singular, plural, capitalization and/or
+							he/she or they, are taken as interchangeable and therefore as referring
+							to same.
 						</p>
 					</div>
 
@@ -58,7 +60,8 @@ const Terms = () => {
 						</h3>
 						<p>
 							We employ the use of cookies. By accessing UCC Project Alumnus, you
-							agreed to use cookies in agreement with the Team Alumnus' Privacy Policy.
+							agreed to use cookies in agreement with the Team Alumnus&#39; Privacy
+							Policy.
 						</p>
 						<p>
 							Most interactive websites use cookies to let us retrieve the user’s
@@ -233,8 +236,8 @@ const Terms = () => {
 						</ul>
 
 						<p>
-							No use of Team Alumnus' logo or other artwork will be allowed for linking
-							absent a trademark license agreement.
+							No use of Team Alumnus&#39; logo or other artwork will be allowed for
+							linking absent a trademark license agreement.
 						</p>
 					</div>
 
