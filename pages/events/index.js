@@ -13,28 +13,25 @@ import {
 import EventCard from '../../components/events/EventCard';
 import _ApolloClient from '../../apolloClient';
 import GradientBackground from '../../components/GradientBackground';
+import { getEvent } from '../api/events';
 
-export const getInitialProps = async (e) => {
-	const res = await fetch('/api/events');
-	const data = await res.json();
+export const getServerSideProps = async (e) => {
+	const data = await getEvent();
+	const news_And_Events = data.news_And_Events;
 
 	return {
 		props: {
-			events: data.news_And_Events,
+			events: news_And_Events,
 		},
 	};
 };
 
-const NewsAndEvents = ({}) => {
+const NewsAndEvents = ({ events }) => {
 	const [loaded, setLoaded] = useState(false);
-	const [events, setEvents] = useState([]);
+	const [thisEvents, setThisEvents] = useState([]);
 
 	const fetchData = async (e) => {
-		const res = await fetch('/api/events');
-		const { data } = await res.json();
-
-		if (data) {
-			setEvents(data.news_And_Events);
+		if (events) {
 			setLoaded(true);
 		}
 	};
@@ -45,9 +42,9 @@ const NewsAndEvents = ({}) => {
 
 	useCallback(
 		(e) => {
-			setLoaded(events ? true : false);
+			setLoaded(thisEvents ? true : false);
 		},
-		[events]
+		[thisEvents]
 	);
 
 	return (
@@ -61,22 +58,49 @@ const NewsAndEvents = ({}) => {
 			</Head>
 
 			{/* animated gradent bg */}
-			<GradientBackground colorLeft={'#0D9488'} colorRight={'#60A5FA'} />
+			<GradientBackground colorLeft={'#DC2626'} colorRight={'#60A5FA'} />
+
+			{/* accent */}
+			<motion.div
+				initial={{ scale: 0.9, opacity: 0 }}
+				animate={{
+					scale: 1,
+					opacity: 0.5,
+					transition: { duration: 0.25, ease: 'circOut' },
+				}}
+				exit={{
+					opacity: 0,
+				}}
+				style={{
+					backgroundImage:
+						'radial-gradient(#d926a9 2px, transparent 2px), radial-gradient(#d926a9 2px, transparent 2px)',
+					backgroundPosition: '0, 0, 0, 0',
+					backgroundSize: '30px 30px',
+				}}
+				className="absolute top-[120vh] right-[0px] h-[200px] w-[1000px]"
+			/>
 
 			<motion.div
 				variants={_Transition_Page}
 				initial="initial"
 				animate="animate"
 				exit="exit"
-				className="relative z-10 flex min-h-screen flex-col ">
+				className="relative z-10 my-32 mt-64 flex min-h-screen flex-col">
 				{/* landing section */}
-				<section className="relative my-32 flex flex-col items-center justify-center">
-					<h1 className="mt-16 text-center text-4xl font-bold text-base-content lg:mt-24 lg:text-5xl">
-						News and Events
-					</h1>
-					<p className="mt-5 text-center text-xl">
+				<section className="relative flex flex-col ">
+					<h1 className="text-5xl font-bold text-base-content ">News and Events</h1>
+					<p className="mt-5 text-xl">
 						See what is happening in the University of Caloocan City.
 					</p>
+					<motion.div
+						initial={{ scaleX: 0 }}
+						animate={{
+							scaleX: 1,
+							transformOrigin: 'left',
+							transition: { delay: 0.25, duration: 0.5, ease: 'circOut' },
+						}}
+						className="divider my-5"
+					/>
 
 					<motion.p
 						variants={_Transition_Card}
@@ -90,12 +114,12 @@ const NewsAndEvents = ({}) => {
 				</section>
 
 				{/* Events section */}
-				<section className="flex min-h-screen flex-col py-32">
+				<section className="mt-16 flex min-h-screen flex-col pt-32">
 					<h1 className="text-center text-4xl font-bold">Events List</h1>
 
 					{/* loading state if prop is still loading */}
 					<AnimatePresence>
-						<div className="mt-10 flex flex-col items-center justify-center gap-5">
+						<div className="flex flex-col items-center justify-center gap-5">
 							{!loaded && (
 								<>
 									<motion.div

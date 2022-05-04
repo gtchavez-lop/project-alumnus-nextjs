@@ -8,6 +8,7 @@ import ReactMarkdown from 'react-markdown';
 import markdownComponents from '../../components/events/_MarkdownComponents';
 import { useEffect, useState } from 'react';
 import { useRouter } from 'next/router';
+import { getEvent } from '../api/events';
 
 const SingleEvent = ({ slug, event }) => {
 	const router = useRouter();
@@ -17,8 +18,7 @@ const SingleEvent = ({ slug, event }) => {
 	const fetchData = async (e) => {
 		const { slug } = router.query;
 		const res = await fetch('/api/events');
-		const { data } = await res.json();
-		const { news_And_Events } = data;
+		const { news_And_Events } = await res.json();
 
 		if (news_And_Events) {
 			let temp = news_And_Events.filter((event) => {

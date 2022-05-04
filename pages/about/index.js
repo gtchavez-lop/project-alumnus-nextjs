@@ -18,6 +18,16 @@ const About = (e) => {
 				initial="initial"
 				animate="animate"
 				className="absolute top-0 left-0 z-[-2] h-full w-full">
+				{/* accent */}
+				<motion.div
+					style={{
+						backgroundImage:
+							'radial-gradient(#d926a9 2px, transparent 2px), radial-gradient(#d926a9 2px, transparent 2px)',
+						backgroundPosition: '0, 0, 0, 0',
+						backgroundSize: '30px 30px',
+					}}
+					className="absolute top-0 right-0 z-[2] h-[100vh] w-[350px] opacity-50"
+				/>
 				<div className="relative left-0 h-full w-full opacity-50 lg:w-3/4">
 					<Image
 						layout="fill"

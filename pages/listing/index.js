@@ -31,6 +31,8 @@ const Listing = ({}) => {
 	const fetchData = async (e) => {
 		const res = await fetch('/api/alumniList');
 		const { alumniLists } = await res.json();
+		// const asd = await getAlumniList();
+		// console.log(asd);
 
 		if (alumniLists) {
 			let temp = alumniLists.filter((alumni) => {
@@ -111,14 +113,21 @@ const Listing = ({}) => {
 				initial="initial"
 				animate="animate"
 				exit="exit"
-				className="bg relative z-10 flex min-h-screen flex-col">
-				<section className="relative my-32 flex flex-col items-center justify-center">
-					<h1 className="mt-16 text-center text-4xl font-bold text-base-content lg:mt-24 lg:text-5xl">
-						Alumni Members List
-					</h1>
-					<p className="mt-5 text-center text-xl">
+				className="relative z-10 my-32 mt-64 flex min-h-screen flex-col">
+				<section className="relative flex flex-col ">
+					<h1 className="text-5xl font-bold text-base-content ">Alumni List</h1>
+					<p className="mt-5 text-xl">
 						See people who became part of the University of Caloocan City.
 					</p>
+					<motion.div
+						initial={{ scaleX: 0 }}
+						animate={{
+							scaleX: 1,
+							transformOrigin: 'left',
+							transition: { delay: 0.25, duration: 0.5, ease: 'circOut' },
+						}}
+						className="divider my-5"
+					/>
 
 					{/* display a toast if the user is not signed in */}
 					{auth_user ? (
@@ -151,8 +160,6 @@ const Listing = ({}) => {
 						animate="animate"
 						exit="exit"
 						className="mb-36 flex min-h-screen flex-col pt-28">
-						<h1 className="text-center text-4xl font-bold">Alumnus List</h1>
-
 						{/* search and filter bar */}
 						<div className="my-5 mb-10 grid grid-cols-1 gap-2 lg:grid-cols-4 ">
 							<div className="col-span-4 flex items-center lg:col-span-2">
@@ -184,6 +191,25 @@ const Listing = ({}) => {
 
 						{/* loop filteredAlumniList and display card on each *IF* the user is existing  */}
 						<motion.div className="my-5 grid grid-cols-1 gap-3 sm:grid-cols-2">
+							{/* accent */}
+							<motion.div
+								initial={{ scale: 0.9, opacity: 0 }}
+								animate={{
+									scale: 1,
+									opacity: 0.5,
+									transition: { duration: 0.25, ease: 'circOut' },
+								}}
+								exit={{
+									opacity: 0,
+								}}
+								style={{
+									backgroundImage:
+										'radial-gradient(#d926a9 2px, transparent 2px), radial-gradient(#d926a9 2px, transparent 2px)',
+									backgroundPosition: '0, 0, 0, 0',
+									backgroundSize: '30px 30px',
+								}}
+								className="absolute bottom-[-10vh] left-[-50px] -z-10 h-[800px] w-[250px]"
+							/>
 							{auth_user &&
 								filteredAlumniList &&
 								filteredAlumniList.map((alumni, index) => {

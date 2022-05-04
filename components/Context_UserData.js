@@ -6,6 +6,7 @@ import _ApolloClient from '../apolloClient';
 import { gql } from '@apollo/client';
 import { motion } from 'framer-motion';
 import { CgSpinner } from 'react-icons/cg';
+import { getAlumniList } from '../pages/api/alumniList';
 
 export const UserDataContext = createContext();
 

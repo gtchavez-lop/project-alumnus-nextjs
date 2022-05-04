@@ -6,6 +6,23 @@ import {
 } from '@apollo/client';
 import { setContext } from '@apollo/client/link/context';
 
+const query = gql`
+	query {
+		news_And_Events {
+			eventTitle
+			eventSlug
+			eventTags
+			eventContent {
+				markdown
+			}
+			eventAuthors {
+				name
+			}
+			id
+		}
+	}
+`;
+
 const httpLink = createHttpLink({
 	uri: process.env.GraphCMS_ContentAPI,
 });
@@ -26,31 +43,20 @@ const _ApolloClient = new ApolloClient({
 	connectToDevTools: true,
 });
 
-const fetchData = async (req, res) => {
-	const query = gql`
-		query {
-			news_And_Events {
-				eventTitle
-				eventSlug
-				eventTags
-				eventContent {
-					markdown
-				}
-				eventAuthors {
-					name
-				}
-				id
-			}
-		}
-	`;
-
+export const getEvent = async (e) => {
 	const { data } = await _ApolloClient.query({
 		query,
 	});
 
-	res.status(200).json({
-		data,
-	});
+	if (data) {
+		return data;
+	}
+	return {};
+};
+
+const fetchData = async (req, res) => {
+	const data = await getEvent();
+	res.status(200).json(data);
 };
 
 export default fetchData;
