@@ -15,23 +15,16 @@ import _ApolloClient from '../../apolloClient';
 import GradientBackground from '../../components/GradientBackground';
 import { getEvent } from '../api/events';
 
-export const getServerSideProps = async (e) => {
-	const data = await getEvent();
-	const news_And_Events = data.news_And_Events;
-
-	return {
-		props: {
-			events: news_And_Events,
-		},
-	};
-};
-
-const NewsAndEvents = ({ events }) => {
+const NewsAndEvents = ({}) => {
 	const [loaded, setLoaded] = useState(false);
 	const [thisEvents, setThisEvents] = useState([]);
 
 	const fetchData = async (e) => {
-		if (events) {
+		const res = await fetch('/api/events');
+		const { data } = await res.json();
+		console.log(data);
+		if (data) {
+			setThisEvents(data);
 			setLoaded(true);
 		}
 	};
@@ -39,13 +32,6 @@ const NewsAndEvents = ({ events }) => {
 	useEffect((e) => {
 		fetchData();
 	}, []);
-
-	useCallback(
-		(e) => {
-			setLoaded(thisEvents ? true : false);
-		},
-		[thisEvents]
-	);
 
 	return (
 		<>
@@ -141,7 +127,7 @@ const NewsAndEvents = ({ events }) => {
 					<AnimatePresence>
 						<div className="mt-10 grid grid-cols-1 gap-3 md:grid-cols-2">
 							{loaded &&
-								events.map((event) => <EventCard {...event} key={event.id} />)}
+								thisEvents.map((event) => <EventCard {...event} key={event.id} />)}
 						</div>
 					</AnimatePresence>
 				</section>

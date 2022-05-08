@@ -1,52 +1,27 @@
-import {
-	ApolloClient,
-	gql,
-	InMemoryCache,
-	createHttpLink,
-} from '@apollo/client';
-import { setContext } from '@apollo/client/link/context';
+import sanityClient from '@sanity/client';
 
-const query = gql`
-	query {
-		news_And_Events {
-			eventTitle
-			eventSlug
-			eventTags
-			eventContent {
-				markdown
-			}
-			eventAuthors {
-				name
-			}
-			id
-		}
+const client = new sanityClient({
+	projectId: 'gq2nptd4',
+	apiVersion: '2022-05-07',
+	dataset: 'production',
+	useCdn: true,
+});
+
+const query = `
+	*[_type == 'event']{
+		_id,
+		_createdAt,
+		title,
+		"slug": slug.current,
+		"authorName": author->name,
+		"featuredImage": featuredImage->url,
+		tags,
+		content
 	}
 `;
 
-const httpLink = createHttpLink({
-	uri: process.env.GraphCMS_ContentAPI,
-});
-
-const authLink = setContext((_, { headers }) => {
-	const token = process.env.GraphCMS_EventsToken;
-	return {
-		headers: {
-			...headers,
-			authorization: token ? `Bearer ${token}` : '',
-		},
-	};
-});
-
-const _ApolloClient = new ApolloClient({
-	link: authLink.concat(httpLink),
-	cache: new InMemoryCache(),
-	connectToDevTools: true,
-});
-
 export const getEvent = async (e) => {
-	const { data } = await _ApolloClient.query({
-		query,
-	});
+	const data = await client.fetch(query);
 
 	if (data) {
 		return data;
@@ -56,7 +31,7 @@ export const getEvent = async (e) => {
 
 const fetchData = async (req, res) => {
 	const data = await getEvent();
-	res.status(200).json(data);
+	res.status(200).json({ data, message: 'Successfully fetched events' });
 };
 
 export default fetchData;

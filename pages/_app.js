@@ -16,6 +16,7 @@ const RootApp = ({ Component, pageProps }) => {
 				<link rel="icon" href="/pa-transparent-white.png" />
 			</Head>
 
+			{/* <SanityProvider> */}
 			<UserDataProvider>
 				<Navbar />
 
@@ -31,6 +32,7 @@ const RootApp = ({ Component, pageProps }) => {
 
 				<Footer />
 			</UserDataProvider>
+			{/* </SanityProvider> */}
 		</>
 	);
 };

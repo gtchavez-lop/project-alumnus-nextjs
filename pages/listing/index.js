@@ -30,12 +30,12 @@ const Listing = ({}) => {
 
 	const fetchData = async (e) => {
 		const res = await fetch('/api/alumniList');
+		const sanityRes = await fetch('/api/alumnus');
 		const { alumniLists } = await res.json();
-		// const asd = await getAlumniList();
-		// console.log(asd);
+		const { data } = await sanityRes.json();
 
-		if (alumniLists) {
-			let temp = alumniLists.filter((alumni) => {
+		if (data) {
+			let temp = data.filter((alumni) => {
 				return alumni.currentEmail !== userData.currentEmail;
 			});
 			setAlumniListData(temp);

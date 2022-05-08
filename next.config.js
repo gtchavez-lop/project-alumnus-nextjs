@@ -13,6 +13,7 @@ const nextConfig = {
 			'media.graphassets.com',
 			'avatars.dicebear.com',
 			'images.unsplash.com',
+			'cdn.sanity.io',
 		],
 	},
 	experimental: {

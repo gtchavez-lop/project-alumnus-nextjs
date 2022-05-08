@@ -9,7 +9,7 @@ import {
 	useAuthState,
 	useSignInWithEmailAndPassword,
 } from 'react-firebase-hooks/auth';
-import { getAuth, signOut } from 'firebase/auth';
+import { getAuth, signOut, onAuthStateChanged } from 'firebase/auth';
 import firebaseApp from '../firebaseConfig';
 import Logo from './Logo';
 
@@ -35,7 +35,7 @@ const Navbar = (e) => {
 		signInWithEmailAndPasswordError,
 	] = useSignInWithEmailAndPassword(getAuth(firebaseApp));
 
-	const { auth_user, hasUserData, userData, auth_loading } = useUserData();
+	const { auth_user, hasUserData, auth_loading, _userData } = useUserData();
 
 	useEffect(() => {
 		themeChange(false);
@@ -246,8 +246,7 @@ const Navbar = (e) => {
 					</div>
 					<div className="navbar-end gap-4">
 						<div className="hidden justify-end gap-1 lg:flex">
-							{auth_loading && <p>Authentication in process</p>}
-							{auth_user && hasUserData && !auth_loading ? (
+							{_userData && auth_user ? (
 								<>
 									<Link href="/events" passHref scroll={false}>
 										<a className="btn btn-ghost">Events</a>
@@ -261,16 +260,12 @@ const Navbar = (e) => {
 								</>
 							) : (
 								<>
-									{!auth_loading && (
-										<>
-											<div onClick={(e) => _setModalOpen(true)} className="btn btn-ghost">
-												Sign In
-											</div>
-											<Link href={'/register'} passHref scroll>
-												<div className="btn btn-ghost">Sign Up</div>
-											</Link>
-										</>
-									)}
+									<div onClick={(e) => _setModalOpen(true)} className="btn btn-ghost">
+										Sign In
+									</div>
+									<Link href={'/register'} passHref scroll>
+										<div className="btn btn-ghost">Sign Up</div>
+									</Link>
 								</>
 							)}
 						</div>
@@ -278,16 +273,19 @@ const Navbar = (e) => {
 						{/* desktop dropdown */}
 						<div
 							aria-disabled={!auth_loading}
-							className="dropdown-end dropdown-hover dropdown hidden lg:inline-block">
+							className="dropdown-hover dropdown-end dropdown hidden lg:inline-block">
 							<label tabIndex={0} className="avatar btn btn-ghost btn-circle">
-								{auth_user && hasUserData ? (
+								{_userData && auth_user && !auth_loading ? (
 									<div className="relative hidden w-10 overflow-hidden rounded-full lg:block">
-										<Image
-											src={userData.alumniDisplayPhoto.url}
-											priority
+										{/* <Image
+											src={_userData.displayPhoto}
+											loader={(e) => <CgSpinner size={25} />}
 											objectFit="cover"
 											layout="fill"
-										/>
+											alt="user profile"
+											placeholder="/pa-transparent.png"
+										/> */}
+										<img src={_userData.displayPhoto} />
 									</div>
 								) : (
 									<CgChevronDown size={25} />
@@ -296,7 +294,7 @@ const Navbar = (e) => {
 							<ul
 								tabIndex={0}
 								className="dropdown-content menu rounded-box menu-compact w-52 bg-base-100 p-2 shadow">
-								{auth_user && hasUserData ? (
+								{auth_user && _userData && !auth_loading ? (
 									<>
 										<li
 											onClick={(e) => {
@@ -351,14 +349,15 @@ const Navbar = (e) => {
 						<div
 							className="avatar btn btn-ghost btn-circle lg:hidden"
 							onClick={(e) => _setMobileMenuOpen(!_mobileMenuOpen)}>
-							{auth_user && hasUserData ? (
+							{auth_user && auth_user ? (
 								<div className="relative hidden w-10 overflow-hidden rounded-full lg:block">
-									<Image
-										src={userData.alumniDisplayPhoto.url}
+									{/* <Image
+										src={_userData.displayPhoto}
 										priority
 										objectFit="cover"
 										layout="fill"
-									/>
+									/> */}
+									<img src={_userData.displayPhoto} />
 								</div>
 							) : (
 								<CgChevronDown size={25} />

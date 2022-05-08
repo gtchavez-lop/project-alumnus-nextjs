@@ -5,13 +5,13 @@ import Link from 'next/link';
 import { useState } from 'react';
 import { CgReadme, CgSpinner } from 'react-icons/cg';
 
-const EventCard = ({ eventTitle, eventSlug, createdAt, id, eventTags }) => {
+const EventCard = ({ title, slug, _createdAt, _id }) => {
 	const [loading, setLoading] = useState(false);
 
 	return (
 		<Link
 			href={{
-				pathname: `/events/${eventSlug}`,
+				pathname: `/events/${slug}`,
 			}}
 			scroll={false}>
 			<motion.div
@@ -20,13 +20,13 @@ const EventCard = ({ eventTitle, eventSlug, createdAt, id, eventTags }) => {
 				initial="initial"
 				animate="animate"
 				exit="exit"
-				id={`eventCard_${id}`}
+				id={`eventCard_${_id}`}
 				className="card cursor-pointer bg-base-200 shadow transition-colors hover:bg-base-300 hover:text-neutral-content">
 				<div className="card-body p-5">
-					<h2 className="card-title">{eventTitle}</h2>
+					<h2 className="card-title">{title}</h2>
 					<p className="text-sm">
 						<span className="text-slate-500">Created At: </span>
-						{dayjs(createdAt).format('MM/DD/YYYY - h:mma')}
+						{dayjs(_createdAt).format('MM/DD/YYYY - h:mma')}
 					</p>
 					{/* <p className="text-sm">
                     <span className="text-slate-500">Created By: </span>
