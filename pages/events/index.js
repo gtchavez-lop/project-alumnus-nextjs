@@ -127,7 +127,7 @@ const NewsAndEvents = ({}) => {
 					<AnimatePresence>
 						<div className="mt-10 grid grid-cols-1 gap-3 md:grid-cols-2">
 							{loaded &&
-								thisEvents.map((event) => <EventCard {...event} key={event.id} />)}
+								thisEvents.map((event) => <EventCard {...event} key={event._id} />)}
 						</div>
 					</AnimatePresence>
 				</section>

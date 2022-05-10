@@ -18,12 +18,13 @@ const Alumnus_Card_Information = ({ data, closeModal }) => {
 		surname,
 		givenName,
 		programCompleted,
-		graduationDate,
-		id,
+		graduationYear,
+		alumnusID,
 		alumniDisplayPhoto,
-		slug,
 		currentLocation,
 		currentEmail,
+		programStartYear,
+		middleName,
 	} = data;
 	return (
 		<>
@@ -71,25 +72,20 @@ const Alumnus_Card_Information = ({ data, closeModal }) => {
 										layout="fill"
 										src={`https://avatars.dicebear.com/api/identicon/${surname}.svg`}
 									/>
-									{/* <CgUser className="h-32 w-32" /> */}``
 								</div>
 							</m.div>
 						)}
 
 						{/* basic infor */}
-						<div className="flex w-full flex-col text-center text-2xl">
+						<div className="mb-7 flex w-full flex-col text-center text-2xl">
 							<m.span>
-								{surname}, {givenName}
+								{givenName} {middleName.substring(0, 1)}. {surname}
 							</m.span>
-							<m.span className="text-sm">{programCompleted}</m.span>
+							<m.span className="text-sm">
+								{programCompleted} | Batch {dayjs(programStartYear).format('YYYY')}
+							</m.span>
 						</div>
 
-						<m.p className="mt-10 flex w-full max-w-lg flex-col justify-between self-center text-center md:flex-row md:text-left ">
-							Graduated at{' '}
-							<span className="font-bold text-secondary">
-								{dayjs(graduationDate).format('MMMM DD, YYYY')}
-							</span>
-						</m.p>
 						<m.p className="flex w-full max-w-lg flex-col justify-between self-center text-center md:flex-row md:text-left  ">
 							Currently located at{' '}
 							<span className="font-bold text-secondary">{currentLocation}</span>
@@ -100,11 +96,11 @@ const Alumnus_Card_Information = ({ data, closeModal }) => {
 						</m.p>
 
 						<div className="my-10 grid grid-cols-2 gap-5">
-							<div onClick={closeModal} className="btn btn-outline btn-primary">
+							<div onClick={closeModal} className="btn btn-outline btn-ghost">
 								Close
 							</div>
 
-							<Link href={`/listing/${slug}&${id}`} passHref>
+							<Link href={`/listing/${alumnusID}`} passHref>
 								<div onClick={closeModal} className="btn btn-primary">
 									Go to Profile
 								</div>
@@ -122,8 +118,8 @@ const AlumnusCard = ({ index, data }) => {
 		surname,
 		givenName,
 		programCompleted,
-		graduationDate,
-		id,
+		graduationYear,
+		alumnusID,
 		alumniDisplayPhoto,
 		slug,
 	} = data;

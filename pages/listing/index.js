@@ -29,9 +29,7 @@ const Listing = ({}) => {
 	});
 
 	const fetchData = async (e) => {
-		const res = await fetch('/api/alumniList');
 		const sanityRes = await fetch('/api/alumnus');
-		const { alumniLists } = await res.json();
 		const { data } = await sanityRes.json();
 
 		if (data) {
@@ -78,6 +76,7 @@ const Listing = ({}) => {
 	useEffect(
 		(e) => {
 			fetchData();
+			console.log(filteredAlumniList);
 		},
 		[userData]
 	);
@@ -211,6 +210,7 @@ const Listing = ({}) => {
 								className="absolute bottom-[-10vh] left-[-50px] -z-10 h-[800px] w-[250px]"
 							/>
 							{auth_user &&
+								loaded &&
 								filteredAlumniList &&
 								filteredAlumniList.map((alumni, index) => {
 									if (index < pagination.limit * pagination.page) {
@@ -219,7 +219,7 @@ const Listing = ({}) => {
 								})}
 						</motion.div>
 						{/* check if filteredAlumniList is empty  */}
-						{filteredAlumniList.length < 1 && (
+						{!loaded && (
 							<motion.div
 								variants={_Transition_Card}
 								initial="initial"
