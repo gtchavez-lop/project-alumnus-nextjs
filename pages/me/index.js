@@ -56,7 +56,7 @@ const MyProfile = ({}) => {
             opacity: 0,
             transition: { duration: 0.25, ease: 'circOut' },
           }}
-          className="absolute top-0 left-0 h-[350px] w-full overflow-hidden rounded-b-xl bg-base-300 opacity-40 lg:h-[300px]"
+          className="absolute top-0 left-0 h-[350px] w-full overflow-hidden rounded-b-xl bg-base-300 opacity-40 lg:h-[300px] -z-10"
         >
           <img
             src={`https://picsum.photos/seed/${studentData.studentID}/1024/720`}
