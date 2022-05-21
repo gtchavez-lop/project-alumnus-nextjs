@@ -158,11 +158,17 @@ const AlumniListing = ({ alumniList }) => {
                     {/* alumni card */}
                     {loaded &&
                       !isSearching &&
-                      mainAlumniList.map((item) => <AlumniCard data={item} />)}
+                      mainAlumniList.map((item, iterator) => (
+                        <div key={iterator}>
+                          <AlumniCard data={item} />
+                        </div>
+                      ))}
 
                     {isSearching &&
-                      searchTempContainer.map((item) => (
-                        <AlumniCard data={item} />
+                      searchTempContainer.map((item, iterator) => (
+                        <div key={iterator}>
+                          <AlumniCard data={item} />
+                        </div>
                       ))}
 
                     {searchTempContainer.length === 0 && isSearching && (

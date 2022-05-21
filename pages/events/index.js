@@ -107,14 +107,14 @@ const NewsAndEvents = ({ newsAndEvents }) => {
             <div className="mt-10 grid grid-cols-1 gap-3 md:grid-cols-2">
               {loaded &&
                 newsAndEvents.map((event) => (
-                  <Link href={`/events/${event.slug}`}>
-                    <motion.div
-                      variants={_Transition_Card}
-                      initial="initial"
-                      animate="animate"
-                      exit="exit"
-                      key={event._id}
-                    >
+                  <motion.div
+                    variants={_Transition_Card}
+                    initial="initial"
+                    animate="animate"
+                    exit="exit"
+                    key={event._id}
+                  >
+                    <Link href={`/events/${event.slug}`}>
                       <div className="card bg-base-300 cursor-pointer">
                         <div className="card-body">
                           <p className="card-title">{event.title}</p>
@@ -126,8 +126,8 @@ const NewsAndEvents = ({ newsAndEvents }) => {
                           </p>
                         </div>
                       </div>
-                    </motion.div>
-                  </Link>
+                    </Link>
+                  </motion.div>
                 ))}
             </div>
           </AnimatePresence>
