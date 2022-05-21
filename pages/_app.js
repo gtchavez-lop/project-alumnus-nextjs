@@ -4,9 +4,15 @@ import '../styles/globals.css';
 import { useRouter } from 'next/router';
 import Footer from '../components/Footer';
 import Head from 'next/head';
+import { themeChange } from 'theme-change';
+import { useEffect } from 'react';
 
 const MainComponent = ({ Component, pageProps }) => {
   const router = useRouter();
+
+  useEffect((e) => {
+    themeChange(false);
+  }, []);
 
   return (
     <>

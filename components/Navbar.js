@@ -13,6 +13,7 @@ import {
 import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { supabase } from './_Supabase';
+import { themeChange } from 'theme-change';
 
 const MobileContextMenu = ({ closeHandler }) => {
   const [hasUser, setHasUser] = useState(false);
@@ -311,7 +312,7 @@ const Navbar = (e) => {
                     </label>
                   </li>
                 )}
-                <li>
+                <li data-toggle-theme="dark,light">
                   <a>
                     <AiOutlineBgColors size={20} />
                     <span>Change Theme</span>
