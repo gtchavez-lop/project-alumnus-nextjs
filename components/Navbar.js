@@ -13,6 +13,8 @@ import {
 import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
 import { supabase } from './_Supabase';
+import Logo from './Logo';
+import toast, { Toaster } from 'react-hot-toast';
 import { themeChange } from 'theme-change';
 
 const MobileContextMenu = ({ closeHandler }) => {
@@ -55,7 +57,7 @@ const MobileContextMenu = ({ closeHandler }) => {
           className="py-8 pt-24 w-full bg-base-300 flex justify-center"
         >
           <div className="max-w-4xl px-10 w-full self-center flex flex-col">
-            <ul className="gap-2 grid grid-cols-2">
+            <ul className="gap-2 grid grid-cols-1 md:grid-cols-2">
               <Link href={'/'}>
                 <li
                   onClick={(e) => closeHandler(false)}
@@ -101,16 +103,21 @@ const MobileContextMenu = ({ closeHandler }) => {
                   <span>About Us</span>
                 </li>
               </Link>
+              <p className="mt-2">Double tap to change theme</p>
+              <li
+                data-toggle-theme="dark,light"
+                onClick={(e) => themeChange(false)}
+                className="btn btn-ghost no-animation items-center justify-start gap-3 mb-3"
+              >
+                <AiOutlineBgColors size={20} />
+                <span>Change Theme</span>
+              </li>
 
               <div className="divider col-span-full" />
               {/* <li>
                   <a className="bg-error text-error-content">
                   </a>
                 </li> */}
-              <li className="btn btn-ghost no-animation items-center justify-start gap-3">
-                <AiOutlineBgColors size={20} />
-                <span>Change Theme</span>
-              </li>
               {hasUser ? (
                 <li
                   onClick={handleSignOut}
@@ -147,7 +154,6 @@ const Navbar = (e) => {
   const [isSigningIn, setIsSigningIn] = useState(false);
   const [mobileContextMenuOpen, setMobileContextMenuOpen] = useState(false);
   const [threshholdReached, setThreshholdReached] = useState(false);
-  const supabaseUser = supabase.auth.user();
   const [hasUser, setHasUser] = useState(false);
   const [user, setUser] = useState({
     email: '',
@@ -162,11 +168,46 @@ const Navbar = (e) => {
     });
     if (!error) {
       setIsSigningIn(false);
+      toast.custom((t) => (
+        <motion.div
+          initial={{ opacity: 0, translateX: -20 }}
+          animate={{ opacity: 1, translateX: 0 }}
+        >
+          <div className="alert alert-success">
+            <p>
+              {supabase.auth.user() ? supabase.auth.user().email : 'A user'}{' '}
+              signed in
+            </p>
+          </div>
+        </motion.div>
+      ));
+    } else {
+      setIsSigningIn(false);
+      toast.custom((t) => (
+        <motion.div
+          initial={{ opacity: 0, translateX: -20 }}
+          animate={{ opacity: 1, translateX: 0 }}
+        >
+          <div className="alert alert-error">
+            <p>{error.message}</p>
+          </div>
+        </motion.div>
+      ));
     }
   };
 
   const handleSignOut = async () => {
     await supabase.auth.signOut();
+    toast.custom((t) => (
+      <motion.div
+        initial={{ opacity: 0, translateX: -20 }}
+        animate={{ opacity: 1, translateX: 0 }}
+      >
+        <div className="alert alert-info">
+          <p>Account signed out</p>
+        </div>
+      </motion.div>
+    ));
     setHasUser(false);
   };
 
@@ -209,6 +250,10 @@ const Navbar = (e) => {
         )}
       </AnimatePresence>
 
+      <div>
+        <Toaster position="bottom-left" reverseOrder={false} />
+      </div>
+
       <nav
         className={`flex justify-center transition-all fixed w-screen top-0 left-0 z-[95] ${
           threshholdReached ? 'bg-base-300 py-5' : 'bg-transparent py-8'
@@ -218,7 +263,10 @@ const Navbar = (e) => {
           {/* logo */}
           <div>
             <Link href={'/'}>
-              <div className="btn btn-ghost">Project Alumnus</div>
+              <div className="btn btn-ghost flex items-center gap-3">
+                <Logo width={25} height={25} />
+                {!threshholdReached && <div className="">Project Alumnus</div>}
+              </div>
             </Link>
           </div>
 
@@ -242,7 +290,9 @@ const Navbar = (e) => {
                   </div>
                 ) : (
                   <div className="flex gap-2">
-                    <div className="btn btn-ghost">Sign Up</div>
+                    <Link href={'/register'}>
+                      <div className="btn btn-ghost">Sign Up</div>
+                    </Link>
 
                     <label htmlFor="signInModal" className="btn btn-secondary">
                       Sign In
@@ -297,6 +347,16 @@ const Navbar = (e) => {
                     </a>
                   </li>
                 </Link>
+                <p className="mt-4 opacity-50">Double Click to change theme</p>
+                <li
+                  data-toggle-theme="dark,light"
+                  onClick={(e) => themeChange(false)}
+                >
+                  <a>
+                    <AiOutlineBgColors size={20} />
+                    <span>Change Theme</span>
+                  </a>
+                </li>
                 <div className="divider" />
                 {hasUser ? (
                   <li onClick={handleSignOut}>
@@ -312,12 +372,6 @@ const Navbar = (e) => {
                     </label>
                   </li>
                 )}
-                <li data-toggle-theme="dark,light">
-                  <a>
-                    <AiOutlineBgColors size={20} />
-                    <span>Change Theme</span>
-                  </a>
-                </li>
               </ul>
             </div>
           </div>

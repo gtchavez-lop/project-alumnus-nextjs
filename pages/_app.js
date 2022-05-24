@@ -6,13 +6,10 @@ import Footer from '../components/Footer';
 import Head from 'next/head';
 import { themeChange } from 'theme-change';
 import { useEffect } from 'react';
+import { AlumniListContextWrapper } from '../components/AlumniListContext';
 
 const MainComponent = ({ Component, pageProps }) => {
   const router = useRouter();
-
-  useEffect((e) => {
-    themeChange(false);
-  }, []);
 
   return (
     <>
@@ -31,10 +28,12 @@ const MainComponent = ({ Component, pageProps }) => {
       </Head>
       <Navbar />
       <div className="flex justify-center">
-        <div className="w-full max-w-4xl px-10 lg:px-0">
+        <div className="w-full max-w-4xl px-10 lg:px-0 overflow-x-hidden">
           <AnimatePresence exitBeforeEnter>
             <motion.div key={router.route}>
-              <Component {...pageProps} />
+              <AlumniListContextWrapper>
+                <Component {...pageProps} />
+              </AlumniListContextWrapper>
             </motion.div>
           </AnimatePresence>
         </div>

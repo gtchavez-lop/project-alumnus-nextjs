@@ -83,7 +83,7 @@ const EventPage = (e) => {
   return (
     <>
       <motion.main
-        className="min-h-screen"
+        className="min-h-screen overflow-y-clip"
         variants={_Transition_Page}
         initial="initial"
         animate="animate"

@@ -9,22 +9,12 @@ import { useState, useEffect } from 'react';
 import { supabase } from '../../components/_Supabase';
 import AlumniCard from '../../components/listing/AlumniCard';
 import { AiOutlineInfoCircle } from 'react-icons/ai';
+import { useAlumniListContext } from '../../components/AlumniListContext';
 
-export const getServerSideProps = async (e) => {
-  const { data, error } = await supabase
-    .from('Alumni List')
-    .select('*')
-    .order('surname', { ascending: true });
-  return {
-    props: {
-      alumniList: data,
-    },
-  };
-};
-
-const AlumniListing = ({ alumniList }) => {
+const AlumniListing = ({}) => {
+  const { alumniList } = useAlumniListContext();
   const [loaded, setLoaded] = useState(false);
-  const [mainAlumniList, setMainAlumniList] = useState(alumniList);
+  const [mainAlumniList, setMainAlumniList] = useState(false);
   const [searchTempContainer, setSearchTempContainer] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [hasUser, setHasUser] = useState(false);
@@ -41,29 +31,37 @@ const AlumniListing = ({ alumniList }) => {
     setSearchTempContainer(tempContainer ? tempContainer : []);
   };
 
-  useEffect(
-    (e) => {
-      console.log('Alumni List Loaded');
-      if (alumniList) setLoaded(true);
-    },
-    [alumniList]
-  );
+  useEffect((e) => {
+    console.log('Alumni List Loaded');
+    if (alumniList) setLoaded(true);
+    if (alumniList) setMainAlumniList(alumniList);
+  }, []);
 
   useEffect(
     (e) => {
       setHasUser(supabase.auth.user() ? true : false);
+      if (hasUser) {
+        // remove current user from list
+        const tempList = alumniList.filter((alumni) => {
+          return alumni.currentEmail !== supabase.auth.user().email;
+        });
+
+        setMainAlumniList(tempList);
+      }
+    },
+    [alumniList]
+  );
+
+  supabase.auth.onAuthStateChange((authEvent, user) => {
+    setHasUser(supabase.auth.user() ? true : false);
+    if (authEvent === 'SIGNED_IN') {
       // remove current user from list
       const tempList = alumniList.filter((alumni) => {
         return alumni.currentEmail !== supabase.auth.user().email;
       });
 
       setMainAlumniList(tempList);
-    },
-    [alumniList]
-  );
-
-  supabase.auth.onAuthStateChange((authEvent, user) => {
-    setHasUser(user ? true : false);
+    }
   });
 
   return (
@@ -104,7 +102,12 @@ const AlumniListing = ({ alumniList }) => {
               <span className="lg:hidden">Swipe up</span> to see the list
             </motion.p>
           ) : (
-            <motion.div className="alert">
+            <motion.div
+              variants={_Transition_Card}
+              initial="initial"
+              animate="animate"
+              className="alert"
+            >
               <p>Please sign in to see this list</p>
             </motion.div>
           )}
@@ -153,7 +156,8 @@ const AlumniListing = ({ alumniList }) => {
                 <AnimateSharedLayout>
                   <motion.div
                     layout
-                    className="my-5 grid grid-cols-1 gap-3 lg:grid-cols-2"
+                    className="my-5 grid grid-cols-1 lg:grid-cols-2 gap-5 lg:gap-1"
+                    style={{ gridTemplateRows: 'masonry' }}
                   >
                     {/* alumni card */}
                     {loaded &&

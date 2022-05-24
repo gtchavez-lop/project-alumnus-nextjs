@@ -4,16 +4,6 @@ import { useState } from 'react';
 import Link from 'next/link';
 import dayjs from 'dayjs';
 
-const ContextMenu = ({ alumniData }) => {
-  return (
-    <>
-      <div className="absolute w-full h-full top-0 left-0 bg-base-300">
-        <p>aklsjhkajsdh</p>
-      </div>
-    </>
-  );
-};
-
 const AlumniCard = ({ data }) => {
   const [showDetails, setShowDetails] = useState(false);
   const {
@@ -25,7 +15,7 @@ const AlumniCard = ({ data }) => {
     graduationDate,
   } = data;
   return (
-    <motion.div className="relative">
+    <>
       <motion.div
         variants={_Transition_Card}
         initial="initial"
@@ -33,12 +23,12 @@ const AlumniCard = ({ data }) => {
         key={id}
         layout
         onClick={() => setShowDetails(!showDetails)}
-        className="card cursor-pointer hover:bg-base-300"
+        className="card cursor-pointer hover:shadow-lg transition-shadow border-2 border-base-300"
       >
         <motion.div layout className="card-body lg:p-5 p-3">
           <motion.div layout className="flex gap-4 items-center">
             {/* image */}
-            <div className="avatar ml-10 lg:ml-0 w-12 h-12 lg:w-16 lg:h-16 rounded-full overflow-hidden">
+            <div className="avatar w-12 h-12 lg:w-16 lg:h-16 rounded-full overflow-hidden">
               <img
                 src={`https://avatars.dicebear.com/api/adventurer-neutral/${studentID}.svg`}
               />
@@ -53,6 +43,7 @@ const AlumniCard = ({ data }) => {
           <AnimatePresence>
             {showDetails && (
               <motion.div className="flex flex-col items-center my-5">
+                <p className="opacity-20">Tap again to close</p>
                 <div className="grid grid-cols-2 max-w-md gap-2 mb-6">
                   <p className="text-right">Program Graduated</p>
                   <p className="text-secondary font-semibold">
@@ -73,7 +64,7 @@ const AlumniCard = ({ data }) => {
           </AnimatePresence>
         </motion.div>
       </motion.div>
-    </motion.div>
+    </>
   );
 };
 
