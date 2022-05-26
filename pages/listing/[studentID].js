@@ -10,6 +10,7 @@ import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { CgArrowLeft, CgMail } from 'react-icons/cg';
 import dayjs from 'dayjs';
+import { useAlumniListContext } from '../../components/AlumniListContext';
 
 const StudentPage = (e) => {
   const [studentID, setStudentID] = useState(false);
@@ -19,20 +20,22 @@ const StudentPage = (e) => {
   const [hasUser, setHasUser] = useState(false);
   const router = useRouter();
   const { studentID: studentIDQuery } = router.query;
+  const { alumniList } = useAlumniListContext();
 
   const fetchStudentData = async (e) => {
     const id = window?.location.pathname.substring(9);
     setStudentID(id);
 
-    const { data, error } = await supabase
-      .from('Alumni List')
-      .select('*')
-      .eq('studentID', id);
+    const temp = alumniList.filter((alumni) => alumni.studentID == id);
 
-    if (!error) {
-      setStudentData(data[0]);
-      setLoaded(true);
-      setHasStudent(true);
+    if (temp[0]) {
+      if (temp[0].currentEmail == supabase.auth.user().email) {
+        window.location.href = '/me';
+      } else {
+        setStudentData(temp[0]);
+        setLoaded(true);
+        setHasStudent(true);
+      }
     } else {
       setHasStudent(false);
     }
@@ -52,7 +55,7 @@ const StudentPage = (e) => {
       setStudentID(id);
       fetchStudentData();
     },
-    [studentIDQuery]
+    [alumniList]
   );
 
   return (
@@ -83,7 +86,7 @@ const StudentPage = (e) => {
             initial="initial"
             animate="animate"
             exit="exit"
-            className="relative z-10 mt-64 flex mb-32 flex-col min-h-screen"
+            className="relative z-10 mt-64 mb-32 flex flex-col"
           >
             {!hasStudent && (
               <>

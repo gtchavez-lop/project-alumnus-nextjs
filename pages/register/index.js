@@ -6,6 +6,7 @@ import { supabase } from '../../components/_Supabase';
 import dayjs from 'dayjs';
 import { useRouter } from 'next/router';
 import { AiOutlineWarning } from 'react-icons/ai';
+import toast from 'react-hot-toast';
 
 const RegisterPage = (e) => {
   const router = useRouter();
@@ -91,6 +92,19 @@ const RegisterPage = (e) => {
     } else {
       // redirect to home page
       router.push('/');
+      toast.custom((t) => (
+        <motion.div
+          initial={{ opacity: 0, translateX: -20 }}
+          animate={{ opacity: 1, translateX: 0 }}
+        >
+          <div className="alert alert-success">
+            <p>
+              Please verify your account by clicking the link sent to your email
+              address.
+            </p>
+          </div>
+        </motion.div>
+      ));
     }
   };
 

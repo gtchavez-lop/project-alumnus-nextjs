@@ -159,6 +159,7 @@ const Navbar = (e) => {
     email: '',
     password: '',
   });
+  const [rememberMe, setRememberMe] = useState(false);
 
   const handleSignIn = async (e) => {
     setIsSigningIn(true);
@@ -402,7 +403,7 @@ const Navbar = (e) => {
             <h2 className="text-center text-3xl font-bold">
               Sign In to your Alumnus Account
             </h2>
-            <div className="grid grid-cols-1 gap-2 mt-10">
+            <div className="grid grid-cols-1 gap-5 mt-10">
               <div className="flex flex-col gap-2">
                 <label className="text-base">Email</label>
                 <input
@@ -420,6 +421,17 @@ const Navbar = (e) => {
                   placeholder="Password"
                   onChange={(e) =>
                     setUser({ ...user, password: e.target.value })
+                  }
+                />
+              </div>
+              <div className="flex flex-col gap-2">
+                <label className="text-base">Remember Me</label>
+                <input
+                  className="toggle"
+                  type="checkbox"
+                  checked={rememberMe}
+                  onChange={(e) =>
+                    setRememberMe(e.target.checked ? true : false)
                   }
                 />
               </div>
