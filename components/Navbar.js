@@ -172,7 +172,8 @@ const Navbar = (e) => {
       toast.custom((t) => (
         <motion.div
           initial={{ opacity: 0, translateX: -20 }}
-          animate={{ opacity: 1, translateX: 0 }}
+          animate={{ opacity: [0, 1, 1, 1, 0], translateX: [-20, 0, 0, 0, 0] }}
+          transition={{ duration: 2 }}
         >
           <div className="alert alert-success">
             <p>
@@ -187,7 +188,8 @@ const Navbar = (e) => {
       toast.custom((t) => (
         <motion.div
           initial={{ opacity: 0, translateX: -20 }}
-          animate={{ opacity: 1, translateX: 0 }}
+          animate={{ opacity: [0, 1, 1, 1, 0], translateX: [-20, 0, 0, 0, 0] }}
+          transition={{ duration: 2 }}
         >
           <div className="alert alert-error">
             <p>{error.message}</p>
@@ -202,7 +204,8 @@ const Navbar = (e) => {
     toast.custom((t) => (
       <motion.div
         initial={{ opacity: 0, translateX: -20 }}
-        animate={{ opacity: 1, translateX: 0 }}
+        animate={{ opacity: [0, 1, 1, 1, 0], translateX: [-20, 0, 0, 0, 0] }}
+        transition={{ duration: 2 }}
       >
         <div className="alert alert-info">
           <p>Account signed out</p>
@@ -407,18 +410,18 @@ const Navbar = (e) => {
               <div className="flex flex-col gap-2">
                 <label className="text-base">Email</label>
                 <input
-                  className="input "
+                  className="input input-bordered"
                   type="text"
-                  placeholder="Email"
+                  placeholder="juandelacruz@mail.com"
                   onChange={(e) => setUser({ ...user, email: e.target.value })}
                 />
               </div>
               <div className="flex flex-col gap-2">
                 <label className="text-base">Password</label>
                 <input
-                  className="input"
+                  className="input input-bordered "
                   type="password"
-                  placeholder="Password"
+                  placeholder="Your strong password here"
                   onChange={(e) =>
                     setUser({ ...user, password: e.target.value })
                   }
