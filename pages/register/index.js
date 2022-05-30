@@ -25,7 +25,7 @@ const RegisterPage = (e) => {
     isVerfiied: false,
     birthdate: '',
     currentLocation: 'Caloocan City',
-    programCompleted: '',
+    programCompleted: 'BS Computer Science',
     programStartDate: '',
     graduationDate: '',
     isCurrentlyWorking: false,
@@ -155,16 +155,20 @@ const RegisterPage = (e) => {
     setHasUser(supabase.auth.user() ? true : false);
   });
 
+  useEffect((e) => {
+    setHasUser(supabase.auth.user() ? true : false);
+  });
+
   return (
     <>
       <GradientTopBar colorLeft={'#EC4899'} colorRight={'#EAB308'} />
-      <div className="relative z-10 my-32 mt-64 flex min-h-screen flex-col">
+      <div className="relative z-10  mt-64 flex min-h-screen flex-col">
         <motion.div
           variants={_Transition_Card}
           initial="initial"
           animate="animate"
           exit="exit"
-          className="relative flex flex-col "
+          className="relative flex flex-col mb-32"
         >
           <h1 className="text-center text-5xl font-bold text-base-content">
             Register to get a basic account
@@ -212,20 +216,24 @@ const RegisterPage = (e) => {
                       }}
                       onKeyDown={(e) => {
                         if (e.key === 'Enter') {
-                          // reset studentdetails
-                          _setUserDetails({
-                            ..._userDetails,
-                            currentEmail: '',
-                            currentLocation: 'Caloocan City',
-                            programCompleted: 'BS Computer Science',
-                            programStartDate: '',
-                            birthdate: '',
-                            graduationDate: '',
-                            isCurrentlyWorking: false,
-                            currentCompany: '',
-                            currentPosition: '',
-                          });
-                          findStudentID();
+                          if (!studentIDFound) {
+                            // reset studentdetails
+                            _setUserDetails({
+                              ..._userDetails,
+                              currentEmail: '',
+                              currentLocation: 'Caloocan City',
+                              programCompleted: 'BS Computer Science',
+                              programStartDate: '',
+                              birthdate: '',
+                              graduationDate: '',
+                              isCurrentlyWorking: false,
+                              currentCompany: '',
+                              currentPosition: '',
+                            });
+                            findStudentID();
+                          } else {
+                            _setPageCount(2);
+                          }
                         }
                       }}
                       value={_userDetails.studentID}
@@ -351,6 +359,9 @@ const RegisterPage = (e) => {
                   <p className="text-lg mt-2">
                     We provided you some information that was found in your
                     Student ID publicly recorded in the university.
+                  </p>
+                  <p className="opacity-50 mt-2">
+                    You can change these information later.
                   </p>
                   <div className="form-control mt-5 gap-8">
                     {/* given name */}
@@ -657,7 +668,7 @@ const RegisterPage = (e) => {
                   exit="exit"
                   className="form-control w-full max-w-md gap-3 self-center"
                 >
-                  <p className="text-2xl">Summay of Details</p>
+                  <p className="text-2xl">Summary of Details</p>
                   <p className="text-lg mt-2">
                     Here&apos;s a summary of your details. Please check if
                     everything is correct.

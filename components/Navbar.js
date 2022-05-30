@@ -363,11 +363,14 @@ const Navbar = (e) => {
                 </li>
                 <div className="divider" />
                 {hasUser ? (
-                  <li onClick={handleSignOut}>
-                    <a className="bg-error text-error-content">
+                  <li>
+                    <label
+                      htmlFor="signOut_modal"
+                      className="btn btn-error text-error-content"
+                    >
                       <AiOutlineLogout size={20} />
                       <span>Sign Out</span>
-                    </a>
+                    </label>
                   </li>
                 ) : (
                   <li>
@@ -450,6 +453,30 @@ const Navbar = (e) => {
               className="btn btn-secondary"
             >
               Sign In
+            </label>
+          </div>
+        </div>
+      </div>
+
+      {/* sign out modal */}
+      <input type="checkbox" id="signOut_modal" className="modal-toggle" />
+      <div className="modal">
+        <div className="modal-box">
+          <div className="flex flex-col mt-10">
+            <h2 className="text-center text-xl font-bold">
+              Are you sure you want to sign out?
+            </h2>
+          </div>
+          <div className="modal-action">
+            <label htmlFor="signOut_modal" className="btn">
+              Close
+            </label>
+            <label
+              htmlFor="signOut_modal"
+              onClick={handleSignOut}
+              className="btn btn-error"
+            >
+              Sign Out
             </label>
           </div>
         </div>

@@ -45,6 +45,7 @@ const Home = ({}) => {
         </div>
       </motion.div>
 
+      {/* landing */}
       <motion.section
         variants={_Transition_Page}
         initial="initial"
@@ -99,41 +100,31 @@ const Home = ({}) => {
         </div>
       </motion.section>
 
-      <motion.section className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-2 mb-32">
-        <motion.div
-          initial={{ opacity: 0, translateY: 100 }}
-          whileInView={{ opacity: 1, translateY: 0 }}
-          className="card "
-        >
-          <figure className="p-7 flex items-center h-64">
-            <img
-              src="/reconnect.svg"
-              className="w-full h-full object-contain"
-            />
-          </figure>
-          <div className="card-body">
-            <h1 className="card-title text-2xl text-center justify-center underline underline-offset-2">
+      {/* detail */}
+      <motion.section className="flex flex-col mt-16 mb-52 gap-10">
+        <motion.div className="flex flex-col lg:flex-row lg:items-center">
+          <div className="relative w-full h-32 lg:h-64">
+            <Image src={'/reconnect.svg'} layout="fill" />
+          </div>
+          <div className="flex flex-col gap-5">
+            <p className="text-center lg:text-left text-2xl lg:text-3xl font-bold underline">
               Reconnect with the people you know
-            </h1>
-            <p className="text-center">
+            </p>
+            <p className="text-center lg:text-left">
               We want you to find people you had a connection with on your days
               here in the university and to find something and get involved.
             </p>
           </div>
         </motion.div>
-        <motion.div
-          initial={{ opacity: 0, translateY: 100 }}
-          whileInView={{ opacity: 1, translateY: 0 }}
-          className="card "
-        >
-          <figure className="p-7 flex items-center h-64">
-            <img src="/rekindle.svg" className="w-full h-full object-contain" />
-          </figure>
-          <div className="card-body">
-            <h1 className="card-title text-2xl text-center justify-center underline underline-offset-2">
+        <motion.div className="flex flex-col lg:flex-row-reverse lg:items-center">
+          <div className="relative w-full h-32 lg:h-64">
+            <Image src={'/rekindle.svg'} layout="fill" />
+          </div>
+          <div className="flex flex-col gap-5">
+            <p className="text-center lg:text-right text-2xl lg:text-3xl font-bold underline">
               Rekindle memories you had
-            </h1>
-            <p className="text-center">
+            </p>
+            <p className="text-center lg:text-right">
               See what other people you know or knew are doing and bring back
               memories that come back with it as well. Never forget the people
               who were there back then as we provide the platform to help you
@@ -141,19 +132,15 @@ const Home = ({}) => {
             </p>
           </div>
         </motion.div>
-        <motion.div
-          initial={{ opacity: 0, translateY: 100 }}
-          whileInView={{ opacity: 1, translateY: 0 }}
-          className="card md:col-span-full lg:col-span-1"
-        >
-          <figure className="p-7 flex items-center h-64">
-            <img src="/relive.svg" className="w-full h-full object-contain" />
-          </figure>
-          <div className="card-body">
-            <h1 className="card-title text-2xl text-center justify-center underline underline-offset-2">
+        <motion.div className="flex flex-col lg:flex-row lg:items-center">
+          <div className="relative w-full h-32 lg:h-64">
+            <Image src={'/relive.svg'} layout="fill" />
+          </div>
+          <div className="flex flex-col gap-5">
+            <p className="text-center lg:text-left text-2xl lg:text-3xl font-bold underline">
               Relive the lives you spent
-            </h1>
-            <p className="text-center">
+            </p>
+            <p className="text-center lg:text-left">
               Be a part of their lives. Be a part of the community. Be something
               unique. Be yourself. This platform will help you to let those
               sparks burn again
@@ -162,42 +149,29 @@ const Home = ({}) => {
         </motion.div>
       </motion.section>
 
-      <motion.section className="grid grid-cols-1 lg:grid-cols-2 lg:h-screen gap-5 place-items-center">
-        <div className="lg:hidden">
-          <img
-            className="w-full h-full object-cover"
-            src="https://images.unsplash.com/photo-1544027993-37dbfe43562a"
-          />
-        </div>
-        <div className="flex flex-col gap-5">
-          <p className="text-4xl text-center lg:text-right">
-            Your platform to be connected once more
-          </p>
-          <p className="text-center lg:text-right">
-            There are numerous advantages to using a Project Alumnus for
-            university alumni. Alumni can use this platform to stay in touch
-            with their alma mater, discover stories, and connect with other
-            alumni. It gives students, staff, faculty, and others connected to
-            the university an easy way to keep up with campus news and events.
-            Furthermore, using Project Alumnus allows alumni to interact
-            directly with one another and form relationships that would not be
-            possible otherwise.
-          </p>
-        </div>
-        <div className="hidden lg:block">
-          <img
-            className="w-full h-screen object-cover"
-            src="https://images.unsplash.com/photo-1544027993-37dbfe43562a"
-          />
-        </div>
+      {/* the paltform */}
+      <motion.section className="flex flex-col mb-52 gap-10">
+        <p className="text-4xl text-center">
+          Your platform to be connected once more
+        </p>
+        <p className="text-center self-center max-w-xl">
+          There are numerous advantages to using a Project Alumnus for
+          university alumni. Alumni can use this platform to stay in touch with
+          their alma mater, discover stories, and connect with other alumni. It
+          gives students, staff, faculty, and others connected to the university
+          an easy way to keep up with campus news and events. Furthermore, using
+          Project Alumnus allows alumni to interact directly with one another
+          and form relationships that would not be possible otherwise.
+        </p>
       </motion.section>
 
+      {/* abotu */}
       <motion.section
         id="about-pa"
-        className="flex flex-col items-center gap-2 mb-64 mt-16"
+        className="flex flex-col mt-16 mb-52 gap-10 items-center"
       >
         <p className="text-4xl text-center">What is Project Alumnus?</p>
-        <p className="text-center max-w-2xl">
+        <p className="text-center max-w-xl">
           Project Alumnus is a social platform for university alumni to connect
           with each other and reach out their stories. We provide a platform to
           connect with people who had a connection with you in the university.
@@ -205,7 +179,7 @@ const Home = ({}) => {
           here in the university and to find something and get involved.
         </p>
         <Link href={'/register'}>
-          <div className="btn btn-secondary max-w-md w-full mt-16">
+          <div className="btn btn-secondary max-w-md w-full mt-10">
             give it a try
           </div>
         </Link>

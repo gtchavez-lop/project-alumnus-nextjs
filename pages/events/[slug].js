@@ -78,7 +78,7 @@ const EventPage = (e) => {
   useEffect(() => {
     setSlug(window.location.pathname.substring(8));
     fetchData();
-  }, [slug]);
+  }, []);
 
   return (
     <>

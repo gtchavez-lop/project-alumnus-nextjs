@@ -4,7 +4,6 @@ import {
   _Transition_Card,
   _Transition_Page,
 } from '../../components/_Animations';
-// import AboutCard from 'https://framer.com/m/About-Card-2gei.js@ZNCDv2kzT6F3iFRbyBVA';
 
 const About = (e) => {
   return (
@@ -55,7 +54,7 @@ const About = (e) => {
           <section className="flex h-screen w-full items-center justify-end">
             <p className="relative max-w-lg text-right text-3xl lg:text-4xl">
               We are students of{' '}
-              <span className="bg-gradient-to-tr from-pink-500 via-red-500 to-yellow-500 bg-clip-text font-black text-transparent">
+              <span className="bg-pink-500 bg-clip-text font-black text-transparent">
                 Computer Science
               </span>
               , from{' '}
@@ -68,7 +67,7 @@ const About = (e) => {
               </span>
               .
             </p>
-          </section>
+          </section>  
         </div>
         <div className="py-16 pb-64">
           {/* meet the team */}
