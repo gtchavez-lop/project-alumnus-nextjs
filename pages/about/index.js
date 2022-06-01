@@ -244,11 +244,11 @@ const About = (e) => {
                   </figure>
                   <h2 className="card-title mt-2 justify-center">Supabase</h2>
                   <p className="text-center">
-                    Supabase is a set of open source tools. Firebase's features
-                    are being built with enterprise-grade, open source products.
-                    Supabase&apos;s goal is to provide developers with a
-                    Firebase-like developer experience by utilizing open source
-                    tools.
+                    Supabase is a set of open source tools. Firebase&apos;s
+                    features are being built with enterprise-grade, open source
+                    products. Supabase&apos;s goal is to provide developers with
+                    a Firebase-like developer experience by utilizing open
+                    source tools.
                   </p>
                 </div>
               </div>
