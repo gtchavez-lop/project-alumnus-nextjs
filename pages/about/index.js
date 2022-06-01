@@ -67,7 +67,7 @@ const About = (e) => {
               </span>
               .
             </p>
-          </section>  
+          </section>
         </div>
         <div className="py-16 pb-64">
           {/* meet the team */}
@@ -181,20 +181,8 @@ const About = (e) => {
             <p className="relative mt-32 mb-5 max-w-lg text-center text-3xl lg:text-4xl">
               The tools and technologies used in this project
             </p>
-            {/* desktop card */}
-            {/* <div className=" hidden grid-cols-1 gap-5 lg:grid lg:grid-cols-2">
-              <AboutCard variant="Variant_Vercel" />
-              <AboutCard variant="Variant_Next" />
-              <AboutCard variant="Variant_React" />
-              <AboutCard variant="Variant_GraphCMS" />
-              <AboutCard variant="Variant_Tailwind" />
-              <AboutCard variant="Variant_Firebase" />
-              <div className="col-span-full flex justify-center">
-                <AboutCard variant="Variant_FramerMotion" />
-              </div>
-            </div> */}
-            {/* mobile list */}
-            <div className="flex flex-col gap-3">
+
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-3">
               <div className="card bg-base-200">
                 <div className="card-body">
                   <figure>
@@ -251,30 +239,16 @@ const About = (e) => {
                   <figure>
                     <img
                       className="avatar h-20 w-20 rounded-full object-cover object-center"
-                      src="https://firebase.google.com/images/brand-guidelines/logo-logomark.png"
+                      src="https://pbs.twimg.com/profile_images/1415511430808313864/Ers1wa5A_400x400.jpg"
                     />
                   </figure>
-                  <h2 className="card-title mt-2 justify-center">Firebase 9</h2>
+                  <h2 className="card-title mt-2 justify-center">Supabase</h2>
                   <p className="text-center">
-                    It made us easily integrate Firebase into our tools. Trusted
-                    by the largest apps. Firebase helps us to build & run apps.
-                  </p>
-                </div>
-              </div>
-
-              <div className="card bg-base-200">
-                <div className="card-body">
-                  <figure>
-                    <img
-                      className="avatar h-20 w-20 rounded-full object-cover object-center"
-                      src="https://pbs.twimg.com/profile_images/1240607161639632896/65lOOz86_400x400.jpg"
-                    />
-                  </figure>
-                  <h2 className="card-title mt-2 justify-center">GraphCMS</h2>
-                  <p className="text-center">
-                    GraphCMS is the ultimate content platform that enables us to
-                    deliver ambitious applications at scale, API first, using
-                    our preferred frameworks.
+                    Supabase is a set of open source tools. Firebase's features
+                    are being built with enterprise-grade, open source products.
+                    Supabase&apos;s goal is to provide developers with a
+                    Firebase-like developer experience by utilizing open source
+                    tools.
                   </p>
                 </div>
               </div>
