@@ -46,7 +46,7 @@ const Footer = (e) => {
                       </a>
                     </li>
                   </Link>
-                  <Link href={'/listing'}>
+                  <Link href={'/alumni'}>
                     <li>
                       <a className="cursor-pointer hover:underline">
                         Alumni Listing

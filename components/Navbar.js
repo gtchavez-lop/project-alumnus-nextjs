@@ -76,7 +76,7 @@ const MobileContextMenu = ({ closeHandler }) => {
                   <span>My Profile</span>
                 </li>
               </Link>
-              <Link href={'/listing'}>
+              <Link href={'/alumni'}>
                 <li
                   onClick={(e) => closeHandler(false)}
                   className="btn btn-ghost no-animation items-center justify-start gap-3"
@@ -285,7 +285,7 @@ const Navbar = (e) => {
                 {/* quick links */}
                 {hasUser ? (
                   <div className="flex gap-2">
-                    <Link href={'/listing'}>
+                    <Link href={'/alumni'}>
                       <div className="btn btn-ghost">Alumni List</div>
                     </Link>
                     <Link href={'/events'}>
@@ -327,7 +327,7 @@ const Navbar = (e) => {
                     </a>
                   </li>
                 </Link>
-                <Link href={'/listing'}>
+                <Link href={'/alumni'}>
                   <li>
                     <a>
                       <AiOutlineMenu size={20} />
@@ -430,7 +430,7 @@ const Navbar = (e) => {
                   }
                 />
               </div>
-              <div className="flex flex-col gap-2">
+              <div className="flex flex-col gap-4">
                 <label className="text-base">Remember Me</label>
                 <input
                   className="toggle"
@@ -443,7 +443,12 @@ const Navbar = (e) => {
               </div>
             </div>
           </div>
-          <div className="modal-action">
+          <div className="modal-action items-center">
+            <Link href={'/recover'}>
+              <label htmlFor="signInModal" className="btn btn-ghost mr-10">
+                Forgot Password?
+              </label>
+            </Link>
             <label htmlFor="signInModal" className="btn">
               Close
             </label>

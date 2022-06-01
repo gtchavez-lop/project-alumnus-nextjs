@@ -31,6 +31,8 @@ const RegisterPage = (e) => {
     isCurrentlyWorking: false,
     currentCompany: '',
     currentPosition: '',
+    securityQuestion: 'What is your favorite color?',
+    securityAnswer: '',
   });
 
   const findStudentID = async (e) => {
@@ -616,6 +618,74 @@ const RegisterPage = (e) => {
                         </motion.div>
                       </>
                     )}
+                    {/* security question */}
+                    <div className="flex flex-col">
+                      <p className="text-xl">
+                        Security Question <span className="text-error">*</span>
+                      </p>
+                      <select
+                        onChange={(e) => {
+                          _setUserDetails({
+                            ..._userDetails,
+                            securityQuestion: e.target.value,
+                          });
+                        }}
+                        value={_userDetails.securityQuestion}
+                        className="select select-bordered"
+                      >
+                        <option disabled>Security Question</option>
+                        <option value="What is your favorite color?">
+                          What is your favorite color?
+                        </option>
+                        <option value="What is your favorite food?">
+                          What is your favorite food?
+                        </option>
+                        <option value="What is your favorite movie?">
+                          What is your favorite movie?
+                        </option>
+                        <option value="What is your favorite sport?">
+                          What is your favorite sport?
+                        </option>
+                        <option value="What is your favorite video game?">
+                          What is your favorite video game?
+                        </option>
+                        <option value="What is your favorite book?">
+                          What is your favorite book?
+                        </option>
+                        <option value="What is your favorite song?">
+                          What is your favorite song?
+                        </option>
+                        <option value="What is your favorite TV show?">
+                          What is your favorite TV show?
+                        </option>
+                        <option value="What is your favorite movie?">
+                          What is your favorite movie?
+                        </option>
+                      </select>
+                      <span className="opacity-50">
+                        What is your security question?
+                      </span>
+                    </div>
+                    {/* security answer */}
+                    <div className="flex flex-col">
+                      <p className="text-xl">
+                        Security Answer <span className="text-error">*</span>
+                      </p>
+                      <input
+                        onChange={(e) => {
+                          _setUserDetails({
+                            ..._userDetails,
+                            securityAnswer: e.target.value,
+                          });
+                        }}
+                        value={_userDetails.securityAnswer}
+                        type="text"
+                        className={`input input-bordered`}
+                      />
+                      <span className="opacity-50">
+                        What is your security answer?
+                      </span>
+                    </div>
                   </div>
 
                   {(!_userDetails.currentEmail ||
@@ -624,7 +694,9 @@ const RegisterPage = (e) => {
                     !_userDetails.birthdate ||
                     !_userDetails.programCompleted ||
                     !_userDetails.programStartDate ||
-                    !_userDetails.graduationDate) && (
+                    !_userDetails.graduationDate ||
+                    !_userDetails.securityQuestion ||
+                    !_userDetails.securityAnswer) && (
                     <p className="text-error mt-10">* This field is required</p>
                   )}
                   <div className="grid grid-cols-1 md:grid-cols-2 mt-16 gap-5">
@@ -749,6 +821,18 @@ const RegisterPage = (e) => {
                       </div>
                     </>
                   )}
+                  <div className="flex flex-col bg-base-200 p-4 rounded-xl">
+                    <span>Security Question</span>
+                    <span className="text-sm text-accent font-bold">
+                      {_userDetails.securityQuestion}
+                    </span>
+                  </div>
+                  <div className="flex flex-col bg-base-200 p-4 rounded-xl">
+                    <span>Security Answer</span>
+                    <span className="text-sm text-accent font-bold">
+                      {_userDetails.securityAnswer}
+                    </span>
+                  </div>
                   <div className="grid grid-cols-2 gap-2 mt-7">
                     <button
                       className="btn btn-ghost"

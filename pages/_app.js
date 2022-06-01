@@ -28,7 +28,7 @@ const MainComponent = ({ Component, pageProps }) => {
       </Head>
       <Navbar />
       <div className="flex justify-center">
-        <div className="w-full max-w-4xl px-10 lg:px-0 overflow-x-hidden">
+        <div className="w-full max-w-4xl px-10 lg:px-0">
           <AnimatePresence exitBeforeEnter>
             <motion.div key={router.route}>
               <AlumniListContextWrapper>

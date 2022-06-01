@@ -5,7 +5,7 @@ import {
   _Transition_Card,
   _Transition_Page,
 } from '../../components/_Animations';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { supabase } from '../../components/_Supabase';
 import AlumniCard from '../../components/listing/AlumniCard';
 import { AiOutlineInfoCircle } from 'react-icons/ai';
@@ -14,13 +14,16 @@ import { useAlumniListContext } from '../../components/AlumniListContext';
 const AlumniListing = ({}) => {
   const { alumniList } = useAlumniListContext();
   const [loaded, setLoaded] = useState(false);
-  const [mainAlumniList, setMainAlumniList] = useState(false);
+  const [mainAlumniList, setMainAlumniList] = useState(alumniList);
   const [searchTempContainer, setSearchTempContainer] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [hasUser, setHasUser] = useState(false);
+  const [orderBy, setOrderBy] = useState('asc');
+  const [sortBy, setSortBy] = useState('surname');
+  const [searchQuery, setSearchQuery] = useState('');
+  const alumniList_ref = useRef([]);
 
-  const searchForAlumni = (e) => {
-    const searchQuery = e.target.value.toLowerCase();
+  const searchForAlumni = (input) => {
     setIsSearching(searchQuery.length > 0 ? true : false);
     const tempContainer = mainAlumniList.filter((alumni) => {
       return (
@@ -28,25 +31,24 @@ const AlumniListing = ({}) => {
         alumni.givenName.toLowerCase().includes(searchQuery)
       );
     });
-    setSearchTempContainer(tempContainer ? tempContainer : []);
+    const sortedTempContainer = tempContainer.sort((a, b) => {
+      if (a[sortBy] < b[sortBy]) {
+        return orderBy === 'asc' ? -1 : 1;
+      }
+      if (a[sortBy] > b[sortBy]) {
+        return orderBy === 'asc' ? 1 : -1;
+      }
+      return 0;
+    });
+    setSearchTempContainer(sortedTempContainer ? sortedTempContainer : []);
   };
-
-  useEffect((e) => {
-    console.log('Alumni List Loaded');
-    if (alumniList) setLoaded(true);
-    if (alumniList) setMainAlumniList(alumniList);
-  }, []);
 
   useEffect(
     (e) => {
-      setHasUser(supabase.auth.user() ? true : false);
-      if (hasUser) {
-        // remove current user from list
-        const tempList = alumniList.filter((alumni) => {
-          return alumni.currentEmail !== supabase.auth.user().email;
-        });
-
-        setMainAlumniList(tempList);
+      if (alumniList) {
+        setLoaded(true);
+        setMainAlumniList(alumniList);
+        sortList();
       }
     },
     [alumniList]
@@ -63,6 +65,50 @@ const AlumniListing = ({}) => {
       setMainAlumniList(tempList);
     }
   });
+
+  const sortList = (e) => {
+    const sortedList = mainAlumniList.sort((a, b) => {
+      if (a[sortBy] < b[sortBy]) {
+        return orderBy === 'asc' ? -1 : 1;
+      }
+      if (a[sortBy] > b[sortBy]) {
+        return orderBy === 'asc' ? 1 : -1;
+      }
+      return 0;
+    });
+    const filteredList = sortedList.filter((alumni) => {
+      return alumni.currentEmail !== supabase.auth.user().email;
+    });
+
+    alumniList_ref.current = filteredList;
+  };
+
+  const searchAndFilter = (e) => {
+    searchForAlumni();
+  };
+
+  useEffect(
+    (e) => {
+      setHasUser(supabase.auth.user() ? true : false);
+      if (hasUser) {
+        // remove current user from list
+        const tempList = alumniList.filter((alumni) => {
+          return alumni.currentEmail !== supabase.auth.user().email;
+        });
+        const sortedTempList = tempList.sort((a, b) => {
+          if (a[sortBy] < b[sortBy]) {
+            return orderBy === 'asc' ? -1 : 1;
+          }
+          if (a[sortBy] > b[sortBy]) {
+            return orderBy === 'asc' ? 1 : -1;
+          }
+          return 0;
+        });
+        setMainAlumniList(sortedTempList);
+      }
+    },
+    [alumniList]
+  );
 
   return (
     <>
@@ -124,31 +170,47 @@ const AlumniListing = ({}) => {
               >
                 {/* search and filter tab */}
                 <div className="my-5 mb-10 grid grid-cols-1 gap-2 lg:grid-cols-4 ">
-                  <div className="col-span-4 flex items-center lg:col-span-2">
+                  <div className="col-span-4 flex items-center lg:col-span-2 gap-2">
                     <input
                       type="text"
-                      placeholder="Type a name to search then press enter"
+                      placeholder="Find someone..."
                       className="input input-bordered w-full"
-                      onChange={(e) =>
-                        e.target.value.length < 1 && setIsSearching(false)
-                      }
+                      onChange={(e) => {
+                        e.target.value.length < 1 && setIsSearching(false);
+                        setSearchQuery(e.target.value ? e.target.value : '');
+                      }}
                       onKeyUp={(e) =>
-                        e.code === 'Enter' ? searchForAlumni(e) : null
+                        e.code === 'Enter' ? searchAndFilter() : null
                       }
                     />
-                  </div>
-                  <div className="col-span-4 flex items-center lg:col-span-2 lg:gap-16">
-                    <div className="grid w-full grid-cols-2 gap-3">
-                      <select disabled className="select w-full">
-                        <option value="ASC">Ascending</option>
-                        <option value="DSC">Descending</option>
-                      </select>
-                      <select disabled className="select w-full">
-                        <option value="givenName">Given Name</option>
-                        <option value="suname">Surname</option>
-                        <option value="createdAt">Created At</option>
-                      </select>
+                    <div
+                      onClick={searchAndFilter}
+                      className="btn btn-secondary"
+                    >
+                      Search and filter
                     </div>
+                  </div>
+                  <div className="col-span-4 grid grid-cols-2 lg:col-span-2 gap-2">
+                    <select
+                      onChange={(e) => {
+                        setOrderBy(e.currentTarget.value);
+                      }}
+                      className="select w-full select-bordered"
+                    >
+                      <option value="asc">Ascending</option>
+                      <option value="dsc">Descending</option>
+                    </select>
+                    <select
+                      onChange={(e) => {
+                        setSortBy(e.currentTarget.value);
+                      }}
+                      className="select w-full select-bordered"
+                      value={sortBy}
+                    >
+                      <option value="givenName">Given Name</option>
+                      <option value="suname">Surname</option>
+                      {/* <option value="createdAt">Created At</option> */}
+                    </select>
                   </div>
                 </div>
 

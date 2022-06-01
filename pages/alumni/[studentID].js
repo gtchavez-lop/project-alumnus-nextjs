@@ -23,7 +23,7 @@ const StudentPage = (e) => {
   const { alumniList } = useAlumniListContext();
 
   const fetchStudentData = async (e) => {
-    const id = window?.location.pathname.substring(9);
+    const id = window?.location.pathname.substring(8);
     setStudentID(id);
 
     const temp = alumniList.filter((alumni) => alumni.studentID == id);
@@ -108,7 +108,7 @@ const StudentPage = (e) => {
                 className="relative mt-[100px] mb-32 flex w-full flex-col items-center text-center lg:mt-[50px]"
               >
                 {/* backbutton */}
-                <Link href="/listing">
+                <Link href="/alumni">
                   <div className="btn btn-primary btn-square absolute top-0 left-0 -mt-8 flex gap-5 lg:-mt-6">
                     <CgArrowLeft size={25} />
                   </div>

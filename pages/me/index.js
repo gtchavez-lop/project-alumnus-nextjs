@@ -9,12 +9,16 @@ import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
 import { AiOutlineEdit, AiOutlineSave } from 'react-icons/ai';
 import { useRouter } from 'next/router';
+import toast from 'react-hot-toast';
 
 const MyProfile = ({}) => {
   const [studentData, setStudentData] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [hasUser, setHasUser] = useState(false);
   const [editMode, setEditMode] = useState(false);
+  const [securityAnswer, setSecurityAnswer] = useState('');
+  const [NewPassword, setNewPassword] = useState('');
+  const [ConfirmPassword, setConfirmPassword] = useState('');
   const router = useRouter();
 
   const fetchData = async (e) => {
@@ -39,6 +43,50 @@ const MyProfile = ({}) => {
       setHasUser(supabase.auth.user() ? true : false);
     }
   });
+
+  const changePassword = async (e) => {
+    if (NewPassword.length > 0) {
+      const { data, error } = await supabase.auth.update({
+        email: supabase.auth.user().email,
+        password: NewPassword,
+      });
+      if (!error) {
+        setNewPassword('');
+        setConfirmPassword('');
+        setSecurityAnswer('');
+        setEditMode(false);
+        toast.custom((t) => (
+          <motion.div
+            initial={{ opacity: 0, translateX: -20 }}
+            animate={{
+              opacity: [0, 1, 1, 1, 0],
+              translateX: [-20, 0, 0, 0, 0],
+            }}
+            transition={{ duration: 2 }}
+          >
+            <div className="alert alert-success">
+              <p>Account password updated</p>
+            </div>
+          </motion.div>
+        ));
+      } else {
+        toast.custom((t) => (
+          <motion.div
+            initial={{ opacity: 0, translateX: -20 }}
+            animate={{
+              opacity: [0, 1, 1, 1, 0],
+              translateX: [-20, 0, 0, 0, 0],
+            }}
+            transition={{ duration: 2 }}
+          >
+            <div className="alert alert-error">
+              <p>{error.message}</p>
+            </div>
+          </motion.div>
+        ));
+      }
+    }
+  };
 
   useEffect(
     (e) => {
@@ -451,6 +499,63 @@ const MyProfile = ({}) => {
                     )}
                   </div>
                 </div>
+
+                {/* change password section */}
+                {editMode && (
+                  <div className="card mt-10 bg-base-200 shadow-lg">
+                    <div className="card-body">
+                      <p className="card-title justify-center">
+                        Change Password
+                      </p>
+
+                      <p className="">
+                        Please answer the security question before proceeding to
+                        change password
+                      </p>
+
+                      <p className="text-xl mt-10 font-bold">
+                        {studentData.securityQuestion}
+                      </p>
+
+                      <input
+                        className="input input-bordered input-secondary self-center max-w-lg w-full text-center mb-10"
+                        type="password"
+                        placeholder="Answer"
+                        value={securityAnswer}
+                        onChange={(e) => setSecurityAnswer(e.target.value)}
+                      />
+                      {securityAnswer == studentData.securityAnswer && (
+                        <>
+                          <p className="">Set your new password</p>
+                          <input
+                            className="input input-bordered input-secondary self-center max-w-lg w-full text-center mb-5"
+                            type="password"
+                            value={NewPassword}
+                            placeholder="Password"
+                            onChange={(e) => setNewPassword(e.target.value)}
+                          />
+                          <input
+                            className="input input-bordered input-secondary self-center max-w-lg w-full text-center mb-10"
+                            type="password"
+                            value={ConfirmPassword}
+                            placeholder="Confirm Password"
+                            onChange={(e) => setConfirmPassword(e.target.value)}
+                          />
+                          {NewPassword == ConfirmPassword &&
+                            NewPassword &&
+                            ConfirmPassword && (
+                              <button
+                                onClick={changePassword}
+                                className="btn btn-primary self-center max-w-sm w-full text-center"
+                              >
+                                Change Password
+                              </button>
+                            )}
+                        </>
+                      )}
+                    </div>
+                  </div>
+                )}
               </div>
             </motion.div>
           </motion.div>
