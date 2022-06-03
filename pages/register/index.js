@@ -116,6 +116,8 @@ const RegisterPage = (e) => {
         isCurrentlyWorking: _userDetails.isCurrentlyWorking,
         currentCompany: _userDetails.currentCompany,
         currentPosition: _userDetails.currentPosition,
+        securityQuestion: _userDetails.securityQuestion,
+        securityAnswer: _userDetails.securityAnswer,
       })
       .eq('studentID', _userDetails.studentID);
     if (error) {

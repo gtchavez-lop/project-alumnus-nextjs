@@ -430,25 +430,28 @@ const Navbar = (e) => {
                   }
                 />
               </div>
-              <div className="flex flex-col gap-4">
-                <label className="text-base">Remember Me</label>
-                <input
-                  className="toggle"
-                  type="checkbox"
-                  checked={rememberMe}
-                  onChange={(e) =>
-                    setRememberMe(e.target.checked ? true : false)
-                  }
-                />
+              <div className="flex gap-4 justify-between items-center">
+                <div className="flex flex-col">
+                  <label className="text-base">Remember Me</label>
+                  <input
+                    className="toggle"
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) =>
+                      setRememberMe(e.target.checked ? true : false)
+                    }
+                  />
+                </div>
+
+                <Link href={'/recover'}>
+                  <label htmlFor="signInModal" className="link">
+                    Forgot Password?
+                  </label>
+                </Link>
               </div>
             </div>
           </div>
           <div className="modal-action items-center">
-            <Link href={'/recover'}>
-              <label htmlFor="signInModal" className="btn btn-ghost mr-10">
-                Forgot Password?
-              </label>
-            </Link>
             <label htmlFor="signInModal" className="btn">
               Close
             </label>
