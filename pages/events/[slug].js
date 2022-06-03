@@ -34,51 +34,37 @@ const components = {
   ),
 };
 
-const EventPage = (e) => {
-  const router = useRouter();
+export const getServerSideProps = async (e) => {
+  const slug = e.query.slug;
 
-  const [eventData, setEventData] = useState(false);
+  const { data, error } = await supabase
+    .from('News and Events')
+    .select('*')
+    .eq('slug', slug);
+
+  if (data) {
+    return {
+      props: {
+        newEventData: data[0],
+      },
+    };
+  }
+};
+
+const EventPage = ({ newEventData }) => {
+  const [eventData, setEventData] = useState([]);
   const [slug, setSlug] = useState(false);
   const [loaded, setLoaded] = useState(false);
-  const [authorName, setAuthorName] = useState(false);
-  const [errorLoaded, setErrorLoaded] = useState(false);
 
-  const fetchAuthor = async (id) => {
-    const { data: author, error } = await supabase
-      .from('Event Authors')
-      .select('name')
-      .eq('id', id);
-
-    if (!error) {
-      setAuthorName(author[0].name);
-    }
-  };
-
-  //   async fetch data
-  const fetchData = async () => {
-    try {
-      const { data, error } = await supabase
-        .from('News and Events')
-        .select('*')
-        .eq('slug', slug);
-      const author_id = data[0].authorID;
-      if (!error) {
-        setEventData(data[0]);
-        fetchAuthor(author_id);
+  useEffect(
+    (e) => {
+      if (newEventData) {
+        setEventData(newEventData);
         setLoaded(true);
-      } else {
-        setErrorLoaded(true);
       }
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  //   fetch data on load
-  useEffect(() => {
-    setSlug(window.location.pathname.substring(8));
-    fetchData();
-  }, []);
+    },
+    [newEventData]
+  );
 
   return (
     <>
@@ -89,7 +75,7 @@ const EventPage = (e) => {
         animate="animate"
         exit="exit"
       >
-        {loaded ? (
+        {loaded && eventData ? (
           <motion.div
             variants={_Transition_Card}
             initial="initial"
@@ -106,7 +92,9 @@ const EventPage = (e) => {
                 whileHover={{ translateX: -10 }}
               >
                 <AiOutlineArrowLeft size={40} />
-                <span className="font-bold">{eventData.title}</span>
+                <span className="font-bold">
+                  {eventData ? eventData.title : ''}
+                </span>
               </motion.div>
             </Link>
 
@@ -116,7 +104,7 @@ const EventPage = (e) => {
               <p className="my-2 flex text-gray-400 ">Posted by</p>
               <p className="my-2 flex items-center text-gray-400">
                 <span className="ml-2  font-bold text-base-content">
-                  {authorName ? authorName : 'Admin'}
+                  {eventData.author ? eventData.author : 'Admin'}
                 </span>
               </p>
               <p className="ml-2 mb-5 flex items-center text-gray-400">
@@ -127,17 +115,18 @@ const EventPage = (e) => {
               </p>
               {/* get event tags */}
               <div className="mb-10 flex select-none flex-wrap gap-2">
-                {eventData.tags.map((tag, index) => (
-                  <div key={index} className="badge badge-primary capitalize">
-                    {tag}
-                  </div>
-                ))}
+                {eventData &&
+                  eventData.tags.map((tag, index) => (
+                    <div key={index} className="badge badge-primary capitalize">
+                      {tag}
+                    </div>
+                  ))}
               </div>
 
               <div className="divider max-w-sm mx-auto my-16" />
 
               <ReactMarkdown components={components}>
-                {eventData.content}
+                {eventData.content ? eventData.content : 'No content'}
               </ReactMarkdown>
               <div className="divider max-w-sm mx-auto my-16" />
             </div>

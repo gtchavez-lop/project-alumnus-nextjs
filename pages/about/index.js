@@ -35,7 +35,7 @@ const About = (e) => {
             }
           /> */}
           <img
-            className="h-full w-full object-left object-bottom object-cover"
+            className="h-full w-full object-bottom object-cover"
             src="https://images.unsplash.com/photo-1602306834394-6c8b7ea0ed9d?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1000&q=80"
           />
           {/* filter */}

@@ -12,21 +12,19 @@ import { CgArrowLeft, CgMail } from 'react-icons/cg';
 import dayjs from 'dayjs';
 import { useAlumniListContext } from '../../components/AlumniListContext';
 
-const StudentPage = (e) => {
+const StudentPage = ({}) => {
   const [studentID, setStudentID] = useState(false);
   const [studentData, setStudentData] = useState(false);
   const [loaded, setLoaded] = useState(false);
   const [hasStudent, setHasStudent] = useState(true);
   const [hasUser, setHasUser] = useState(false);
-  const router = useRouter();
-  const { studentID: studentIDQuery } = router.query;
   const { alumniList } = useAlumniListContext();
 
   const fetchStudentData = async (e) => {
     const id = window?.location.pathname.substring(8);
     setStudentID(id);
 
-    const temp = alumniList.filter((alumni) => alumni.studentID == id);
+    const temp = alumniList.filter((alumni) => alumni.studentID == studentID);
 
     if (temp[0]) {
       if (temp[0].currentEmail == supabase.auth.user().email) {
@@ -51,8 +49,6 @@ const StudentPage = (e) => {
 
   useEffect(
     (e) => {
-      const id = window?.location.pathname.substring(9);
-      setStudentID(id);
       fetchStudentData();
     },
     [alumniList]
