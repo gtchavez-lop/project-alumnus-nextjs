@@ -109,7 +109,7 @@ const About = (e) => {
               <div className="card bg-base-100 shadow transition-all hover:shadow-lg ">
                 <figure className="px-10 pt-10">
                   <img
-                    src="https://api.lorem.space/image/face?w=175&h=175"
+                    src="/profile/khyle.jpg"
                     alt="Khyle"
                     className="h-32 w-32 rounded-xl object-cover"
                   />

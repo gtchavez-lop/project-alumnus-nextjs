@@ -10,6 +10,7 @@ import { AiOutlineLoading } from 'react-icons/ai';
 import dayjs from 'dayjs';
 import GradientTopBar from '../../components/GradientTopBar';
 import Link from 'next/link';
+import EventCard from '../../components/evets/EventCard';
 
 export const getStaticProps = async () => {
   const { data: events, error } = await supabase
@@ -107,27 +108,7 @@ const NewsAndEvents = ({ newsAndEvents }) => {
             <div className="mt-10 grid grid-cols-1 gap-3 md:grid-cols-2">
               {loaded &&
                 newsAndEvents.map((event) => (
-                  <motion.div
-                    variants={_Transition_Card}
-                    initial="initial"
-                    animate="animate"
-                    exit="exit"
-                    key={event._id}
-                  >
-                    <Link href={`/events/${event.slug}`}>
-                      <div className="card bg-base-300 cursor-pointer">
-                        <div className="card-body">
-                          <p className="card-title">{event.title}</p>
-                          <p>
-                            Posted on{' '}
-                            {dayjs(event.created_at).format(
-                              'MMM D YYYY, hh:MMa'
-                            )}
-                          </p>
-                        </div>
-                      </div>
-                    </Link>
-                  </motion.div>
+                  <EventCard key={event.id} event={event} />
                 ))}
             </div>
           </AnimatePresence>
