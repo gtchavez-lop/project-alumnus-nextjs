@@ -110,9 +110,13 @@ const StudentPage = ({}) => {
                   </div>
                 </Link>
                 {/* contact button */}
-                <div className="btn btn-primary btn-square absolute top-0 right-0 -mt-8 flex gap-5 lg:-mt-6">
-                  <CgMail size={25} />
-                </div>
+                <Link
+                  href={`mailto:${studentData.currentEmail}?subject=Project%20Alumnus%20Contact%20Email`}
+                >
+                  <div className="btn btn-primary btn-square absolute top-0 right-0 -mt-8 flex gap-5 lg:-mt-6">
+                    <CgMail size={25} />
+                  </div>
+                </Link>
 
                 {/* content */}
                 <motion.div className="w-full rounded-xl pb-16">

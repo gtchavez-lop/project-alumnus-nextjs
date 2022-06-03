@@ -77,7 +77,9 @@ const AlumniListing = ({}) => {
       return 0;
     });
     const filteredList = sortedList.filter((alumni) => {
-      return alumni.currentEmail !== supabase.auth.user().email;
+      return supabase.auth.user()
+        ? alumni.currentEmail !== supabase.auth.user().email
+        : true;
     });
 
     alumniList_ref.current = filteredList;
@@ -170,7 +172,7 @@ const AlumniListing = ({}) => {
               >
                 {/* search and filter tab */}
                 <div className="my-5 mb-10 grid grid-cols-1 gap-2 lg:grid-cols-4 ">
-                  <div className="col-span-4 flex items-center lg:col-span-2 gap-2">
+                  <div className="col-span-4 flex flex-col lg:flex-row lg:items-center lg:col-span-2 gap-2">
                     <input
                       type="text"
                       placeholder="Find someone..."

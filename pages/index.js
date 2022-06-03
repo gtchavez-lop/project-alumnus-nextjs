@@ -27,21 +27,16 @@ const Home = ({}) => {
         variants={_Transition_HeroPage}
         className="fixed top-0 right-0 -z-10 h-screen w-screen"
       >
-        <div className=" absolute top-0 left-0 z-10 h-full w-full bg-gradient-to-br from-base-100 to-base-300 opacity-90 " />
+        <div className=" absolute top-0 left-0 z-10 h-full w-full bg-gradient-to-br from-base-100 to-base-300 opacity-80 " />
 
         <div
           style={{
-            opacity: 1 - scrollY.get() / 500,
-            top: -(scrollY.get() / 20),
+            opacity: 1 - Math.min(scrollY.get() / 300, 1),
+            transform: `translateY(-${scrollY.get() / 10}px)`,
           }}
-          className="relative h-full w-full"
+          className="relative h-[110vh] w-full"
         >
-          <Image
-            src="/ucc-north.jpg"
-            layout="fill"
-            objectFit="cover"
-            priority
-          />
+          <Image src="/landing.jpg" layout="fill" objectFit="cover" priority />
         </div>
       </motion.div>
 

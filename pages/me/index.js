@@ -493,7 +493,7 @@ const MyProfile = ({}) => {
                             </div>
                           </>
                         ) : (
-                          <p>Detail Unpsecified</p>
+                          <p>Detail Unspecified</p>
                         )}
                       </>
                     )}

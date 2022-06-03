@@ -9,6 +9,7 @@ import {
   AiOutlineLogout,
   AiOutlineBgColors,
   AiOutlineUserAdd,
+  AiOutlineLogin,
 } from 'react-icons/ai';
 import { useState, useEffect } from 'react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -131,15 +132,21 @@ const MobileContextMenu = ({ closeHandler }) => {
                   <li className=" items-center justify-start gap-3">
                     <label
                       htmlFor="signInModal"
-                      className="btn btn-secondary btn-block"
+                      className="btn btn-secondary btn-outline btn-block items-center justify-start gap-3"
                     >
-                      Sign In
+                      <AiOutlineLogin size={20} />
+                      <span>Sign In</span>
                     </label>
                   </li>
-                  <li className="btn btn-ghost items-center justify-start gap-3">
-                    <AiOutlineUserAdd size={20} />
-                    <span>Register</span>
-                  </li>
+                  <Link href={'/register'}>
+                    <li
+                      onClick={handleSignOut}
+                      className="btn btn-secondary items-center justify-start gap-3"
+                    >
+                      <AiOutlineUserAdd size={20} />
+                      <span>Register</span>
+                    </li>
+                  </Link>
                 </>
               )}
             </ul>
@@ -268,7 +275,7 @@ const Navbar = (e) => {
           <div>
             <Link href={'/'}>
               <div className="btn btn-ghost flex items-center gap-3">
-                <Logo width={25} height={25} />
+                <Logo width={25} height={25} strokeColor="#D926A9" />
                 {!threshholdReached && <div className="">Project Alumnus</div>}
               </div>
             </Link>
@@ -295,10 +302,10 @@ const Navbar = (e) => {
                 ) : (
                   <div className="flex gap-2">
                     <Link href={'/register'}>
-                      <div className="btn btn-ghost">Sign Up</div>
+                      <div className="btn btn-secondary">Sign Up</div>
                     </Link>
 
-                    <label htmlFor="signInModal" className="btn btn-secondary">
+                    <label htmlFor="signInModal" className="btn ">
                       Sign In
                     </label>
                   </div>
@@ -366,18 +373,33 @@ const Navbar = (e) => {
                   <li>
                     <label
                       htmlFor="signOut_modal"
-                      className="btn btn-error text-error-content"
+                      className="btn btn-error text-white justify-start "
                     >
                       <AiOutlineLogout size={20} />
                       <span>Sign Out</span>
                     </label>
                   </li>
                 ) : (
-                  <li>
-                    <label htmlFor="signInModal" className="btn btn-secondary">
-                      Sign In
-                    </label>
-                  </li>
+                  <>
+                    <li>
+                      <label
+                        htmlFor="signInModal"
+                        className="btn btn-secondary text-secondary-content justify-start mb-2"
+                      >
+                        <AiOutlineUserAdd size={20} />
+                        <span>Register</span>
+                      </label>
+                    </li>
+                    <li>
+                      <label
+                        htmlFor="signInModal"
+                        className="btn justify-start"
+                      >
+                        <AiOutlineLogin size={20} />
+                        <span>Sign In</span>
+                      </label>
+                    </li>
+                  </>
                 )}
               </ul>
             </div>
