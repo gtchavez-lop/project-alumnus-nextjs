@@ -12,30 +12,34 @@ import GradientTopBar from '../../components/GradientTopBar';
 import Link from 'next/link';
 import EventCard from '../../components/evets/EventCard';
 
-export const getStaticProps = async () => {
-  const { data: events, error } = await supabase
-    .from('News and Events')
-    .select('id, title, created_at, slug');
+// export const getServerSideProps = async () => {
 
-  if (!error) {
-    return {
-      props: {
-        newsAndEvents: events,
-      },
-    };
-  }
-};
+//   if (!error) {
+//     return {
+//       props: {
+//         newsAndEvents: events,
+//       },
+//     };
+//   }
+// };
 
 const NewsAndEvents = ({ newsAndEvents }) => {
   const [loaded, setLoaded] = useState(false);
+  const [events, setEvents] = useState([]);
 
-  useEffect(
-    (e) => {
-      if (newsAndEvents) setLoaded(true);
-      //   console.log(newsAndEvents);
-    },
-    [newsAndEvents]
-  );
+  const FetchData = async (e) => {
+    const { data: events, error } = await supabase
+      .from('News and Events')
+      .select('id, title, created_at, slug');
+    if (!error) {
+      setEvents(events);
+      setLoaded(true);
+    }
+  };
+
+  useEffect((e) => {
+    FetchData();
+  }, []);
 
   return (
     <>
@@ -107,7 +111,8 @@ const NewsAndEvents = ({ newsAndEvents }) => {
           <AnimatePresence>
             <div className="mt-10 grid grid-cols-1 gap-3 md:grid-cols-2">
               {loaded &&
-                newsAndEvents.map((event) => (
+                events &&
+                events.map((event) => (
                   <EventCard key={event.id} event={event} />
                 ))}
             </div>
