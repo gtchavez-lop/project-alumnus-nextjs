@@ -27,8 +27,8 @@ const AlumniListing = ({}) => {
     setIsSearching(searchQuery.length > 0 ? true : false);
     const tempContainer = mainAlumniList.filter((alumni) => {
       return (
-        alumni.surname.toLowerCase().includes(searchQuery) ||
-        alumni.givenName.toLowerCase().includes(searchQuery)
+        alumni.surname.toLowerCase().includes(searchQuery.toLowerCase()) ||
+        alumni.givenName.toLowerCase().includes(searchQuery.toLowerCase())
       );
     });
     const sortedTempContainer = tempContainer.sort((a, b) => {
