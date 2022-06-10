@@ -1,34 +1,84 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+# Project Alumnus - Alumni Platform
 
-## Getting Started
+This web project is a platform for alumni to interact with each other.
+This project is built with [Next.js](https://nextjs.org/), [React](https://reactjs.org/), [Node.js](https://nodejs.org/en/), [Supabase](https://supabase.com/), and [TailwindCSS](https://tailwindcss.com).
 
-First, run the development server:
+<br />
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+---
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+<br />
 
-You can start editing the page by modifying `pages/index.js`. The page auto-updates as you edit the file.
+# Getting Started
 
-[API routes](https://nextjs.org/docs/api-routes/introduction) can be accessed on [http://localhost:3000/api/hello](http://localhost:3000/api/hello). This endpoint can be edited in `pages/api/hello.js`.
+## Install Node.js
 
-The `pages/api` directory is mapped to `/api/*`. Files in this directory are treated as [API routes](https://nextjs.org/docs/api-routes/introduction) instead of React pages.
+After you downloaed this project, you need to install Node.js.
 
-## Learn More
+Go to [https://nodejs.org/en/](https://nodejs.org/en/) and download the latest version of Node.js.
+<br /><br /><br />
 
-To learn more about Next.js, take a look at the following resources:
+## Install the dependencies
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+Install the dependencies by running the following command:
+<br /><br />
+`npm install` or `yarn`<br /><br />
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+## Run the application
 
-## Deploy on Vercel
+Run the application by running the following command:
+<br /><br />
+`npm run dev` or `yarn dev`<br /><br />
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Supabase Setup
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+Please contact the project owner to setup the database.
+This will not migrate the database automatically.
+
+<br />
+
+---
+
+<br />
+
+# Contributors
+
+<br />
+
+## Gerald Chavez
+
+Lead Project Developer, Manager, and Creative Director
+
+<br />
+
+## Charles Daniel Turiaga
+
+## Khyle Andrei Remolona
+
+Development and Design
+
+<br />
+
+## Carlo Diaz
+
+## Mikkie Gregorio
+
+Content Management
+
+<br />
+
+## Ken Castillo
+
+## John Josuah Pamintuan
+
+Quality Assurance and Documentation
+
+<br />
+
+---
+
+<br />
+
+<!-- disclaimer as a requirement for a course -->
+
+This project is made for the fulfillment of the requirements for the course Software Engineering 2
